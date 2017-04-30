@@ -1,5 +1,9 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-
+  
+  
+  <PropertyGroup>
+    <DatabaseBackupFileName>$(DatabaseName)_PreBuild_$(CurrentDateTime).bak</DatabaseBackupFileName>
+  </PropertyGroup>
 
   <Target Name="DatabaseBackup">
 
@@ -59,7 +63,7 @@
       MachineName="$(SqlServerName)"
       UserName="$(SqlServerUserName)"
       UserPassword="$(SqlServerPassword)"
-      DataFilePath="$(DatabaseBackupDir)\$(DatabaseName)_$(CurrentDateTime).bak" />
+      DataFilePath="$(DatabaseBackupDir)\$(DatabaseBackupFileName)" />
     <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)\$(DatabaseName)_$(CurrentDateTime).bak"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -107,7 +111,7 @@
     <MSBuild.ExtensionPack.Compression.Zip
       TaskAction="Create"
       CompressPath="$(SourceDir)"
-      ZipFileName="$(SourceBackupDir)\ClaimXO_$(CurrentDateTime).zip"/>
+      ZipFileName="$(SourceBackupDir)\ClaimXO_PreBuild_$(CurrentDateTime).zip"/>
     <Message Text="Source code backup has been sucessfully completed at this location: $(SourceBackupDir)\ClaimXO_$(CurrentDateTime).zip"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />

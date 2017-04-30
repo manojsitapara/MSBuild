@@ -25,12 +25,12 @@
 
     <CurrentTargetName></CurrentTargetName>
 
-    <GDIDataChangesFolderName>1.GDI_DataChanges</GDIDataChangesFolderName>
-    <GDIMetaFolderName>2.GDI_MetaChanges</GDIMetaFolderName>
-    <PayFlexDataChangesFolderName>1.PayFlex_DataChanges</PayFlexDataChangesFolderName>
-    <PayFlexMetaFolderName>2.PayFlex_MetaChanges</PayFlexMetaFolderName>
-    <PrimePayDataChangesFolderName>1.PrimePay_DataChanges</PrimePayDataChangesFolderName>
-    <PrimePayMetaFolderName>2.PrimePay_MetaChanges</PrimePayMetaFolderName>
+    <GDIMetaFolderName>1.GDI_MetaChanges</GDIMetaFolderName>
+    <GDIDataChangesFolderName>2.GDI_DataChanges</GDIDataChangesFolderName>
+    <PayFlexMetaFolderName>1.PayFlex_MetaChanges</PayFlexMetaFolderName>
+    <PayFlexDataChangesFolderName>2.PayFlex_DataChanges</PayFlexDataChangesFolderName>
+    <PrimePayMetaFolderName>1.PrimePay_MetaChanges</PrimePayMetaFolderName>
+    <PrimePayDataChangesFolderName>2.PrimePay_DataChanges</PrimePayDataChangesFolderName>
     <CoreSchemaChangesFolderName>1.CXCCore_SchemaChanges</CoreSchemaChangesFolderName>
     <CoreMetaFolderName>2.CXCCore_Meta</CoreMetaFolderName>
 
@@ -71,14 +71,6 @@
     
     <DeploymentDirForDbDeploy>$(DeploymentDir)\$(DbDeployScriptFolderName)</DeploymentDirForDbDeploy>
 
-
-
-
-
-
-   
-
-    
 
     <!--TODO: Make group of related property together-->
     <XmlPreprocessorCleanFile>true</XmlPreprocessorCleanFile>

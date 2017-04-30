@@ -61,7 +61,7 @@
     <!--Specify the path for deployment directory (i.e. ready to run code) -->
     <DeploymentDir>$(RootDir)\Deployment</DeploymentDir>
 
-    <TempDir>$(RootDir)\temp</TempDir>
+    <TempDir>$(RootDir)\Staging\temp</TempDir>
 
     
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>

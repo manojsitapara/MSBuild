@@ -613,10 +613,10 @@
      FileIndexNumber="$(NextFileNumber)"
      AssemblyVersionNumber="@(AssemblyVersionNumber)" />
 
-    <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="$(SqlServerName)" Database="$(dbDeployDBName)" LogOn="$(SqlServerUserName)" Password="$(SqlServerPassword)" InputFiles="$(RootDir)\temp\Insert_AssemblyVersionNumber.sql"  Condition="$(IsSqlWindowsAuthentication)=='false'"/>
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="$(SqlServerName)" Database="$(dbDeployDBName)" LogOn="$(SqlServerUserName)" Password="$(SqlServerPassword)" InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"  Condition="$(IsSqlWindowsAuthentication)=='false'"/>
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="$(SqlServerName)" Database="$(dbDeployDBName)"
-                                            InputFiles="$(RootDir)\temp\Insert_AssemblyVersionNumber.sql"  Condition="$(IsSqlWindowsAuthentication)=='true'"/>
+                                            InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"  Condition="$(IsSqlWindowsAuthentication)=='true'"/>
 
 
     
@@ -626,7 +626,7 @@
 
   <Target Name="CleanTempFolder">
     
-    <RemoveDir Directories="$(RootDir)\temp" />
+    <RemoveDir Directories="$(TempDir)" />
     
   </Target>
   

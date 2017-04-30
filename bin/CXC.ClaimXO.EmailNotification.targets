@@ -1,0 +1,12 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" >
+
+ <Target Name="SendEmailNotification">
+
+    <SendEmail
+      ToEmailAddress="$(ErrorNotificationToAddress)"
+      Subject="Build failed"
+      Message="Target name $(CurrentTargetName) has been failed to execute." />
+  </Target>
+  
+
+</Project>

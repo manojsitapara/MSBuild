@@ -1,0 +1,75 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+  <Target Name="GenerateSqlScript">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='GenerateSqlScript'">GenerateSqlScript</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <MSBuild.ExtensionPack.FileSystem.Folder
+    TaskAction="RemoveContent" Path="$(DeploymentDir)\$(DbDeployScriptFolderName)"/>
+    
+    <MSBuild.Dbdeploy.Task.Dbdeploy
+            DbType="mssql"
+            templatedir="$(DbDeployTemplateDirectory)"
+            DbConnection="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);Integrated Security=SSPI"
+            Dir="$(BuildDirForDbDeploy)"
+            OutputFile="$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_output_$(CurrentDateTime).sql"
+            UndoOutputFile="$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_undo_$(CurrentDateTime).sql"
+            TableName="$(DatabaseChangeLogTableName)"
+            AutoCreateChangeLogTable="true"
+            forceUpdate="true" Condition="$(IsSqlWindowsAuthentication)=='true'" />
+
+
+    <MSBuild.Dbdeploy.Task.Dbdeploy
+				   DbType="mssql"
+           templatedir="$(DbDeployTemplateDirectory)"
+				   DbConnection="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword)"
+				   Dir="$(BuildDirForDbDeploy)"
+				   OutputFile="$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_output_$(CurrentDateTime).sql"
+				   UndoOutputFile="$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_undo_$(CurrentDateTime).sql"
+           TableName="$(DatabaseChangeLogTableName)"
+           AutoCreateChangeLogTable="true"
+           forceUpdate="true" Condition="$(IsSqlWindowsAuthentication)=='false'" />
+    
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  
+  
+  
+  <Target Name="ExecuteSqlScript" DependsOnTargets="GenerateSqlScript">
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='ExecuteSqlScript'">ExecuteSqlScript</CurrentTargetName>
+    </PropertyGroup>
+    
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+    <Message Text="Executing change script ($(GenerateOutputSqlFileName)) on $(dbDeployDBName) ..."/>
+
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="$(SqlServerName)" Database="$(dbDeployDBName)" LogOn="$(SqlServerUserName)" Password="$(SqlServerPassword)" InputFiles="$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_output_$(CurrentDateTime).sql"  Condition="$(IsSqlWindowsAuthentication)=='false'"/>
+
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="$(SqlServerName)" Database="$(dbDeployDBName)" 
+                                            InputFiles="$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_output_$(CurrentDateTime).sql"  Condition="$(IsSqlWindowsAuthentication)=='true'"/>
+
+    
+    
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  <Target Name="DatabaseDeployment" >
+    <CallTarget Targets="GenerateSqlScript" />
+    <CallTarget Targets="ExecuteSqlScript" Condition="$(MSBuildLastTaskResult) == 'True'" />
+    
+  </Target>
+
+
+</Project>

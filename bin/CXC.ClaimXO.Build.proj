@@ -1,0 +1,674 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
+
+  <!--Msbuild command: msbuild CXC.ClaimXO.Build.proj /p:Environment="Production"-->
+  <!--msbuild CXC.ClaimXO.Build.proj /l:XMLFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.xml-->
+  <!--msbuild CXC.ClaimXO.Build.proj /l:SqlLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;BID=123;BN=2016;DS=.;IC=MSBuildLogs;SP=msbep_SqlLogger-->
+  <!--msbuild CXC.ClaimXO.Build.proj /l:SecureFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.txt-->
+  <!-- Region Import External target -->
+
+
+  <Import Project="CXC.ClaimXO.Assembly.Version.Targets"/>
+  <Import Project="CXC.ClaimXO.DbDeploy.targets"/>
+  <Import Project="CXC.ClaimXO.Backup.targets"/>
+  <Import Project="CXC.ClaimXO.EmailNotification.targets"/>
+
+
+
+  <!-- EndRegion -->
+
+
+  <!--This item group has definitions related to solution files-->
+  <ItemGroup>
+    <CXCEngineSolutionFile Include="$(SourceDir)\CXC\CXCEngine.sln"></CXCEngineSolutionFile>
+    <PrimePaySolutionFile Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay.sln"></PrimePaySolutionFile>
+    <PayFlexSolutionFile Include="$(SourceDir)\TPA\PayFlex\CXCPayFlex.sln"></PayFlexSolutionFile>
+    <GDISolutionFile Include="$(SourceDir)\TPA\GDI\CXCGDI.sln"></GDISolutionFile>
+    <GeneratedAssemblyFileName Include="$(TempDir)\AssemblyVersionNumber.txt"/>
+  </ItemGroup>
+
+
+
+
+
+  <ItemGroup>
+    <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
+  </ItemGroup>
+
+
+  <Target Name="CreateFolderStructure">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CreateFolderStructure'">CreateFolderStructure</CurrentTargetName>
+    </PropertyGroup>
+
+    <RemoveDir Directories="$(SourceDir)" Condition="$(ForceSourceOverwrite)== 'true'"/>
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <MakeDir Directories="$(SourceDir)" Condition="!Exists('$(SourceDir)')"/>
+    <MakeDir Directories="$(SourceBackupDir)" Condition="!Exists('$(SourceBackupDir)')"/>
+
+    <MakeDir Directories="$(StagingDir)" Condition="!Exists('$(StagingDir)')"/>
+    <MakeDir Directories="$(DeploymentBackupDir)" Condition="!Exists('$(DeploymentBackupDir)')"/>
+
+    <MakeDir Directories="$(DeploymentDir)" Condition="!Exists('$(DeploymentDir)')"/>
+
+    <MakeDir Directories="$(DatabaseBackupDir)" Condition="!Exists('$(DatabaseBackupDir)')"/>
+
+    <MakeDir Directories="$(TargetDir)" Condition="!Exists('$(TargetDir)')"/>
+    <MakeDir Directories="$(TargetBackupDir)" Condition="!Exists('$(TargetBackupDir)')"/>
+
+
+
+
+
+    <MakeDir Directories="$(BuildDirForApp)" Condition="!Exists('$(BuildDirForApp)')"/>
+    <MakeDir Directories="$(BuildDirForDbDeploy)" Condition="!Exists('$(BuildDirForDbDeploy)')"/>
+
+
+    <MakeDir Directories="$(DeploymentDirForApp)" Condition="!Exists('$(DeploymentDirForApp)')"/>
+    <MakeDir Directories="$(DeploymentDirForDbDeploy)" Condition="!Exists('$(DeploymentDirForDbDeploy)')"/>
+
+
+
+    <MakeDir Directories="$(BuildDirForDbDeploy)\GDI\$(GDIMetaFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\GDI\$(GDIMetaFolderName)')"/>
+    <MakeDir Directories="$(BuildDirForDbDeploy)\GDI\$(GDIDataChangesFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\GDI\$(GDIDataChangesFolderName)')"/>
+
+    <MakeDir Directories="$(BuildDirForDbDeploy)\PrimePay\$(PrimePayMetaFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\PrimePay\$(PrimePayMetaFolderName)')"/>
+    <MakeDir Directories="$(BuildDirForDbDeploy)\PrimePay\$(PrimePayDataChangesFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\PrimePay\$(PrimePayDataChangesFolderName)')"/>
+
+    <MakeDir Directories="$(BuildDirForDbDeploy)\PayFlex\$(PayFlexMetaFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\PayFlex\$(PayFlexMetaFolderName)')"/>
+    <MakeDir Directories="$(BuildDirForDbDeploy)\PayFlex\$(PayFlexDataChangesFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\PayFlex\$(PayFlexDataChangesFolderName)')"/>
+
+    <MakeDir Directories="$(BuildDirForDbDeploy)\CXCCore\$(CoreSchemaChangesFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\CXCCore\$(CoreSchemaChangesFolderName)')"/>
+    <MakeDir Directories="$(BuildDirForDbDeploy)\CXCCore\$(CoreMetaFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\CXCCore\$(CoreMetaFolderName)')"/>
+
+    
+
+    <MakeDir Directories="$(TempDir)" Condition="!Exists('$(TempDir))')"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  <Target Name="DownloadSourceFromSVN">
+
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DownloadSourceFromSVN'">DownloadSourceFromSVN</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <SvnCheckout  RepositoryPath="$(SVNSourceURL)"
+			            LocalPath="$(SourceDir)"
+			            UserName="$(SvnUsername)"
+			            Password="$(SvnPassword)">
+      <Output TaskParameter="Revision" PropertyName="Revision" />
+    </SvnCheckout>
+
+    <Message Text="Have got revision: $(Revision)"/>
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+
+  <Target Name="BuildCXCEngineSolution" >
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCEngineSolution'">BuildCXCEngineSolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCEngineSolutionFile)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+
+
+  </Target>
+
+
+
+  <Target Name="BuildGDISolution" Condition="$(BuildGDI)=='true'">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildGDISolution'">BuildGDISolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <MSBuild Projects="@(GDISolutionFile)"
+             Properties="@(UpdateAssemblyVersionTarget)"  Targets="Build"/>
+
+    <Message Text="Target BuildGDISolution has been completed" />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+
+  <Target Name="BuildPrimePaySolution" Condition="$(BuildPrimePay)=='true'">
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPrimePaySolution'">BuildPrimePaySolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="Target BuildPrimePaySolution has been started." />
+
+    <MSBuild Projects="@(PrimePaySolutionFile)"
+             Properties="@(UpdateAssemblyVersionTarget)" Targets="Build"  />
+
+    <Message Text="Target BuildPrimePaySolution has been completed" />
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+
+  <Target Name="BuildPayFlexSolution" Condition="$(BuildPayFlex)=='true'" >
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPayFlexSolution'">BuildPayFlexSolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <MSBuild Projects="@(PayFlexSolutionFile)"
+             Properties="@(UpdateAssemblyVersionTarget)"  Targets="Build"/>
+
+    <Message Text="Target BuildPayFlexSolution has been completed" />
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="CopyBuildFilesToStagingDir">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToStagingDir'">CopyBuildFilesToStagingDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <ItemGroup>
+      <BuildFiles Include="$(SourceDir)\CXC\CXCEngine\bin\Release\**\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(BuildFiles)"
+			  	DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+
+    <CallTarget Targets="CopyScriptFilesToBuildDir" />
+    <CallTarget Targets="CopySqlFilesToStagingDirectory"/>
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  <Target Name="CopyScriptFilesToBuildDir">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyScriptFilesToBuildDir'">CopyScriptFilesToBuildDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <ItemGroup>
+      <CopyCommandAndSqlFiles Include="$(SourceDir)\CXC\Scripts\*.*" />
+      <CopyPayFlexCommandAndSqlFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\Scripts\*.*" />
+      <CopyPrimePayCommandAndSqlFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Scripts\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CopyCommandAndSqlFiles)"
+			  	DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+
+    <Copy SourceFiles="@(CopyPayFlexCommandAndSqlFiles)"
+			DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
+      SkipUnchangedFiles="true"
+      Condition="$(BuildPayFlex) == 'True'"/>
+
+
+    <Copy SourceFiles="@(CopyPrimePayCommandAndSqlFiles)"
+			DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
+      SkipUnchangedFiles="true"
+      Condition="$(BuildPrimePay) == 'True'"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  <Target Name="CopyBuildFilesToDeploymentDir" DependsOnTargets="ConfigTransformation">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToDeploymentDir'">CopyBuildFilesToDeploymentDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy Source="$(StagingDir)\$(AppFolderName)" Destination="$(DeploymentDir)\$(AppFolderName)" Files="*.*" Options="/MIR">
+    </MSBuild.ExtensionPack.FileSystem.RoboCopy>
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  <Target Name="CopyBuildFilesToTargetDir">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToTargetDir'">CopyBuildFilesToTargetDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy Source="$(DeploymentDirForApp)" Destination="$(TargetDir)" Files="*.*" Options="/MIR">
+    </MSBuild.ExtensionPack.FileSystem.RoboCopy>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="ConfigTransformation">
+
+    <XmlPreprocess
+      ToolPath="$(LibDir)"
+      InputFiles="$(BuildDirForApp)\config\StateParams.xml"
+      OutputFiles="$(BuildDirForApp)\config\StateParams.xml"
+      SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+      Environment="$(Environment)"
+  	  Clean="$(XmlPreprocessorCleanFile)"
+	    Validate="$(XmlPreprocessorValidateFile)" />
+
+
+    <XmlPreprocess
+      ToolPath="$(LibDir)"
+      InputFiles="$(BuildDirForApp)\config\CoreParams.xml"
+      OutputFiles="$(BuildDirForApp)\config\CoreParams.xml"
+      SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+      Environment="$(Environment)"
+  	  Clean="$(XmlPreprocessorCleanFile)"
+	    Validate="$(XmlPreprocessorValidateFile)" />
+
+
+    <XmlPreprocess
+      ToolPath="$(LibDir)"
+      InputFiles="$(BuildDirForApp)\config\DataAccess.xml"
+      OutputFiles="$(BuildDirForApp)\config\DataAccess.xml"
+      SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+      Environment="$(Environment)"
+  	  Clean="$(XmlPreprocessorCleanFile)"
+	    Validate="$(XmlPreprocessorValidateFile)" />
+
+
+    <XmlPreprocess
+          ToolPath="$(LibDir)"
+          InputFiles="$(BuildDirForApp)\config\AlertParams.xml"
+          OutputFiles="$(BuildDirForApp)\config\AlertParams.xml"
+          SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+          Environment="$(Environment)"
+          Clean="$(XmlPreprocessorCleanFile)"
+          Validate="$(XmlPreprocessorValidateFile)" />
+
+
+    <XmlPreprocess
+             ToolPath="$(LibDir)"
+             InputFiles="$(BuildDirForApp)\config\Archiver.xml"
+             OutputFiles="$(BuildDirForApp)\config\Archiver.xml"
+             SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+             Environment="$(Environment)"
+             Clean="$(XmlPreprocessorCleanFile)"
+             Validate="$(XmlPreprocessorValidateFile)" />
+
+
+
+    <XmlPreprocess
+            ToolPath="$(LibDir)"
+            InputFiles="$(BuildDirForApp)\config\Notifier.xml"
+            OutputFiles="$(BuildDirForApp)\config\Notifier.xml"
+            SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+            Environment="$(Environment)"
+            Clean="$(XmlPreprocessorCleanFile)"
+            Validate="$(XmlPreprocessorValidateFile)" />
+
+
+
+    <XmlPreprocess
+           ToolPath="$(LibDir)"
+           InputFiles="$(BuildDirForApp)\CXCEngine.exe.config"
+           OutputFiles="$(BuildDirForApp)\CXCEngine.exe.config"
+           SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+           Environment="$(Environment)"
+           Clean="$(XmlPreprocessorCleanFile)"
+           Validate="$(XmlPreprocessorValidateFile)" />
+
+
+    <CallTarget Targets="GDIConfigTransform" Condition="$(BuildGDI) == 'True'"></CallTarget>
+    <CallTarget Targets="PrimePayConfigTransform" Condition="$(BuildPrimePay) == 'True'"></CallTarget>
+    <CallTarget Targets="PayFlexConfigTransform" Condition="$(BuildPayFlex) == 'True'"></CallTarget>
+
+    <!--Convert mssql_apply.vm.tt file to mssql_apply.vm file-->
+    <Copy SourceFiles="$(LibDir)\Resources\mssql_apply.vm.tt" DestinationFiles="$(LibDir)\Resources\mssql_apply.vm"></Copy>
+    <!--Convert mssql_undo.vm.tt file to mssql_undo.vm file-->
+    <Copy SourceFiles="$(LibDir)\Resources\mssql_undo.vm.tt" DestinationFiles="$(LibDir)\Resources\mssql_undo.vm"></Copy>
+
+
+    <FindAndReplace
+                  Filename="$(LibDir)\Resources\mssql_apply.vm"
+                  FindWord="USE #CLAIMXODATABASE#"
+                  ReplaceWithWord="USE [$(DatabaseName)]" />
+
+
+    <FindAndReplace
+                  Filename="$(LibDir)\Resources\mssql_apply.vm"
+                  FindWord="USE #DBDEPLOYDATABASE#"
+                  ReplaceWithWord="USE [$(dbDeployDBName)]" />
+
+
+    <FindAndReplace
+                  Filename="$(LibDir)\Resources\mssql_undo.vm"
+                  FindWord="USE #DBDEPLOYDATABASE#"
+                  ReplaceWithWord="USE [$(dbDeployDBName)]" />
+
+
+  </Target>
+
+
+  <Target Name="GDIConfigTransform">
+
+    <XmlPreprocess
+      ToolPath="$(LibDir)"
+      InputFiles="$(BuildDirForApp)\GDI\config\StateParams.xml"
+      OutputFiles="$(BuildDirForApp)\GDI\config\StateParams.xml"
+      SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+      Environment="$(Environment)"
+  	  Clean="$(XmlPreprocessorCleanFile)"
+	    Validate="$(XmlPreprocessorValidateFile)" />
+
+  </Target>
+
+
+  <Target Name="PrimePayConfigTransform">
+
+    <XmlPreprocess
+    ToolPath="$(LibDir)"
+    InputFiles="$(BuildDirForApp)\PrimePay\config\StateParams.xml"
+    OutputFiles="$(BuildDirForApp)\PrimePay\config\StateParams.xml"
+    SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+    Environment="$(Environment)"
+    Clean="$(XmlPreprocessorCleanFile)"
+    Validate="$(XmlPreprocessorValidateFile)"  />
+
+  </Target>
+
+
+  <Target Name="PayFlexConfigTransform">
+
+    <XmlPreprocess
+      ToolPath="$(LibDir)"
+      InputFiles="$(BuildDirForApp)\PayFlex\config\StateParams.xml"
+      OutputFiles="$(BuildDirForApp)\PayFlex\config\StateParams.xml"
+      SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+      Environment="$(Environment)"
+  	  Clean="$(XmlPreprocessorCleanFile)"
+	    Validate="$(XmlPreprocessorValidateFile)" />
+
+  </Target>
+
+
+  <Target Name="CommandFileTransaformation">
+
+    <CallTarget Targets="CommonCommandFileTransform" />
+    <CallTarget Targets="PayFlexCommandFileTransform" />
+
+  </Target>
+
+
+  <Target Name="PayFlexCommandFileTransform" Condition="$(BuildPayFlex)=='true'">
+
+    <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+                               TabName="EnvSetting"
+                               Environment ="$(Environment)"
+                               InputFiles="$(BuildDirForApp)\PayFlex_SetEnv.cmd"
+                               OutputFiles="$(BuildDirForApp)\PayFlex_SetEnv.cmd"
+                               VariableColumnName="Environment Name" >
+      <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
+    </CommandFileTransformation>
+
+  </Target>
+
+
+  <Target Name="CommonCommandFileTransform">
+
+    <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+                               TabName="EnvSetting"
+                               Environment ="$(Environment)"
+                               InputFiles="$(BuildDirForApp)\SetEnv.cmd"
+                               OutputFiles="$(BuildDirForApp)\SetEnv.cmd"
+                               VariableColumnName="Environment Name" >
+      <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
+    </CommandFileTransformation>
+
+  </Target>
+
+
+
+  <Target Name="CopySqlFilesToStagingDirectory">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToStagingDirectory'">CopySqlFilesToStagingDirectory</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <ItemGroup>
+      <GDIMetaFiles Include="$(SourceDir)\TPA\GDI\GDI\Build\MetaChanges\**\*.*" />
+      <GDIDataChangesFiles Include="$(SourceDir)\TPA\GDI\GDI\Build\DataChanges\**\*.*" />
+      <PrimePayMetaFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges\**\*.*" />
+      <PrimePayDataChangesFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\DataChanges\**\*.*" />
+      <PayFlexMetaFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\Build\MetaChanges\**\*.*" />
+      <PayFlexDataChangesFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\Build\DataChanges\**\*.*" />
+      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
+      <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(GDIMetaFiles)"
+			  	DestinationFolder="$(BuildDirForDbDeploy)\GDI\$(GDIMetaFolderName)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" Condition="$(BuildGDI)=='true'" />
+
+
+    <Copy SourceFiles="@(GDIDataChangesFiles)"
+      DestinationFolder="$(BuildDirForDbDeploy)\GDI\$(GDIDataChangesFolderName)\%(RecursiveDir)"
+      SkipUnchangedFiles="true" Condition="$(BuildGDI)=='true'" />
+
+
+
+    <Copy SourceFiles="@(PrimePayMetaFiles)"
+     DestinationFolder="$(BuildDirForDbDeploy)\PrimePay\$(PrimePayMetaFolderName)\%(RecursiveDir)"
+     SkipUnchangedFiles="true" Condition="$(BuildPrimePay)=='true'" />
+
+
+    <Copy SourceFiles="@(PrimePayDataChangesFiles)"
+    DestinationFolder="$(BuildDirForDbDeploy)\PrimePay\$(PrimePayDataChangesFolderName)\%(RecursiveDir)"
+    SkipUnchangedFiles="true" Condition="$(BuildPrimePay)=='true'" />
+
+
+
+    <Copy SourceFiles="@(PayFlexMetaFiles)"
+        DestinationFolder="$(BuildDirForDbDeploy)\PayFlex\$(PayFlexMetaFolderName)\%(RecursiveDir)"
+        SkipUnchangedFiles="true" Condition="$(BuildPayFlex)=='true'" />
+
+
+    <Copy SourceFiles="@(PayFlexDataChangesFiles)"
+        DestinationFolder="$(BuildDirForDbDeploy)\PayFlex\$(PayFlexDataChangesFolderName)\%(RecursiveDir)"
+        SkipUnchangedFiles="true" Condition="$(BuildPayFlex)=='true'" />
+
+
+    <Copy SourceFiles="@(CXCCoreMetaFiles)"
+       DestinationFolder="$(BuildDirForDbDeploy)\CXCCore\$(CoreMetaFolderName)\%(RecursiveDir)"
+       SkipUnchangedFiles="true"  Condition="$(CopyCXCCoreMetaChangeSql) == 'true' "/>
+
+
+    <Copy SourceFiles="@(CXCCoreSchemaChangesFiles)"
+        DestinationFolder="$(BuildDirForDbDeploy)\CXCCore\$(CoreSchemaChangesFolderName)\%(RecursiveDir)"
+        SkipUnchangedFiles="true" />
+
+
+
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  <Target Name="CreateSVNLabel" Condition="$(CreateSVNLabel) == 'True'">
+
+    <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
+      <Output TaskParameter="Lines" ItemName="AssemblyVersionNumber" />
+    </ReadLinesFromFile>
+
+    <SvnCopy SourcePath="$(SVNSourceURL)"
+      DestinationPath="$(SVNTagURL)/MSBuild_Testing_$(CurrentDate)_@(AssemblyVersionNumber)"
+      Message="$(CurrentDate)_@(AssemblyVersionNumber)"
+      Username="$(SvnUsername)" password="$(SvnPassword)"/>
+
+  </Target>
+
+
+  <Target Name="SaveChangedAssemblyVersionInfoInDB" Condition="Exists(@(GeneratedAssemblyFileName))">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SaveChangedVersionInfoInDB'">SaveChangedVersionInfoInDB</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteScalar" UseTransaction="false" Sql="select max(ScriptNumber) from $(DatabaseChangeLogTableName) where Folder='Dummy' " ConnectionString="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword);Integrated Security=True">
+      <Output PropertyName="MaxAssemblyScriptNumber" TaskParameter="ScalarResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+    <Message Text="$(MaxAssemblyScriptNumber)"></Message>
+
+
+    <MSBuild.ExtensionPack.Science.Maths TaskAction="Add" Numbers="$(MaxAssemblyScriptNumber);1">
+      <Output PropertyName="NextFileNumber" TaskParameter="Result"/>
+    </MSBuild.ExtensionPack.Science.Maths>
+    <Message Text="Max Number: $(NextFileNumber)"></Message>
+
+
+    <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
+      <Output TaskParameter="Lines" ItemName="AssemblyVersionNumber" />
+    </ReadLinesFromFile>
+
+    <Message Text="$(CurrentDate)_@(AssemblyVersionNumber)"></Message>
+
+    <GenerateSqlFileForAssemblyVersion
+     DbDeployDatabaseName="$(dbDeployDBName)"
+     SqlFilePath="$(TempDir)\Insert_AssemblyVersionNumber.sql"
+     ChangeLogTableName="$(DatabaseChangeLogTableName)"
+     FileIndexNumber="$(NextFileNumber)"
+     AssemblyVersionNumber="@(AssemblyVersionNumber)" />
+
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="$(SqlServerName)" Database="$(dbDeployDBName)" LogOn="$(SqlServerUserName)" Password="$(SqlServerPassword)" InputFiles="$(RootDir)\temp\Insert_AssemblyVersionNumber.sql"  Condition="$(IsSqlWindowsAuthentication)=='false'"/>
+
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="$(SqlServerName)" Database="$(dbDeployDBName)"
+                                            InputFiles="$(RootDir)\temp\Insert_AssemblyVersionNumber.sql"  Condition="$(IsSqlWindowsAuthentication)=='true'"/>
+
+
+    
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+  <Target Name="CleanTempFolder">
+    
+    <RemoveDir Directories="$(RootDir)\temp" />
+    
+  </Target>
+  
+
+  <Target Name="Run">
+
+
+    <CallTarget Targets="CreateFolderStructure" />
+
+    <CallTarget Targets="DatabaseBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="TargetBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+    <!--<CallTarget Targets="DownloadSourceFromSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>-->
+    <CallTarget Targets="BackupSource" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+
+    <CallTarget Targets="BuildCXCEngineSolution" Condition="$(MSBuildLastTaskResult) == 'True'" />
+    <CallTarget Targets="BuildGDISolution" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="BuildPrimepaySolution" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="BuildPayFlexSolution" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+
+    <CallTarget Targets="CopyBuildFilesToStagingDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+    <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
+    <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
+
+    <CallTarget Targets="CopyBuildFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+    <CallTarget Targets="DeploymentBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+    <CallTarget Targets="CopyBuildFilesToTargetDir"  Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+    <CallTarget Targets="DatabaseDeployment" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+    <CallTarget Targets="SaveChangedAssemblyVersionInfoInDB" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+    <CallTarget Targets="CreateSVNLabel" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+    <CallTarget Targets="CleanTempFolder"></CallTarget>
+    
+  </Target>
+
+
+</Project>

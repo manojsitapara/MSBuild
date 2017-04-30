@@ -1,0 +1,26 @@
+#foreach($script in $scripts)
+
+-- START CHANGE SCRIPT $script
+
+INSERT INTO ${changeLogTableName} (Folder, ScriptNumber, ScriptName, StartDate, AppliedBy, ScriptStatus, ScriptOutput)
+ VALUES ('$script.Folder', $script.ScriptNumber,'$script.ScriptName', getdate(), user_name(), 3, '')
+GO
+
+BEGIN TRANSACTION
+GO
+
+USE [MsbuildCXC]
+$script.getContent()
+
+USE [MsBuildDbDeploy]
+UPDATE ${changeLogTableName} 
+SET CompleteDate = getdate(), ScriptStatus = 1, ScriptOutput = '' 
+WHERE Folder = '$script.Folder' AND ScriptNumber = $script.ScriptNumber
+GO
+
+COMMIT
+GO
+
+-- END CHANGE SCRIPT $script
+
+#end

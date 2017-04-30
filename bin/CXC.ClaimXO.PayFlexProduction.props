@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
+
+  <PropertyGroup>
+
+    <!-- MSBuild script folder structure settings -->
+
+    <!-- Specify the root directory to create msbuild script folder structure -->
+    <RootDir>G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile</RootDir>
+
+
+
+    <!--Solution settings -->
+
+    <!-- To build GDI solution, set value to true -->
+    <BuildGDI>true</BuildGDI>
+    <!-- To build PrimePay solution, set value to true -->
+    <BuildPrimePay>true</BuildPrimePay>
+    <!-- To build PayFlex solution, set value to true -->
+    <BuildPayFlex>true</BuildPayFlex>
+
+
+
+
+    <!--Sql server settings -->
+
+    <!--Set value to true, if windows authentication required-->
+    <IsSqlWindowsAuthentication>true</IsSqlWindowsAuthentication>
+    <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
+    <SqlServerVersion>2012</SqlServerVersion>
+    <!--Specify Sql server name-->
+    <SqlServerName>(local)</SqlServerName>
+
+    <!--Specify sql user name, if IsSqlWindowsAuthentication flag value is false -->
+    <SqlServerUserName>sa</SqlServerUserName>
+    <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false  -->
+    <SqlServerPassword>sa123</SqlServerPassword>
+
+    <!--specify database name -->
+    <DatabaseName>MsbuildCXC</DatabaseName>
+
+
+
+    <!--Config settings -->
+
+    <!--Specify environment -->
+    <EnvironmentName>ManojDev</EnvironmentName>
+
+
+
+
+    <!--DbDeploy Settings -->
+
+    <!-- Specify table name for dbDeploy -->
+    <DatabaseChangeLogTableName>Changelog</DatabaseChangeLogTableName>
+    <!--Specify the dbDeploy Database name-->
+    <dbDeployDBName>MsBuildDbDeploy</dbDeployDBName>
+
+
+
+    <!--Source code Settings -->
+
+    <!--Set value true to take source code backup else false -->
+    <AllowSourceCodeBackup>false</AllowSourceCodeBackup>
+    <!--Set value true to overwrite source code if any changes else false -->
+    <ForceSourceOverwrite>false</ForceSourceOverwrite>
+
+
+
+
+
+    <!--Error Email Notification Settings -->
+
+    <!--Specify TO email address to send error email notification -->
+    <ErrorNotificationToAddress>manojs@cxcnetwork.com</ErrorNotificationToAddress>
+    <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
+    <AllowEmailNotification>true</AllowEmailNotification>
+
+
+
+
+
+    <!--Assembly Settings -->
+
+    <!--Set value true to check in change assembly comment back to SVN else set false -->
+    <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
+    <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
+    <AssemblyBuildNumber></AssemblyBuildNumber>
+    <!-- Set UpdateBuildVersion value true to update build version number else set false -->
+    <UpdateBuildVersion>true</UpdateBuildVersion>
+
+
+    <!--Set value true to create svn lable under svn tag branch-->
+    <CreateSVNLabel>false</CreateSVNLabel>
+
+    <CopyCXCCoreMetaChangeSql>false</CopyCXCCoreMetaChangeSql>
+
+
+  </PropertyGroup>
+
+</Project>

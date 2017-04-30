@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
+
+  <PropertyGroup>
+    <Environment>PayFlexProduction</Environment>
+    <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
+    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
+    <SvnUsername></SvnUsername>
+    <SvnPassword></SvnPassword>
+  </PropertyGroup>
+
+
+  <Import Project="CXC.ClaimXO.QA.props" Condition="$(Environment) == 'QA'"/>
+  <Import Project="CXC.ClaimXO.Production.props" Condition="$(Environment) == 'Production'"/>
+  <Import Project="CXC.ClaimXO.PayFlexProduction.props" Condition="$(Environment) == 'PayFlexProduction'"/>
+
+
+  <!--DO NOT MODIFY FOLLOWING PROPERTY GROUP-->
+  <PropertyGroup>
+
+    <PreviousAssemblyVersionNumber></PreviousAssemblyVersionNumber>
+    <NewAssemblyVersion></NewAssemblyVersion>
+    <DbDeployScriptFolderName>DbDeployScript</DbDeployScriptFolderName>
+    <AppFolderName>App</AppFolderName>
+
+    <CurrentTargetName></CurrentTargetName>
+
+    <GDIDataChangesFolderName>1.GDI_DataChanges</GDIDataChangesFolderName>
+    <GDIMetaFolderName>2.GDI_MetaChanges</GDIMetaFolderName>
+    <PayFlexDataChangesFolderName>1.PayFlex_DataChanges</PayFlexDataChangesFolderName>
+    <PayFlexMetaFolderName>2.PayFlex_MetaChanges</PayFlexMetaFolderName>
+    <PrimePayDataChangesFolderName>1.PrimePay_DataChanges</PrimePayDataChangesFolderName>
+    <PrimePayMetaFolderName>2.PrimePay_MetaChanges</PrimePayMetaFolderName>
+    <CoreSchemaChangesFolderName>1.CXCCore_SchemaChanges</CoreSchemaChangesFolderName>
+    <CoreMetaFolderName>2.CXCCore_Meta</CoreMetaFolderName>
+
+    
+    <CurrentDateTime>$([System.DateTime]::Now.ToString(yyyyMMdd_hh_mm_ss))</CurrentDateTime>
+    <CurrentDate>$([System.DateTime]::Now.ToString(yyyyMMdd))</CurrentDate>
+
+
+    <!-- Specify the path of source code -->
+    <SourceDir>$(RootDir)\Source</SourceDir>
+    <!-- Specify the path to save build code -->
+    <StagingDir>$(RootDir)\Staging</StagingDir>
+    <!-- Specify the path to copy build code on server -->
+    <TargetDir>$(RootDir)\Target</TargetDir>
+
+
+
+    <!-- Specify the path to backup of source code -->
+    <SourceBackupDir>$(RootDir)\Backup\Source</SourceBackupDir>
+    <!-- Specify the path to backup of deployment code -->
+    <DeploymentBackupDir>$(RootDir)\Backup\Deployment</DeploymentBackupDir>
+    <!-- Specify the path to backup of database -->
+    <DatabaseBackupDir>$(RootDir)\Backup\Database</DatabaseBackupDir>
+    <!-- Specify the path to back up build code on server -->
+    <TargetBackupDir>$(RootDir)\Backup\Target</TargetBackupDir>
+
+
+    <!--Specify the path for deployment directory (i.e. ready to run code) -->
+    <DeploymentDir>$(RootDir)\Deployment</DeploymentDir>
+
+    <TempDir>$(RootDir)\temp</TempDir>
+
+    
+    <BuildDirForApp>$(StagingDir)\$(AppFolderName)</BuildDirForApp>
+    <BuildDirForDbDeploy>$(StagingDir)\$(DbDeployScriptFolderName)</BuildDirForDbDeploy>
+
+    <DeploymentDirForApp>$(DeploymentDir)\$(AppFolderName)</DeploymentDirForApp>
+    
+    <DeploymentDirForDbDeploy>$(DeploymentDir)\$(DbDeployScriptFolderName)</DeploymentDirForDbDeploy>
+
+
+
+
+
+
+   
+
+    
+
+    <!--TODO: Make group of related property together-->
+    <XmlPreprocessorCleanFile>true</XmlPreprocessorCleanFile>
+    <XmlPreprocessorValidateFile>true</XmlPreprocessorValidateFile>
+    
+
+  </PropertyGroup>
+
+
+</Project>

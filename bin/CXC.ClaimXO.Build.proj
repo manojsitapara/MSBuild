@@ -49,7 +49,7 @@
     <MakeDir Directories="$(SourceDir)" Condition="!Exists('$(SourceDir)')"/>
     <MakeDir Directories="$(SourceBackupDir)" Condition="!Exists('$(SourceBackupDir)')"/>
 
-    <MakeDir Directories="$(StagingDir)" Condition="!Exists('$(StagingDir)')"/>
+    <MakeDir Directories="$(BuildDir)" Condition="!Exists('$(BuildDir)')"/>
     <MakeDir Directories="$(DeploymentBackupDir)" Condition="!Exists('$(DeploymentBackupDir)')"/>
 
     <MakeDir Directories="$(DeploymentDir)" Condition="!Exists('$(DeploymentDir)')"/>
@@ -211,10 +211,10 @@
   </Target>
 
 
-  <Target Name="CopyBuildFilesToStagingDir">
+  <Target Name="CopyBuildFilesToBuildDir">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToStagingDir'">CopyBuildFilesToStagingDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToBuildDir'">CopyBuildFilesToBuildDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -228,7 +228,7 @@
           SkipUnchangedFiles="true" />
 
     <CallTarget Targets="CopyScriptFilesToBuildDir" />
-    <CallTarget Targets="CopySqlFilesToStagingDirectory"/>
+    <CallTarget Targets="CopySqlFilesToBuildDirectory"/>
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -282,7 +282,7 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy Source="$(StagingDir)\$(AppFolderName)" Destination="$(DeploymentDir)\$(AppFolderName)" Files="*.*" Options="/MIR">
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy Source="$(BuildDir)\$(AppFolderName)" Destination="$(DeploymentDir)\$(AppFolderName)" Files="*.*" Options="/MIR">
     </MSBuild.ExtensionPack.FileSystem.RoboCopy>
 
 
@@ -495,10 +495,10 @@
 
 
 
-  <Target Name="CopySqlFilesToStagingDirectory">
+  <Target Name="CopySqlFilesToBuildDirectory">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToStagingDirectory'">CopySqlFilesToStagingDirectory</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToBuildDirectory'">CopySqlFilesToBuildDirectory</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -649,7 +649,7 @@
     <CallTarget Targets="BuildPayFlexSolution" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
 
-    <CallTarget Targets="CopyBuildFilesToStagingDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
     <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True'" />

@@ -42,7 +42,7 @@
     <!-- Specify the path of source code -->
     <SourceDir>$(RootDir)\Source</SourceDir>
     <!-- Specify the path to save build code -->
-    <StagingDir>$(RootDir)\Staging</StagingDir>
+    <BuildDir>$(RootDir)\Staging</BuildDir>
     <!-- Specify the path to copy build code on server -->
     <TargetDir>$(RootDir)\Target</TargetDir>
 
@@ -64,8 +64,8 @@
     <TempDir>$(RootDir)\temp</TempDir>
 
     
-    <BuildDirForApp>$(StagingDir)\$(AppFolderName)</BuildDirForApp>
-    <BuildDirForDbDeploy>$(StagingDir)\$(DbDeployScriptFolderName)</BuildDirForDbDeploy>
+    <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
+    <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptFolderName)</BuildDirForDbDeploy>
 
     <DeploymentDirForApp>$(DeploymentDir)\$(AppFolderName)</DeploymentDirForApp>
     

@@ -61,7 +61,7 @@
     <!--Source code Settings -->
 
     <!--Set value true to take source code backup else false -->
-    <AllowSourceCodeBackup>false</AllowSourceCodeBackup>
+    <SourceCodeBackup>true</SourceCodeBackup>
     <!--Set value true to overwrite source code if any changes else false -->
     <ForceSourceOverwrite>false</ForceSourceOverwrite>
 

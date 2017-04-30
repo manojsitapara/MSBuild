@@ -95,10 +95,10 @@
   </Target>
 
 
-  <Target Name="BackupSource" Condition="$(AllowSourceCodeBackup) == 'true'">
+  <Target Name="SourceBackup" Condition="$(SourceCodeBackup) == 'true'">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupSource'">BackupSource</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SourceBackup'">SourceBackup</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />

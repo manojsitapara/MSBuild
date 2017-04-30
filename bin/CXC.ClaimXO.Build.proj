@@ -640,7 +640,7 @@
     <CallTarget Targets="TargetBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="DownloadSourceFromSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="BackupSource" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="SourceBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
 
     <CallTarget Targets="BuildCXCEngineSolution" Condition="$(MSBuildLastTaskResult) == 'True'" />

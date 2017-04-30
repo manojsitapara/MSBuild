@@ -44,7 +44,7 @@
     <!-- Specify the path to save build code -->
     <BuildDir>$(RootDir)\Staging</BuildDir>
     <!-- Specify the path to copy build code on server -->
-    <TargetDir>$(RootDir)\Target</TargetDir>
+    <TargetDir>$(RootDir)\Destination</TargetDir>
 
 
 
@@ -55,7 +55,7 @@
     <!-- Specify the path to backup of database -->
     <DatabaseBackupDir>$(RootDir)\Backup\Database</DatabaseBackupDir>
     <!-- Specify the path to back up build code on server -->
-    <TargetBackupDir>$(RootDir)\Backup\Target</TargetBackupDir>
+    <TargetBackupDir>$(RootDir)\Backup\Destination</TargetBackupDir>
 
 
     <!--Specify the path for deployment directory (i.e. ready to run code) -->

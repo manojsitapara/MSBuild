@@ -637,7 +637,7 @@
     <CallTarget Targets="CreateFolderStructure" />
 
     <CallTarget Targets="DatabaseBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="TargetBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="DestinationBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="DownloadSourceFromSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
     <CallTarget Targets="SourceBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>

@@ -136,21 +136,21 @@
   </Target>
 
   
-  <Target Name="TargetBackup">
+  <Target Name="DestinationBackup">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='TargetBackup'">TargetBackup</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DestinationBackup'">DestinationBackup</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <Message Text="TargetBackup target has been started." />
+    <Message Text="DestinationBackup target has been started." />
     <!-- Create a zip file based on the FilesToZip collection -->
     <MSBuild.ExtensionPack.Compression.Zip
       TaskAction="Create"
       CompressPath="$(TargetDir)"
       ZipFileName="$(TargetBackupDir)\ClaimXO_$(CurrentDateTime).zip"/>
-    <Message Text="Target backup has been sucessfully completed at this location: $(TargetBackupDir)\ClaimXO_$(CurrentDateTime).zip"></Message>
+    <Message Text="DestinationBackup has been sucessfully completed at this location: $(TargetBackupDir)\ClaimXO_$(CurrentDateTime).zip"></Message>
     
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
     

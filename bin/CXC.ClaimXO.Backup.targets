@@ -128,7 +128,7 @@
     <MSBuild.ExtensionPack.Compression.Zip
       TaskAction="Create"
       CompressPath="$(DeploymentDir)"
-      ZipFileName="$(DeploymentBackupDir)\ClaimXO_$(CurrentDateTime).zip"/>
+      ZipFileName="$(DeploymentBackupDir)\ClaimXO_Current_$(CurrentDateTime).zip"/>
     <Message Text="Build backup has been sucessfully completed at this location: $(DeploymentBackup)\ClaimXO_$(CurrentDateTime).zip"></Message>
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
@@ -149,7 +149,7 @@
     <MSBuild.ExtensionPack.Compression.Zip
       TaskAction="Create"
       CompressPath="$(TargetDir)"
-      ZipFileName="$(TargetBackupDir)\ClaimXO_$(CurrentDateTime).zip"/>
+      ZipFileName="$(TargetBackupDir)\ClaimXO_Previous_$(CurrentDateTime).zip"/>
     <Message Text="DestinationBackup has been sucessfully completed at this location: $(TargetBackupDir)\ClaimXO_$(CurrentDateTime).zip"></Message>
     
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />

@@ -1,4 +1,4 @@
-Build started. 05/01/2017 14:50:37
+Build started. 05/01/2017 14:59:23
 __________________________________________________
 Project "C:\Users\manoj\OneDrive\Dev\POC\GitHub\MSBuild\bin\CXC.ClaimXO.Build.proj" (default target(s)):
 
@@ -27,18 +27,18 @@ Target Run:
 		============= DatabaseBackup target has been started. ============= 
 		Target SqlServer2012DatabaseBackup:
 			============= SqlServer2012DatabaseBackup target has been started. ============= 
-			Backing up SQL Database: MsbuildCXC to: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Database\MsbuildCXC_PreBuild_20170501_02_50_38.bak
+			Backing up SQL Database: MsbuildCXC to: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Database\MsbuildCXC_PreBuild_20170501_02_59_23.bak
 			11% done
 			21% done
 			30% done
 			40% done
-			52% done
+			51% done
 			61% done
-			71% done
+			70% done
 			80% done
 			92% done
 			100% done
-			Database backup has been sucessfully completed at this location: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Database\MsbuildCXC_PreBuild_20170501_02_50_38.bak
+			Database backup has been sucessfully completed at this location: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Database
 			============= SqlServer2012DatabaseBackup target has been completed. ============= 
 		Done building target "SqlServer2012DatabaseBackup" in project "C:\Users\manoj\OneDrive\Dev\POC\GitHub\MSBuild\bin\CXC.ClaimXO.Build.proj"
 		============= DatabaseBackup target has been completed. ============= 
@@ -46,8 +46,8 @@ Target Run:
 	Target DestinationBackup:
 		============= DestinationBackup target has been started. ============= 
 		DestinationBackup target has been started.
-		Creating ZipFile: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Destination\ClaimXO_PreBuild_20170501_02_50_38.zip
-		DestinationBackup has been sucessfully completed at this location: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Destination\ClaimXO_PreBuild_20170501_02_50_38.zip
+		Creating ZipFile: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Destination\ClaimXO_PreBuild_20170501_02_59_23.zip
+		DestinationBackup has been sucessfully completed at this location: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Destination\ClaimXO_PreBuild_20170501_02_59_23.zip
 		============= DestinationBackup target has been completed. ============= 
 	Done building target "DestinationBackup" in project "C:\Users\manoj\OneDrive\Dev\POC\GitHub\MSBuild\bin\CXC.ClaimXO.Build.proj"
 	Target DownloadSourceFromSVN:
@@ -2592,8 +2592,8 @@ Return Code 1. One or more files were copied successfully (that is, new files ha
 Done building target "CopyBuildFilesToDeploymentDir" in project "C:\Users\manoj\OneDrive\Dev\POC\GitHub\MSBuild\bin\CXC.ClaimXO.Build.proj"
 Target DeploymentBackup:
 Target DatabaseBackupCompiledAssembliesBackup has been started.
-Creating ZipFile: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Deployment\ClaimXO_PostBuild_20170501_02_50_38.zip
-Build backup has been sucessfully completed at this location: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Deployment\ClaimXO_PostBuild_20170501_02_50_38.zip
+Creating ZipFile: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Deployment\ClaimXO_PostBuild_20170501_02_59_23.zip
+Build backup has been sucessfully completed at this location: G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Backup\Deployment\ClaimXO_PostBuild_20170501_02_59_23.zip
 Done building target "DeploymentBackup" in project "C:\Users\manoj\OneDrive\Dev\POC\GitHub\MSBuild\bin\CXC.ClaimXO.Build.proj"
 Target CopyBuildFilesToTargetDir:
 ============= CopyBuildFilesToTargetDir target has been started. ============= 
@@ -2611,7 +2611,7 @@ Done building target "GenerateSqlScript" in project "C:\Users\manoj\OneDrive\Dev
 Target ExecuteSqlScript:
 ============= ExecuteSqlScript target has been started. ============= 
 Executing change script () on MsBuildDbDeploy ...
-Adding input file 'G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Deployment\DbDeployScript\dbDeploy_output_20170501_02_50_38.sql'
+Adding input file 'G:\MSBuildTesting\XOPayFlexProductionFromSeperateFile\Deployment\DbDeployScript\dbDeploy_output_20170501_02_59_23.sql'
 (1 rows affected)
 Changed database context to 'MsbuildCXC'.
 Msg 1934, Level 16, State 1, Server DESKTOP-BJ7IIE5, Line 9
@@ -2943,4 +2943,4 @@ Build succeeded.
 0 Error(s) 
 
 
-Time Elapsed 00:00:19.0870462
+Time Elapsed 00:00:20.5371556

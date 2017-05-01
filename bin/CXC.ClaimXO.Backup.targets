@@ -2,8 +2,7 @@
   
   
   <PropertyGroup>
-    <DatabaseBackupFileName>$(DatabaseName)_PreBuild_$(CurrentDateTime).bak</DatabaseBackupFileName>
-    <DatabaseBackupFile>$(DatabaseBackupDir)\$(DatabaseBackupFileName)</DatabaseBackupFile>
+    <DatabaseBackupFile>$(DatabaseBackupDir)\$(DatabaseName)_PreBuild_$(CurrentDateTime).bak</DatabaseBackupFile>
     <SourceBackupFile>$(SourceBackupDir)\ClaimXO_PreBuild_$(CurrentDateTime).zip</SourceBackupFile>
     <DeploymentBackupFile>$(DeploymentBackupDir)\ClaimXO_PostBuild_$(CurrentDateTime).zip</DeploymentBackupFile>
     <DestinationBackupFile>$(TargetBackupDir)\ClaimXO_PreBuild_$(CurrentDateTime).zip</DestinationBackupFile>
@@ -42,7 +41,7 @@
       MachineName="$(SqlServerName)"
       UserName="$(SqlServerUserName)"
       UserPassword="$(SqlServerPassword)"
-      DataFilePath="$(DatabaseBackupDir)" />
+      DataFilePath="$(DatabaseBackupFile)" />
     <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -67,7 +66,7 @@
       MachineName="$(SqlServerName)"
       UserName="$(SqlServerUserName)"
       UserPassword="$(SqlServerPassword)"
-      DataFilePath="$(DatabaseBackupDir)" />
+      DataFilePath="$(DatabaseBackupFile)" />
     <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -92,7 +91,7 @@
       MachineName="$(SqlServerName)"
       UserName="$(SqlServerUserName)"
       UserPassword="$(SqlServerPassword)"
-      DataFilePath="$(DatabaseBackupDir)" />
+      DataFilePath="$(DatabaseBackupFile)" />
     <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />

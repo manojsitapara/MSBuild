@@ -27,10 +27,6 @@
     <GeneratedAssemblyFileName Include="$(TempDir)\AssemblyVersionNumber.txt"/>
   </ItemGroup>
 
-
-
-
-
   <ItemGroup>
     <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
   </ItemGroup>
@@ -42,31 +38,26 @@
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CreateFolderStructure'">CreateFolderStructure</CurrentTargetName>
     </PropertyGroup>
 
-    <RemoveDir Directories="$(SourceDir)" Condition="$(ForceSourceOverwrite)== 'true'"/>
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
+    <RemoveDir Directories="$(SourceDir)" Condition="$(ForceSourceOverwrite)== 'true'"/>
 
     <MakeDir Directories="$(SourceDir)" Condition="!Exists('$(SourceDir)')"/>
     <MakeDir Directories="$(SourceBackupDir)" Condition="!Exists('$(SourceBackupDir)')"/>
 
     <MakeDir Directories="$(BuildDir)" Condition="!Exists('$(BuildDir)')"/>
-    <MakeDir Directories="$(DeploymentBackupDir)" Condition="!Exists('$(DeploymentBackupDir)')"/>
+    <MakeDir Directories="$(BuildDirForApp)" Condition="!Exists('$(BuildDirForApp)')"/>
+    <MakeDir Directories="$(BuildDirForDbDeploy)" Condition="!Exists('$(BuildDirForDbDeploy)')"/>
 
     <MakeDir Directories="$(DeploymentDir)" Condition="!Exists('$(DeploymentDir)')"/>
-
-    <MakeDir Directories="$(DatabaseBackupDir)" Condition="!Exists('$(DatabaseBackupDir)')"/>
+    <MakeDir Directories="$(DeploymentBackupDir)" Condition="!Exists('$(DeploymentBackupDir)')"/>
+    <MakeDir Directories="$(DeploymentDirForApp)" Condition="!Exists('$(DeploymentDirForApp)')"/>
+    <MakeDir Directories="$(DeploymentDirForDbDeploy)" Condition="!Exists('$(DeploymentDirForDbDeploy)')"/>
 
     <MakeDir Directories="$(TargetDir)" Condition="!Exists('$(TargetDir)')"/>
     <MakeDir Directories="$(TargetBackupDir)" Condition="!Exists('$(TargetBackupDir)')"/>
 
-
-
-    <MakeDir Directories="$(BuildDirForApp)" Condition="!Exists('$(BuildDirForApp)')"/>
-    <MakeDir Directories="$(BuildDirForDbDeploy)" Condition="!Exists('$(BuildDirForDbDeploy)')"/>
-
-
-    <MakeDir Directories="$(DeploymentDirForApp)" Condition="!Exists('$(DeploymentDirForApp)')"/>
-    <MakeDir Directories="$(DeploymentDirForDbDeploy)" Condition="!Exists('$(DeploymentDirForDbDeploy)')"/>
+    <MakeDir Directories="$(DatabaseBackupDir)" Condition="!Exists('$(DatabaseBackupDir)')"/>
 
     <MakeDir Directories="$(CXCCoreSchemaChangesSqlDir)" Condition="!Exists('$(CXCCoreSchemaChangesSqlDir)')"/>
     <MakeDir Directories="$(CXCCoreMetaChangesSqlDir)" Condition="!Exists('$(CXCCoreMetaChangesSqlDir)')"/>
@@ -80,10 +71,6 @@
     <MakeDir Directories="$(PayFlexMetaChangesSqlDir)" Condition="!Exists('$(PayFlexMetaChangesSqlDir)')"/>
     <MakeDir Directories="$(PayFlexDataChangesSqlDir)" Condition="!Exists('$(PayFlexDataChangesSqlDir)')"/>
 
-    
-
-    
-
     <MakeDir Directories="$(TempDir)" Condition="!Exists('$(TempDir))')"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -93,7 +80,6 @@
 
 
   <Target Name="DownloadSourceFromSVN">
-
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='DownloadSourceFromSVN'">DownloadSourceFromSVN</CurrentTargetName>
@@ -108,15 +94,13 @@
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </SvnCheckout>
 
-    <Message Text="Have got revision: $(Revision)"/>
-
+    <Message Text="Source code downloaded from svn with revision number: $(Revision)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-  </Target>
 
+  </Target>
 
 
   <Target Name="BuildCXCEngineSolution" >
@@ -130,16 +114,11 @@
     <MSBuild Projects="@(CXCEngineSolutionFile)"
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
-
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
-
-
   </Target>
-
 
 
   <Target Name="BuildGDISolution" Condition="$(BuildGDI)=='true'">
@@ -153,8 +132,6 @@
 
     <MSBuild Projects="@(GDISolutionFile)"
              Properties="@(UpdateAssemblyVersionTarget)"  Targets="Build"/>
-
-    <Message Text="Target BuildGDISolution has been completed" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -176,9 +153,6 @@
     <MSBuild Projects="@(PrimePaySolutionFile)"
              Properties="@(UpdateAssemblyVersionTarget)" Targets="Build"  />
 
-    <Message Text="Target BuildPrimePaySolution has been completed" />
-
-
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
@@ -198,9 +172,6 @@
 
     <MSBuild Projects="@(PayFlexSolutionFile)"
              Properties="@(UpdateAssemblyVersionTarget)"  Targets="Build"/>
-
-    <Message Text="Target BuildPayFlexSolution has been completed" />
-
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -226,6 +197,7 @@
           SkipUnchangedFiles="true" />
 
     <CallTarget Targets="CopyScriptFilesToBuildDir" />
+
     <CallTarget Targets="CopySqlFilesToBuildDirectory"/>
 
 
@@ -280,7 +252,7 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy Source="$(BuildDir)\$(AppFolderName)" Destination="$(DeploymentDir)\$(AppFolderName)" Files="*.*" Options="/MIR">
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy Source="$(BuildDirForApp)" Destination="$(DeploymentDirForApp)" Files="*.*" Options="/MIR">
     </MSBuild.ExtensionPack.FileSystem.RoboCopy>
 
 
@@ -512,7 +484,7 @@
       <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
     </ItemGroup>
 
-    
+
     <Copy SourceFiles="@(CXCCoreMetaFiles)"
        DestinationFolder="$(CXCCoreMetaChangesSqlDir)\%(RecursiveDir)"
        SkipUnchangedFiles="true"  Condition="$(CopyCXCCoreMetaChangeSql) == 'true' "/>
@@ -522,7 +494,7 @@
         DestinationFolder="$(CXCCoreSchemaChangesSqlDir)\%(RecursiveDir)"
         SkipUnchangedFiles="true" />
 
-    
+
     <Copy SourceFiles="@(GDIMetaFiles)"
 			  	DestinationFolder="$(GDIMetaChangesSqlDir)\%(RecursiveDir)"
           SkipUnchangedFiles="true" Condition="$(BuildGDI)=='true'" />
@@ -563,6 +535,12 @@
 
   <Target Name="CreateSVNLabel" Condition="$(CreateSVNLabel) == 'True'">
 
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CreateSVNLabel'">CreateSVNLabel</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
     <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
       <Output TaskParameter="Lines" ItemName="AssemblyVersionNumber" />
     </ReadLinesFromFile>
@@ -571,6 +549,10 @@
       DestinationPath="$(SVNTagURL)/MSBuild_Testing_$(CurrentDate)_@(AssemblyVersionNumber)"
       Message="$(CurrentDate)_@(AssemblyVersionNumber)"
       Username="$(SvnUsername)" password="$(SvnPassword)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
 
@@ -584,10 +566,10 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-    <MSBuild.ExtensionPack.SqlServer.SqlExecute 
-      TaskAction="ExecuteScalar" 
-      UseTransaction="false" 
-      Sql="select max(ScriptNumber) from $(DatabaseChangeLogTableName) where Folder='Dummy' " 
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute
+      TaskAction="ExecuteScalar"
+      UseTransaction="false"
+      Sql="select max(ScriptNumber) from $(DatabaseChangeLogTableName) where Folder='Dummy' "
       ConnectionString="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword);Integrated Security=True">
       <Output PropertyName="MaxAssemblyScriptNumber" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
@@ -603,7 +585,7 @@
       <Output TaskParameter="Lines" ItemName="AssemblyVersionNumber" />
     </ReadLinesFromFile>
 
-    
+
     <GenerateSqlFileForAssemblyVersion
      DbDeployDatabaseName="$(dbDeployDBName)"
      SqlFilePath="$(TempDir)\Insert_AssemblyVersionNumber.sql"
@@ -611,30 +593,32 @@
      FileIndexNumber="$(NextFileNumber)"
      AssemblyVersionNumber="@(AssemblyVersionNumber)" />
 
-    <MSBuild.ExtensionPack.SqlServer.SqlCmd 
-      TaskAction="Execute" Server="$(SqlServerName)" 
-      Database="$(dbDeployDBName)" 
-      LogOn="$(SqlServerUserName)" 
-      Password="$(SqlServerPassword)" 
-      InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"  
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd
+      TaskAction="Execute" Server="$(SqlServerName)"
+      Database="$(dbDeployDBName)"
+      LogOn="$(SqlServerUserName)"
+      Password="$(SqlServerPassword)"
+      InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"
       Condition="$(IsSqlWindowsAuthentication)=='false'"/>
 
-    <MSBuild.ExtensionPack.SqlServer.SqlCmd 
-      TaskAction="Execute" 
-      Server="$(SqlServerName)" 
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd
+      TaskAction="Execute"
+      Server="$(SqlServerName)"
       Database="$(dbDeployDBName)"
-      InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"  
+      InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"
       Condition="$(IsSqlWindowsAuthentication)=='true'"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CleanTempFolder">
-    
+
     <RemoveDir Directories="$(TempDir)" />
-    
+
   </Target>
-  
+
 
   <Target Name="Run">
 
@@ -672,7 +656,7 @@
     <CallTarget Targets="CreateSVNLabel" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="CleanTempFolder"></CallTarget>
-    
+
   </Target>
 
 

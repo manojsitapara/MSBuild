@@ -25,16 +25,6 @@
 
     <CurrentTargetName></CurrentTargetName>
 
-    <GDIMetaFolderName>1.GDI_MetaChanges</GDIMetaFolderName>
-    <GDIDataChangesFolderName>2.GDI_DataChanges</GDIDataChangesFolderName>
-    <PayFlexMetaFolderName>1.PayFlex_MetaChanges</PayFlexMetaFolderName>
-    <PayFlexDataChangesFolderName>2.PayFlex_DataChanges</PayFlexDataChangesFolderName>
-    <PrimePayMetaFolderName>1.PrimePay_MetaChanges</PrimePayMetaFolderName>
-    <PrimePayDataChangesFolderName>2.PrimePay_DataChanges</PrimePayDataChangesFolderName>
-    <CoreSchemaChangesFolderName>1.CXCCore_SchemaChanges</CoreSchemaChangesFolderName>
-    <CoreMetaFolderName>2.CXCCore_Meta</CoreMetaFolderName>
-
-    
     <CurrentDateTime>$([System.DateTime]::Now.ToString(yyyyMMdd_hh_mm_ss))</CurrentDateTime>
     <CurrentDate>$([System.DateTime]::Now.ToString(yyyyMMdd))</CurrentDate>
 
@@ -71,6 +61,18 @@
     
     <DeploymentDirForDbDeploy>$(DeploymentDir)\$(DbDeployScriptFolderName)</DeploymentDirForDbDeploy>
 
+    
+    <CXCCoreSchemaChangesSqlDir>$(BuildDirForDbDeploy)\CXCCore\1.CXCCore_SchemaChanges</CXCCoreSchemaChangesSqlDir>
+    <CXCCoreMetaChangesSqlDir>$(BuildDirForDbDeploy)\CXCCore\2.CXCCore_Meta</CXCCoreMetaChangesSqlDir>
+    
+    <GDIMetaChangesSqlDir>$(BuildDirForDbDeploy)\GDI\1.GDI_MetaChanges</GDIMetaChangesSqlDir>
+    <GDIDataChangesSqlDir>$(BuildDirForDbDeploy)\GDI\2.GDI_DataChanges</GDIDataChangesSqlDir>
+    
+    <PrimePayMetaChangesSqlDir>$(BuildDirForDbDeploy)\PrimePay\1.PrimePay_MetaChanges</PrimePayMetaChangesSqlDir>
+    <PrimePayDataChangesSqlDir>$(BuildDirForDbDeploy)\PrimePay\2.PrimePay_DataChanges</PrimePayDataChangesSqlDir>
+    
+    <PayFlexMetaChangesSqlDir>$(BuildDirForDbDeploy)\PayFlex\1.PayFlex_MetaChanges</PayFlexMetaChangesSqlDir>
+    <PayFlexDataChangesSqlDir>$(BuildDirForDbDeploy)\PayFlex\2.PayFlex_DataChanges</PayFlexDataChangesSqlDir>
 
     <!--TODO: Make group of related property together-->
     <XmlPreprocessorCleanFile>true</XmlPreprocessorCleanFile>

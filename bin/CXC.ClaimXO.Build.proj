@@ -61,8 +61,6 @@
 
 
 
-
-
     <MakeDir Directories="$(BuildDirForApp)" Condition="!Exists('$(BuildDirForApp)')"/>
     <MakeDir Directories="$(BuildDirForDbDeploy)" Condition="!Exists('$(BuildDirForDbDeploy)')"/>
 
@@ -70,19 +68,19 @@
     <MakeDir Directories="$(DeploymentDirForApp)" Condition="!Exists('$(DeploymentDirForApp)')"/>
     <MakeDir Directories="$(DeploymentDirForDbDeploy)" Condition="!Exists('$(DeploymentDirForDbDeploy)')"/>
 
+    <MakeDir Directories="$(CXCCoreSchemaChangesSqlDir)" Condition="!Exists('$(CXCCoreSchemaChangesSqlDir)')"/>
+    <MakeDir Directories="$(CXCCoreMetaChangesSqlDir)" Condition="!Exists('$(CXCCoreMetaChangesSqlDir)')"/>
 
+    <MakeDir Directories="$(GDIMetaChangesSqlDir)" Condition="!Exists('$(GDIMetaChangesSqlDir)')"/>
+    <MakeDir Directories="$(GDIDataChangesSqlDir)" Condition="!Exists('$(GDIDataChangesSqlDir)')"/>
 
-    <MakeDir Directories="$(BuildDirForDbDeploy)\GDI\$(GDIMetaFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\GDI\$(GDIMetaFolderName)')"/>
-    <MakeDir Directories="$(BuildDirForDbDeploy)\GDI\$(GDIDataChangesFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\GDI\$(GDIDataChangesFolderName)')"/>
+    <MakeDir Directories="$(PrimePayDataChangesSqlDir)" Condition="!Exists('$(PrimePayDataChangesSqlDir)')"/>
+    <MakeDir Directories="$(PrimePayMetaChangesSqlDir)" Condition="!Exists('$(PrimePayMetaChangesSqlDir)')"/>
 
-    <MakeDir Directories="$(BuildDirForDbDeploy)\PrimePay\$(PrimePayMetaFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\PrimePay\$(PrimePayMetaFolderName)')"/>
-    <MakeDir Directories="$(BuildDirForDbDeploy)\PrimePay\$(PrimePayDataChangesFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\PrimePay\$(PrimePayDataChangesFolderName)')"/>
+    <MakeDir Directories="$(PayFlexMetaChangesSqlDir)" Condition="!Exists('$(PayFlexMetaChangesSqlDir)')"/>
+    <MakeDir Directories="$(PayFlexDataChangesSqlDir)" Condition="!Exists('$(PayFlexDataChangesSqlDir)')"/>
 
-    <MakeDir Directories="$(BuildDirForDbDeploy)\PayFlex\$(PayFlexMetaFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\PayFlex\$(PayFlexMetaFolderName)')"/>
-    <MakeDir Directories="$(BuildDirForDbDeploy)\PayFlex\$(PayFlexDataChangesFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\PayFlex\$(PayFlexDataChangesFolderName)')"/>
-
-    <MakeDir Directories="$(BuildDirForDbDeploy)\CXCCore\$(CoreSchemaChangesFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\CXCCore\$(CoreSchemaChangesFolderName)')"/>
-    <MakeDir Directories="$(BuildDirForDbDeploy)\CXCCore\$(CoreMetaFolderName)" Condition="!Exists('$(BuildDirForDbDeploy)\CXCCore\$(CoreMetaFolderName)')"/>
+    
 
     
 
@@ -514,49 +512,47 @@
       <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
     </ItemGroup>
 
+    
+    <Copy SourceFiles="@(CXCCoreMetaFiles)"
+       DestinationFolder="$(CXCCoreMetaChangesSqlDir)\%(RecursiveDir)"
+       SkipUnchangedFiles="true"  Condition="$(CopyCXCCoreMetaChangeSql) == 'true' "/>
+
+
+    <Copy SourceFiles="@(CXCCoreSchemaChangesFiles)"
+        DestinationFolder="$(CXCCoreSchemaChangesSqlDir)\%(RecursiveDir)"
+        SkipUnchangedFiles="true" />
+
+    
     <Copy SourceFiles="@(GDIMetaFiles)"
-			  	DestinationFolder="$(BuildDirForDbDeploy)\GDI\$(GDIMetaFolderName)\%(RecursiveDir)"
+			  	DestinationFolder="$(GDIMetaChangesSqlDir)\%(RecursiveDir)"
           SkipUnchangedFiles="true" Condition="$(BuildGDI)=='true'" />
 
 
     <Copy SourceFiles="@(GDIDataChangesFiles)"
-      DestinationFolder="$(BuildDirForDbDeploy)\GDI\$(GDIDataChangesFolderName)\%(RecursiveDir)"
+      DestinationFolder="$(GDIDataChangesSqlDir)\%(RecursiveDir)"
       SkipUnchangedFiles="true" Condition="$(BuildGDI)=='true'" />
 
 
 
     <Copy SourceFiles="@(PrimePayMetaFiles)"
-     DestinationFolder="$(BuildDirForDbDeploy)\PrimePay\$(PrimePayMetaFolderName)\%(RecursiveDir)"
+     DestinationFolder="$(PrimePayMetaChangesSqlDir)\%(RecursiveDir)"
      SkipUnchangedFiles="true" Condition="$(BuildPrimePay)=='true'" />
 
 
     <Copy SourceFiles="@(PrimePayDataChangesFiles)"
-    DestinationFolder="$(BuildDirForDbDeploy)\PrimePay\$(PrimePayDataChangesFolderName)\%(RecursiveDir)"
+    DestinationFolder="$(PrimePayDataChangesSqlDir)\%(RecursiveDir)"
     SkipUnchangedFiles="true" Condition="$(BuildPrimePay)=='true'" />
 
 
 
     <Copy SourceFiles="@(PayFlexMetaFiles)"
-        DestinationFolder="$(BuildDirForDbDeploy)\PayFlex\$(PayFlexMetaFolderName)\%(RecursiveDir)"
+        DestinationFolder="$(PayFlexMetaChangesSqlDir)\%(RecursiveDir)"
         SkipUnchangedFiles="true" Condition="$(BuildPayFlex)=='true'" />
 
 
     <Copy SourceFiles="@(PayFlexDataChangesFiles)"
-        DestinationFolder="$(BuildDirForDbDeploy)\PayFlex\$(PayFlexDataChangesFolderName)\%(RecursiveDir)"
+        DestinationFolder="$(PayFlexDataChangesSqlDir)\%(RecursiveDir)"
         SkipUnchangedFiles="true" Condition="$(BuildPayFlex)=='true'" />
-
-
-    <Copy SourceFiles="@(CXCCoreMetaFiles)"
-       DestinationFolder="$(BuildDirForDbDeploy)\CXCCore\$(CoreMetaFolderName)\%(RecursiveDir)"
-       SkipUnchangedFiles="true"  Condition="$(CopyCXCCoreMetaChangeSql) == 'true' "/>
-
-
-    <Copy SourceFiles="@(CXCCoreSchemaChangesFiles)"
-        DestinationFolder="$(BuildDirForDbDeploy)\CXCCore\$(CoreSchemaChangesFolderName)\%(RecursiveDir)"
-        SkipUnchangedFiles="true" />
-
-
-
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />

@@ -3,6 +3,10 @@
   
   <PropertyGroup>
     <DatabaseBackupFileName>$(DatabaseName)_PreBuild_$(CurrentDateTime).bak</DatabaseBackupFileName>
+    <DatabaseBackupFile>$(DatabaseBackupDir)\$(DatabaseBackupFileName)</DatabaseBackupFile>
+    <SourceBackupFile>$(SourceBackupDir)\ClaimXO_PreBuild_$(CurrentDateTime).zip</SourceBackupFile>
+    <DeploymentBackupFile>$(DeploymentBackupDir)\ClaimXO_PostBuild_$(CurrentDateTime).zip</DeploymentBackupFile>
+    <DestinationBackupFile>$(TargetBackupDir)\ClaimXO_PreBuild_$(CurrentDateTime).zip</DestinationBackupFile>
   </PropertyGroup>
 
   <Target Name="DatabaseBackup">
@@ -38,8 +42,8 @@
       MachineName="$(SqlServerName)"
       UserName="$(SqlServerUserName)"
       UserPassword="$(SqlServerPassword)"
-      DataFilePath="$(DatabaseBackupDir)\$(DatabaseName)_$(CurrentDateTime).bak" />
-    <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)\$(DatabaseName)_$(CurrentDateTime).bak"></Message>
+      DataFilePath="$(DatabaseBackupDir)" />
+    <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -63,8 +67,8 @@
       MachineName="$(SqlServerName)"
       UserName="$(SqlServerUserName)"
       UserPassword="$(SqlServerPassword)"
-      DataFilePath="$(DatabaseBackupDir)\$(DatabaseBackupFileName)" />
-    <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)\$(DatabaseName)_$(CurrentDateTime).bak"></Message>
+      DataFilePath="$(DatabaseBackupDir)" />
+    <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -88,8 +92,8 @@
       MachineName="$(SqlServerName)"
       UserName="$(SqlServerUserName)"
       UserPassword="$(SqlServerPassword)"
-      DataFilePath="$(DatabaseBackupDir)\$(DatabaseName)_$(CurrentDateTime).bak" />
-    <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)\$(DatabaseName)_$(CurrentDateTime).bak"></Message>
+      DataFilePath="$(DatabaseBackupDir)" />
+    <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -111,8 +115,8 @@
     <MSBuild.ExtensionPack.Compression.Zip
       TaskAction="Create"
       CompressPath="$(SourceDir)"
-      ZipFileName="$(SourceBackupDir)\ClaimXO_PreBuild_$(CurrentDateTime).zip"/>
-    <Message Text="Source code backup has been sucessfully completed at this location: $(SourceBackupDir)\ClaimXO_$(CurrentDateTime).zip"></Message>
+      ZipFileName="$(SourceBackupFile)"/>
+    <Message Text="Source code backup has been sucessfully completed at this location: $(SourceBackupFile)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
     
@@ -132,8 +136,8 @@
     <MSBuild.ExtensionPack.Compression.Zip
       TaskAction="Create"
       CompressPath="$(DeploymentDir)"
-      ZipFileName="$(DeploymentBackupDir)\ClaimXO_PostBuild_$(CurrentDateTime).zip"/>
-    <Message Text="Build backup has been sucessfully completed at this location: $(DeploymentBackup)\ClaimXO_$(CurrentDateTime).zip"></Message>
+      ZipFileName="$(DeploymentBackupFile)"/>
+    <Message Text="Build backup has been sucessfully completed at this location: $(DeploymentBackupFile)"></Message>
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
@@ -149,12 +153,13 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <Message Text="DestinationBackup target has been started." />
-    <!-- Create a zip file based on the FilesToZip collection -->
+
     <MSBuild.ExtensionPack.Compression.Zip
       TaskAction="Create"
       CompressPath="$(TargetDir)"
-      ZipFileName="$(TargetBackupDir)\ClaimXO_PreBuild_$(CurrentDateTime).zip"/>
-    <Message Text="DestinationBackup has been sucessfully completed at this location: $(TargetBackupDir)\ClaimXO_$(CurrentDateTime).zip"></Message>
+      ZipFileName="$(DestinationBackupFile)"/>
+    
+    <Message Text="DestinationBackup has been sucessfully completed at this location: $(DestinationBackupFile)"></Message>
     
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
     

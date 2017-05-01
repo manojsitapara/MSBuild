@@ -3,8 +3,8 @@
 
   <PropertyGroup>
     <Environment>PayFlexProduction</Environment>
-    <SVNSourceURL></SVNSourceURL>
-    <SVNTagURL></SVNTagURL>
+    <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
+    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
     <SvnUsername></SvnUsername>
     <SvnPassword></SvnPassword>
   </PropertyGroup>

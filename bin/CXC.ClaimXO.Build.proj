@@ -584,7 +584,11 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteScalar" UseTransaction="false" Sql="select max(ScriptNumber) from $(DatabaseChangeLogTableName) where Folder='Dummy' " ConnectionString="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword);Integrated Security=True">
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute 
+      TaskAction="ExecuteScalar" 
+      UseTransaction="false" 
+      Sql="select max(ScriptNumber) from $(DatabaseChangeLogTableName) where Folder='Dummy' " 
+      ConnectionString="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword);Integrated Security=True">
       <Output PropertyName="MaxAssemblyScriptNumber" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
     <Message Text="$(MaxAssemblyScriptNumber)"></Message>
@@ -593,15 +597,13 @@
     <MSBuild.ExtensionPack.Science.Maths TaskAction="Add" Numbers="$(MaxAssemblyScriptNumber);1">
       <Output PropertyName="NextFileNumber" TaskParameter="Result"/>
     </MSBuild.ExtensionPack.Science.Maths>
-    <Message Text="Max Number: $(NextFileNumber)"></Message>
 
 
     <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
       <Output TaskParameter="Lines" ItemName="AssemblyVersionNumber" />
     </ReadLinesFromFile>
 
-    <Message Text="$(CurrentDate)_@(AssemblyVersionNumber)"></Message>
-
+    
     <GenerateSqlFileForAssemblyVersion
      DbDeployDatabaseName="$(dbDeployDBName)"
      SqlFilePath="$(TempDir)\Insert_AssemblyVersionNumber.sql"
@@ -609,13 +611,20 @@
      FileIndexNumber="$(NextFileNumber)"
      AssemblyVersionNumber="@(AssemblyVersionNumber)" />
 
-    <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="$(SqlServerName)" Database="$(dbDeployDBName)" LogOn="$(SqlServerUserName)" Password="$(SqlServerPassword)" InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"  Condition="$(IsSqlWindowsAuthentication)=='false'"/>
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd 
+      TaskAction="Execute" Server="$(SqlServerName)" 
+      Database="$(dbDeployDBName)" 
+      LogOn="$(SqlServerUserName)" 
+      Password="$(SqlServerPassword)" 
+      InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"  
+      Condition="$(IsSqlWindowsAuthentication)=='false'"/>
 
-    <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="$(SqlServerName)" Database="$(dbDeployDBName)"
-                                            InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"  Condition="$(IsSqlWindowsAuthentication)=='true'"/>
-
-
-    
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd 
+      TaskAction="Execute" 
+      Server="$(SqlServerName)" 
+      Database="$(dbDeployDBName)"
+      InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"  
+      Condition="$(IsSqlWindowsAuthentication)=='true'"/>
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>

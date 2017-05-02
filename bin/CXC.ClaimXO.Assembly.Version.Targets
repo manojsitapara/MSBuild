@@ -56,7 +56,6 @@
   </Target>
 
 
-
   <Target Name="GetNewAssemblyVersionNumberFromSql">
 
     <PropertyGroup>
@@ -84,7 +83,6 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-
 
   
   <Target Name="GetNewAssemblyVersionNumberFromPropertyFile">
@@ -118,8 +116,6 @@
 
 
   </Target>
-
-
 
 
   <!--SetNewAssemblyVersion target use to set new assemly version number -->
@@ -157,10 +153,6 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-
-
-  
-
 
 
 </Project>

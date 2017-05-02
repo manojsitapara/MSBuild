@@ -8,6 +8,7 @@
     <DestinationBackupFile>$(TargetBackupDir)\ClaimXO_PreBuild_$(CurrentDateTime).zip</DestinationBackupFile>
   </PropertyGroup>
 
+  
   <Target Name="DatabaseBackup">
 
     <PropertyGroup>

@@ -34,9 +34,6 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
-
-  
-  
   
   <Target Name="ExecuteSqlScript" DependsOnTargets="GenerateSqlScript">
     

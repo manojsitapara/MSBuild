@@ -6,7 +6,6 @@
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='GenerateSqlScript'">GenerateSqlScript</CurrentTargetName>
       <DbDeployOutputFileName>$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployOutputFileName>
       <DbDeployUndoOutputFileName>$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_undo_$(CurrentDateTime).sql</DbDeployUndoOutputFileName>
-      
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -40,11 +39,13 @@
   
   
   <Target Name="ExecuteSqlScript" DependsOnTargets="GenerateSqlScript">
+    
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='ExecuteSqlScript'">ExecuteSqlScript</CurrentTargetName>
     </PropertyGroup>
     
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+    
     <Message Text="Executing change script ($(GenerateOutputSqlFileName)) on $(dbDeployDBName) ..."/>
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd 

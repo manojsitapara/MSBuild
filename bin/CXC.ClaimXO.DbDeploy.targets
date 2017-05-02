@@ -13,7 +13,8 @@
 
     <MSBuild.ExtensionPack.FileSystem.Folder
             TaskAction="RemoveContent" 
-            Path="$(DeploymentDir)\$(DbDeployScriptFolderName)"/>
+            Path="$(DeploymentDirForDbDeploy)"/>
+    
     
     <MSBuild.Dbdeploy.Task.Dbdeploy
             DbType="mssql"

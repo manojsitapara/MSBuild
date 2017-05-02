@@ -43,7 +43,7 @@
       TaskAction="ExecuteScalar" 
       UseTransaction="true" 
       Sql="select case when exists((select * from information_schema.tables where table_name = '$(DatabaseChangeLogTableName)')) then 1 else 0 end" 
-      ConnectionString="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword);Integrated Security=True">
+      ConnectionString="$(DatabaseConnectionString)">
       <Output PropertyName="IsTableExist" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
     <Message Text="Table status: $(IsTableExist)"></Message>
@@ -67,7 +67,7 @@
       TaskAction="ExecuteScalar" 
       UseTransaction="true" 
       Sql="select top 1  ScriptOutput from $(DatabaseChangeLogTableName) where ScriptOutput!=''  order by CompleteDate desc" 
-      ConnectionString="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword);Integrated Security=True">
+      ConnectionString="$(DatabaseConnectionString)">
       <Output PropertyName="PreviousAssemblyVersionNumber" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
     <Message Text="Previous Assembly version number was: $(PreviousAssemblyVersionNumber)"></Message>

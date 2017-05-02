@@ -570,7 +570,7 @@
       TaskAction="ExecuteScalar"
       UseTransaction="false"
       Sql="select max(ScriptNumber) from $(DatabaseChangeLogTableName) where Folder='Dummy' "
-      ConnectionString="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword);Integrated Security=True">
+      ConnectionString="$(DatabaseConnectionString)">
       <Output PropertyName="MaxAssemblyScriptNumber" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
     <Message Text="$(MaxAssemblyScriptNumber)"></Message>

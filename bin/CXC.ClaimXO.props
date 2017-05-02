@@ -78,6 +78,10 @@
     <XmlPreprocessorCleanFile>true</XmlPreprocessorCleanFile>
     <XmlPreprocessorValidateFile>true</XmlPreprocessorValidateFile>
     
+    
+    <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);Integrated Security=SSPI</DatabaseConnectionString>
+    <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword)</DatabaseConnectionString>
+      
 
   </PropertyGroup>
 

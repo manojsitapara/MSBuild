@@ -8,7 +8,7 @@
     <EmailTaskLibrary>..\lib\EmailUtility.dll</EmailTaskLibrary>
     <FindAndReplaceTaskLibrary>..\lib\ReplaceValueInFile.dll</FindAndReplaceTaskLibrary>
     <MicrosoftBuildTasks>..\lib\Microsoft.Build.Tasks.v4.0.dll</MicrosoftBuildTasks>
-    <DbDeployTemplateDirectory>..\lib\Resources</DbDeployTemplateDirectory>
+    <DbDeployTemplateDir>..\lib\Resources</DbDeployTemplateDir>
     <ConfigValuesSpreadsheetFileLocation>..\lib\SettingsSpreadsheet\SettingsSpreadsheet.xls</ConfigValuesSpreadsheetFileLocation>
     <CommandFileTransformationLibrary>..\lib\CXC.CommandFileTransformation.dll</CommandFileTransformationLibrary>
     <XmlPreProcessorLibrary>..\lib\XmlPreprocess.MSBuildTasks.dll</XmlPreProcessorLibrary>

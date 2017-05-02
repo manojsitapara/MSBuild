@@ -6,6 +6,7 @@
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='GenerateSqlScript'">GenerateSqlScript</CurrentTargetName>
       <DbDeployOutputFileName>$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployOutputFileName>
       <DbDeployUndoOutputFileName>$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_undo_$(CurrentDateTime).sql</DbDeployUndoOutputFileName>
+      
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -18,26 +19,16 @@
     
     <MSBuild.Dbdeploy.Task.Dbdeploy
             DbType="mssql"
-            templatedir="$(DbDeployTemplateDirectory)"
-            DbConnection="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);Integrated Security=SSPI"
+            templatedir="$(DbDeployTemplateDir)"
+            DbConnection="$(DatabaseConnectionString)"
             Dir="$(BuildDirForDbDeploy)"
             OutputFile="$(DbDeployOutputFileName)"
             UndoOutputFile="$(DbDeployUndoOutputFileName)"
             TableName="$(DatabaseChangeLogTableName)"
             AutoCreateChangeLogTable="true"
-            forceUpdate="true" Condition="$(IsSqlWindowsAuthentication)=='true'" />
+            forceUpdate="true"  />
 
 
-    <MSBuild.Dbdeploy.Task.Dbdeploy
-				   DbType="mssql"
-           templatedir="$(DbDeployTemplateDirectory)"
-				   DbConnection="Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword)"
-				   Dir="$(BuildDirForDbDeploy)"
-				   OutputFile="$(DbDeployOutputFileName)"
-				   UndoOutputFile="$(DbDeployUndoOutputFileName)"
-           TableName="$(DatabaseChangeLogTableName)"
-           AutoCreateChangeLogTable="true"
-           forceUpdate="true" Condition="$(IsSqlWindowsAuthentication)=='false'" />
     
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 

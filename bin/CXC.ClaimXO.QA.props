@@ -31,7 +31,7 @@
     <!--Set value to true, if windows authentication required-->
     <IsSqlWindowsAuthentication>true</IsSqlWindowsAuthentication>
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
-    <SqlServerVersion>2008</SqlServerVersion>
+    <SqlServerVersion>2012</SqlServerVersion>
     <!--Specify Sql server name-->
     <SqlServerName>(local)</SqlServerName>
 

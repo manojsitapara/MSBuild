@@ -535,6 +535,16 @@
                                VariableColumnName="Environment Name" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
+    
+    
+     <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+                               TabName="EnvSetting"
+                               Environment ="$(Environment)"
+                               InputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
+                               OutputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
+                               VariableColumnName="Environment Name" >
+      <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
+    </CommandFileTransformation>
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />

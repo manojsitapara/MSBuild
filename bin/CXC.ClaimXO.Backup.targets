@@ -156,7 +156,7 @@
 
     <MSBuild.ExtensionPack.Compression.Zip
       TaskAction="Create"
-      CompressPath="$(TargetDir)"
+      CompressPath="$(DestinationDir)"
       ZipFileName="$(DestinationBackupFile)"/>
     
     <Message Text="DestinationBackup has been sucessfully completed at this location: $(DestinationBackupFile)"></Message>

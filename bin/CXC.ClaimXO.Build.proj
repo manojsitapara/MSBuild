@@ -55,7 +55,7 @@
     <MakeDir Directories="$(DeploymentDirForApp)" Condition="!Exists('$(DeploymentDirForApp)')"/>
     <MakeDir Directories="$(DeploymentDirForDbDeploy)" Condition="!Exists('$(DeploymentDirForDbDeploy)')"/>
 
-    <MakeDir Directories="$(TargetDir)" Condition="!Exists('$(TargetDir)')"/>
+    <MakeDir Directories="$(DestinationDir)" Condition="!Exists('$(DestinationDir)')"/>
     <MakeDir Directories="$(TargetBackupDir)" Condition="!Exists('$(TargetBackupDir)')"/>
 
     <MakeDir Directories="$(DatabaseBackupDir)" Condition="!Exists('$(DatabaseBackupDir)')"/>
@@ -261,16 +261,16 @@
   </Target>
 
 
-  <Target Name="CopyBuildFilesToTargetDir">
+  <Target Name="CopyBuildFilesToDestinationDir">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToTargetDir'">CopyBuildFilesToTargetDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToDestinationDir'">CopyBuildFilesToDestinationDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy Source="$(DeploymentDirForApp)" Destination="$(TargetDir)" Files="*.*" Options="/MIR">
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy Source="$(DeploymentDirForApp)" Destination="$(DestinationDir)" Files="*.*" Options="/MIR">
     </MSBuild.ExtensionPack.FileSystem.RoboCopy>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -737,7 +737,7 @@
 
     <CallTarget Targets="DeploymentBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
-    <CallTarget Targets="CopyBuildFilesToTargetDir"  Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="DatabaseDeployment" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 

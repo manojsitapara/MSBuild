@@ -34,7 +34,7 @@
     <!-- Specify the path to save build code -->
     <BuildDir>$(RootDir)\Staging</BuildDir>
     <!-- Specify the path to copy build code on server -->
-    <TargetDir>$(RootDir)\Destination</TargetDir>
+    <DestinationDir>$(RootDir)\Destination</DestinationDir>
 
 
 

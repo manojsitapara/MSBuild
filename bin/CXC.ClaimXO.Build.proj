@@ -198,7 +198,7 @@
 
     <CallTarget Targets="CopyScriptFilesToBuildDir" />
 
-    <CallTarget Targets="CopySqlFilesToBuildDirectory"/>
+    <CallTarget Targets="CopySqlFilesToBuildDir"/>
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -555,10 +555,10 @@
   </Target>
 
 
-  <Target Name="CopySqlFilesToBuildDirectory">
+  <Target Name="CopySqlFilesToBuildDir">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToBuildDirectory'">CopySqlFilesToBuildDirectory</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToBuildDir'">CopySqlFilesToBuildDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />

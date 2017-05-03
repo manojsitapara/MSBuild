@@ -27,7 +27,7 @@
     <GeneratedAssemblyFileName Include="$(TempDir)\AssemblyVersionNumber.txt"/>
   </ItemGroup>
 
-  
+
   <ItemGroup>
     <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
   </ItemGroup>
@@ -660,49 +660,48 @@
       UseTransaction="false"
       Sql="select max(ScriptNumber) from $(DatabaseChangeLogTableName) where Folder='Dummy' "
       ConnectionString="$(DatabaseConnectionString)">
-      <Output PropertyName="MaxAssemblyScriptNumber" TaskParameter="ScalarResult"/>
+      <Output PropertyName="MaxScriptNumber" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
-    <Message Text="$(MaxAssemblyScriptNumber)"></Message>
+    
 
-
-    <MSBuild.ExtensionPack.Science.Maths TaskAction="Add" Numbers="$(MaxAssemblyScriptNumber);1">
-      <Output PropertyName="NextFileNumber" TaskParameter="Result"/>
+    <MSBuild.ExtensionPack.Science.Maths TaskAction="Add" Numbers="$(MaxScriptNumber);1">
+      <Output PropertyName="NextScriptNumber" TaskParameter="Result"/>
     </MSBuild.ExtensionPack.Science.Maths>
 
 
     <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
-      <Output TaskParameter="Lines" ItemName="AssemblyVersionNumber" />
+      <Output TaskParameter="Lines" PropertyName="AssemblyVersionNumber" />
     </ReadLinesFromFile>
 
-
-    <GenerateSqlFileForAssemblyVersion
-     DbDeployDatabaseName="$(dbDeployDBName)"
-     SqlFilePath="$(TempDir)\Insert_AssemblyVersionNumber.sql"
-     ChangeLogTableName="$(DatabaseChangeLogTableName)"
-     FileIndexNumber="$(NextFileNumber)"
-     AssemblyVersionNumber="@(AssemblyVersionNumber)" />
-
+    <PropertyGroup>
+      <CommandLineSqlForInsertNewAssemblyVersionNumber>Use $(dbDeployDBName) INSERT INTO $(DatabaseChangeLogTableName) VALUES('Dummy', $(NextScriptNumber), 'DummyScript', GETDATE(), GETDATE(),'dbo','1',  '$(AssemblyVersionNumber)' )</CommandLineSqlForInsertNewAssemblyVersionNumber>
+    </PropertyGroup>
+    
     <MSBuild.ExtensionPack.SqlServer.SqlCmd
-      TaskAction="Execute" Server="$(SqlServerName)"
+      TaskAction="Execute"
+      Server="$(SqlServerName)"
       Database="$(dbDeployDBName)"
-      LogOn="$(SqlServerUserName)"
-      Password="$(SqlServerPassword)"
-      InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"
-      Condition="$(IsSqlWindowsAuthentication)=='false'"/>
+      CommandLineQuery="$(CommandLineSqlForInsertNewAssemblyVersionNumber)"
+      Condition="$(IsSqlWindowsAuthentication)=='true'"/>
+
+
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd
       TaskAction="Execute"
       Server="$(SqlServerName)"
       Database="$(dbDeployDBName)"
-      InputFiles="$(TempDir)\Insert_AssemblyVersionNumber.sql"
-      Condition="$(IsSqlWindowsAuthentication)=='true'"/>
+      LogOn="$(SqlServerUserName)"
+      Password="$(SqlServerPassword)"
+      CommandLineQuery="$(CommandLineSqlForInsertNewAssemblyVersionNumber)"
+      Condition="$(IsSqlWindowsAuthentication)=='false'"/>
 
+    
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
-  
+
   <Target Name="CleanTempFolder">
 
     <RemoveDir Directories="$(TempDir)" />
@@ -711,6 +710,7 @@
 
 
   <Target Name="Run">
+
 
 
     <CallTarget Targets="CreateFolderStructure" />

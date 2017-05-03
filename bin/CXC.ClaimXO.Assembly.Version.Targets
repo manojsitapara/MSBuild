@@ -79,8 +79,6 @@
       <Output PropertyName="NewAssemblyVersion" TaskParameter="NewAssemblyVersion"/>
     </ExtractNewAssemblyVersionNumber>
 
-    <CallTarget Targets="GetNewAssemblyVersionNumberFromPropertyFile" Condition="'$(PreviousAssemblyVersionNumber)' == '' "/>
-
     <Message Text="New assembly version will be: $(NewAssemblyVersion)"></Message>
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />

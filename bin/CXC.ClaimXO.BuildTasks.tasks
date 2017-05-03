@@ -69,39 +69,7 @@
   </UsingTask>
 
 
-  <!--Generate sql insert statement to store updated assembly info into dbDeploy database-->
-  <UsingTask TaskName="GenerateSqlFileForAssemblyVersion" TaskFactory="CodeTaskFactory"  AssemblyFile="$(MicrosoftBuildTasks)" >
-
-    <ParameterGroup>
-      <DbDeployDatabaseName ParameterType="System.String" Required="true"/>
-      <SqlFilePath ParameterType="System.String" Required="true"/>
-      <ChangeLogTableName ParameterType="System.String" Required="true"/>
-      <FileIndexNumber ParameterType="System.Int32" Required="true"/>
-      <AssemblyVersionNumber ParameterType="System.String" Required="true"/>
-
-    </ParameterGroup>
-    <Task>
-      <Code Type="Fragment" Language="cs">
-        <![CDATA[         
-           string insertSql = "Use " + DbDeployDatabaseName + "  insert into " + ChangeLogTableName + " values('Dummy', " + FileIndexNumber + " ,'" + FileIndexNumber + "_DeploymentSqlScript' ,GETDATE(),GETDATE(),'dbo',1, '" + AssemblyVersionNumber + "')";
-
-            if (!File.Exists(SqlFilePath))
-            {
-                File.Create(SqlFilePath).Dispose();
-                using (TextWriter tw = new StreamWriter(SqlFilePath))
-                {
-                    tw.WriteLine(insertSql);
-                    tw.Close();
-                }
-
-            }
-                
-      ]]>
-      </Code>
-    </Task>
-  </UsingTask>
-
-
+ 
   <!--Send msbuild failed error email notification-->
   <Target Name="SendEmailNotification">
     <SendEmail

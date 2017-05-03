@@ -53,26 +53,18 @@
 
     <TempDir>$(RootDir)\Staging\temp</TempDir>
 
-    
+
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
     <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptFolderName)</BuildDirForDbDeploy>
 
     <DeploymentDirForApp>$(DeploymentDir)\$(AppFolderName)</DeploymentDirForApp>
-    
+
     <DeploymentDirForDbDeploy>$(DeploymentDir)\$(DbDeployScriptFolderName)</DeploymentDirForDbDeploy>
 
-    
+
     <CXCCoreSchemaChangesSqlDir>$(BuildDirForDbDeploy)\CXCCore\1.CXCCore_SchemaChanges</CXCCoreSchemaChangesSqlDir>
     <CXCCoreMetaChangesSqlDir>$(BuildDirForDbDeploy)\CXCCore\2.CXCCore_Meta</CXCCoreMetaChangesSqlDir>
-    
-    <GDIMetaChangesSqlDir>$(BuildDirForDbDeploy)\GDI\1.GDI_MetaChanges</GDIMetaChangesSqlDir>
-    <GDIDataChangesSqlDir>$(BuildDirForDbDeploy)\GDI\2.GDI_DataChanges</GDIDataChangesSqlDir>
-    
-    <PrimePayMetaChangesSqlDir>$(BuildDirForDbDeploy)\PrimePay\1.PrimePay_MetaChanges</PrimePayMetaChangesSqlDir>
-    <PrimePayDataChangesSqlDir>$(BuildDirForDbDeploy)\PrimePay\2.PrimePay_DataChanges</PrimePayDataChangesSqlDir>
-    
-    <PayFlexMetaChangesSqlDir>$(BuildDirForDbDeploy)\PayFlex\1.PayFlex_MetaChanges</PayFlexMetaChangesSqlDir>
-    <PayFlexDataChangesSqlDir>$(BuildDirForDbDeploy)\PayFlex\2.PayFlex_DataChanges</PayFlexDataChangesSqlDir>
+
 
     <!--TODO: Make group of related property together-->
     <XmlPreprocessorCleanFile>true</XmlPreprocessorCleanFile>
@@ -80,13 +72,22 @@
 
     <!-- This setting is for command file transformation -->
     <VariableColumnName>Environment Name</VariableColumnName>
-    
-    
+
+
     <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);Integrated Security=SSPI</DatabaseConnectionString>
     <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword)</DatabaseConnectionString>
-      
+
 
   </PropertyGroup>
+
+
+  <!--Add TPAName while onborading new TPA -->
+  <ItemGroup>
+    <TPAName Include="GDI"/>
+    <TPAName Include="PrimePay"/>
+    <TPAName Include="PayFlex"/>
+  </ItemGroup>
+
 
 
 </Project>

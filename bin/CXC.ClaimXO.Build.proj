@@ -63,14 +63,9 @@
     <MakeDir Directories="$(CXCCoreSchemaChangesSqlDir)" Condition="!Exists('$(CXCCoreSchemaChangesSqlDir)')"/>
     <MakeDir Directories="$(CXCCoreMetaChangesSqlDir)" Condition="!Exists('$(CXCCoreMetaChangesSqlDir)')"/>
 
-    <MakeDir Directories="$(GDIMetaChangesSqlDir)" Condition="!Exists('$(GDIMetaChangesSqlDir)')"/>
-    <MakeDir Directories="$(GDIDataChangesSqlDir)" Condition="!Exists('$(GDIDataChangesSqlDir)')"/>
-
-    <MakeDir Directories="$(PrimePayDataChangesSqlDir)" Condition="!Exists('$(PrimePayDataChangesSqlDir)')"/>
-    <MakeDir Directories="$(PrimePayMetaChangesSqlDir)" Condition="!Exists('$(PrimePayMetaChangesSqlDir)')"/>
-
-    <MakeDir Directories="$(PayFlexMetaChangesSqlDir)" Condition="!Exists('$(PayFlexMetaChangesSqlDir)')"/>
-    <MakeDir Directories="$(PayFlexDataChangesSqlDir)" Condition="!Exists('$(PayFlexDataChangesSqlDir)')"/>
+    <!-- Below two commands creates folder structure for each TPA which is mentioned into ItemGroup as TPAName in common property file -->
+    <MakeDir Directories="$(BuildDirForDbDeploy)\%(TPAName.Identity)\1.%(TPAName.Identity)_MetaChanges" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity)\1.%(TPAName.Identity)_MetaChanges')"/>
+    <MakeDir Directories="$(BuildDirForDbDeploy)\%(TPAName.Identity)\2.%(TPAName.Identity)_DataChanges" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity)\2.%(TPAName.Identity)_DataChanges')"/>
 
     <MakeDir Directories="$(TempDir)" Condition="!Exists('$(TempDir))')"/>
 
@@ -196,7 +191,7 @@
 			  	DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
-    <CallTarget Targets="CopyScriptFilesToBuildDir" />
+    <CallTarget Targets="CopyCommandAndSqlScriptFilesToBuildDir" />
 
     <CallTarget Targets="CopySqlFilesToBuildDir"/>
 
@@ -207,10 +202,10 @@
   </Target>
 
 
-  <Target Name="CopyScriptFilesToBuildDir">
+  <Target Name="CopyCommandAndSqlScriptFilesToBuildDir">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyScriptFilesToBuildDir'">CopyScriptFilesToBuildDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlScriptFilesToBuildDir'">CopyCommandAndSqlScriptFilesToBuildDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -518,7 +513,7 @@
 
   </Target>
 
-  
+
   <Target Name="CommonCommandFileTransform">
 
     <PropertyGroup>
@@ -542,7 +537,7 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-  
+
 
   <Target Name="PayFlexCommandFileTransform" Condition="$(BuildPayFlex)=='true'">
 
@@ -560,14 +555,14 @@
                                VariableColumnName="$(VariableColumnName)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
-    
-    
-     <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
-                               TabName="EnvSetting"
-                               Environment ="$(Environment)"
-                               InputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
-                               OutputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
-                               VariableColumnName="$(VariableColumnName)" >
+
+
+    <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+                              TabName="EnvSetting"
+                              Environment ="$(Environment)"
+                              InputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
+                              OutputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
+                              VariableColumnName="$(VariableColumnName)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
 
@@ -741,7 +736,6 @@
 
 
   <Target Name="Run">
-
 
 
     <CallTarget Targets="CreateFolderStructure" />

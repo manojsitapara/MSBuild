@@ -518,6 +518,31 @@
 
   </Target>
 
+  
+  <Target Name="CommonCommandFileTransform">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CommonCommandFileTransform'">CommonCommandFileTransform</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
+                               TabName="EnvSetting"
+                               Environment ="$(Environment)"
+                               InputFiles="$(BuildDirForApp)\SetEnv.cmd"
+                               OutputFiles="$(BuildDirForApp)\SetEnv.cmd"
+                               VariableColumnName="$(VariableColumnName)" >
+      <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
+    </CommandFileTransformation>
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+  
 
   <Target Name="PayFlexCommandFileTransform" Condition="$(BuildPayFlex)=='true'">
 
@@ -532,7 +557,7 @@
                                Environment ="$(Environment)"
                                InputFiles="$(BuildDirForApp)\PayFlex_SetEnv.cmd"
                                OutputFiles="$(BuildDirForApp)\PayFlex_SetEnv.cmd"
-                               VariableColumnName="Environment Name" >
+                               VariableColumnName="$(VariableColumnName)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
     
@@ -542,7 +567,7 @@
                                Environment ="$(Environment)"
                                InputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
                                OutputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
-                               VariableColumnName="Environment Name" >
+                               VariableColumnName="$(VariableColumnName)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
 
@@ -553,30 +578,6 @@
 
   </Target>
 
-
-  <Target Name="CommonCommandFileTransform">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CommonCommandFileTransform'">CommonCommandFileTransform</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
-                               TabName="EnvSetting"
-                               Environment ="$(Environment)"
-                               InputFiles="$(BuildDirForApp)\SetEnv.cmd"
-                               OutputFiles="$(BuildDirForApp)\SetEnv.cmd"
-                               VariableColumnName="Environment Name" >
-      <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
-    </CommandFileTransformation>
-
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
 
 
   <Target Name="CopySqlFilesToBuildDir">

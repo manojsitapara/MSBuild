@@ -77,6 +77,9 @@
     <!--TODO: Make group of related property together-->
     <XmlPreprocessorCleanFile>true</XmlPreprocessorCleanFile>
     <XmlPreprocessorValidateFile>true</XmlPreprocessorValidateFile>
+
+    <!-- This setting is for command file transformation -->
+    <VariableColumnName>Environment Name</VariableColumnName>
     
     
     <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);Integrated Security=SSPI</DatabaseConnectionString>

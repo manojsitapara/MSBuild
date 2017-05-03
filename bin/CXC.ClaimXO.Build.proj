@@ -77,7 +77,7 @@
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-    
+
   </Target>
 
 
@@ -217,22 +217,22 @@
 
 
     <ItemGroup>
-      <CopyCommandAndSqlFiles Include="$(SourceDir)\CXC\Scripts\*.*" />
-      <CopyPayFlexCommandAndSqlFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\Scripts\*.*" />
-      <CopyPrimePayCommandAndSqlFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Scripts\*.*" />
+      <CommonCommandAndSqlFiles Include="$(SourceDir)\CXC\Scripts\*.*" />
+      <PayFlexCommandAndSqlFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\Scripts\*.*" />
+      <PrimePayCommandAndSqlFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Scripts\*.*" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(CopyCommandAndSqlFiles)"
+    <Copy SourceFiles="@(CommonCommandAndSqlFiles)"
 			  	DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
-    <Copy SourceFiles="@(CopyPayFlexCommandAndSqlFiles)"
+    <Copy SourceFiles="@(PayFlexCommandAndSqlFiles)"
 			DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
       SkipUnchangedFiles="true"
       Condition="$(BuildPayFlex) == 'True'"/>
 
 
-    <Copy SourceFiles="@(CopyPrimePayCommandAndSqlFiles)"
+    <Copy SourceFiles="@(PrimePayCommandAndSqlFiles)"
 			DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
       SkipUnchangedFiles="true"
       Condition="$(BuildPrimePay) == 'True'"/>
@@ -564,57 +564,62 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <ItemGroup>
+      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
+      <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
       <GDIMetaFiles Include="$(SourceDir)\TPA\GDI\GDI\Build\MetaChanges\**\*.*" />
       <GDIDataChangesFiles Include="$(SourceDir)\TPA\GDI\GDI\Build\DataChanges\**\*.*" />
       <PrimePayMetaFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges\**\*.*" />
       <PrimePayDataChangesFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\DataChanges\**\*.*" />
       <PayFlexMetaFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\Build\MetaChanges\**\*.*" />
       <PayFlexDataChangesFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\Build\DataChanges\**\*.*" />
-      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
-      <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
     </ItemGroup>
 
 
-    <Copy SourceFiles="@(CXCCoreMetaFiles)"
-       DestinationFolder="$(CXCCoreMetaChangesSqlDir)\%(RecursiveDir)"
-       SkipUnchangedFiles="true"  Condition="$(CopyCXCCoreMetaChangeSql) == 'true' "/>
-
-
     <Copy SourceFiles="@(CXCCoreSchemaChangesFiles)"
-        DestinationFolder="$(CXCCoreSchemaChangesSqlDir)\%(RecursiveDir)"
-        SkipUnchangedFiles="true" />
+          DestinationFolder="$(CXCCoreSchemaChangesSqlDir)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+
+
+    <Copy SourceFiles="@(CXCCoreMetaFiles)"
+          DestinationFolder="$(CXCCoreMetaChangesSqlDir)\%(RecursiveDir)"
+          SkipUnchangedFiles="true"
+          Condition="$(CopyCXCCoreMetaChangeSql) == 'true' "/>
+
+
+    <Copy SourceFiles="@(GDIDataChangesFiles)"
+          DestinationFolder="$(GDIDataChangesSqlDir)\%(RecursiveDir)"
+          SkipUnchangedFiles="true"
+          Condition="$(BuildGDI)=='true'" />
 
 
     <Copy SourceFiles="@(GDIMetaFiles)"
 			  	DestinationFolder="$(GDIMetaChangesSqlDir)\%(RecursiveDir)"
-          SkipUnchangedFiles="true" Condition="$(BuildGDI)=='true'" />
-
-
-    <Copy SourceFiles="@(GDIDataChangesFiles)"
-      DestinationFolder="$(GDIDataChangesSqlDir)\%(RecursiveDir)"
-      SkipUnchangedFiles="true" Condition="$(BuildGDI)=='true'" />
-
-
-
-    <Copy SourceFiles="@(PrimePayMetaFiles)"
-     DestinationFolder="$(PrimePayMetaChangesSqlDir)\%(RecursiveDir)"
-     SkipUnchangedFiles="true" Condition="$(BuildPrimePay)=='true'" />
+          SkipUnchangedFiles="true"
+          Condition="$(BuildGDI)=='true'" />
 
 
     <Copy SourceFiles="@(PrimePayDataChangesFiles)"
-    DestinationFolder="$(PrimePayDataChangesSqlDir)\%(RecursiveDir)"
-    SkipUnchangedFiles="true" Condition="$(BuildPrimePay)=='true'" />
+          DestinationFolder="$(PrimePayDataChangesSqlDir)\%(RecursiveDir)"
+          SkipUnchangedFiles="true"
+          Condition="$(BuildPrimePay)=='true'" />
 
+
+    <Copy SourceFiles="@(PrimePayMetaFiles)"
+          DestinationFolder="$(PrimePayMetaChangesSqlDir)\%(RecursiveDir)"
+          SkipUnchangedFiles="true"
+          Condition="$(BuildPrimePay)=='true'" />
+
+    
+    <Copy SourceFiles="@(PayFlexDataChangesFiles)"
+             DestinationFolder="$(PayFlexDataChangesSqlDir)\%(RecursiveDir)"
+             SkipUnchangedFiles="true"
+             Condition="$(BuildPayFlex)=='true'" />
 
 
     <Copy SourceFiles="@(PayFlexMetaFiles)"
-        DestinationFolder="$(PayFlexMetaChangesSqlDir)\%(RecursiveDir)"
-        SkipUnchangedFiles="true" Condition="$(BuildPayFlex)=='true'" />
-
-
-    <Copy SourceFiles="@(PayFlexDataChangesFiles)"
-        DestinationFolder="$(PayFlexDataChangesSqlDir)\%(RecursiveDir)"
-        SkipUnchangedFiles="true" Condition="$(BuildPayFlex)=='true'" />
+          DestinationFolder="$(PayFlexMetaChangesSqlDir)\%(RecursiveDir)"
+          SkipUnchangedFiles="true"
+          Condition="$(BuildPayFlex)=='true'" />
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -663,7 +668,7 @@
       ConnectionString="$(DatabaseConnectionString)">
       <Output PropertyName="MaxScriptNumber" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
-    
+
 
     <MSBuild.ExtensionPack.Science.Maths TaskAction="Add" Numbers="$(MaxScriptNumber);1">
       <Output PropertyName="NextScriptNumber" TaskParameter="Result"/>
@@ -677,7 +682,7 @@
     <PropertyGroup>
       <CommandLineSqlForInsertNewAssemblyVersionNumber>Use $(dbDeployDBName) INSERT INTO $(DatabaseChangeLogTableName) VALUES('Dummy', $(NextScriptNumber), 'DummyScript', GETDATE(), GETDATE(),'dbo','1',  '$(AssemblyVersionNumber)' )</CommandLineSqlForInsertNewAssemblyVersionNumber>
     </PropertyGroup>
-    
+
     <MSBuild.ExtensionPack.SqlServer.SqlCmd
       TaskAction="Execute"
       Server="$(SqlServerName)"
@@ -696,7 +701,7 @@
       CommandLineQuery="$(CommandLineSqlForInsertNewAssemblyVersionNumber)"
       Condition="$(IsSqlWindowsAuthentication)=='false'"/>
 
-    
+
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />

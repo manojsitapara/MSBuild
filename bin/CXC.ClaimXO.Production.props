@@ -9,6 +9,11 @@
     <RootDir>G:\MSBuildTesting\XOProductionFromSeperateFile</RootDir>
 
 
+    <!-- Source code SVN settings -->
+    
+    <!-- To download source code from SVN, set value to true else false -->
+    <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
+    
 
     <!--Solution settings -->
 

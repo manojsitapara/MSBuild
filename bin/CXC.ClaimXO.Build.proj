@@ -81,7 +81,7 @@
   </Target>
 
 
-  <Target Name="DownloadSourceFromSVN">
+  <Target Name="DownloadSourceFromSVN" Condition="$(DownloadSourceCodeFromSVN) == 'true' ">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='DownloadSourceFromSVN'">DownloadSourceFromSVN</CurrentTargetName>

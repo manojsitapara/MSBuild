@@ -5,7 +5,7 @@
 BEGIN TRANSACTION
 GO
 
-USE [MsBuildDbDeploy]
+USE #DBDEPLOYDATABASE#
 $script.GetUndoContent()
 
 DELETE FROM $changeLogTableName WHERE Folder = '$script.Folder' AND ScriptNumber = $script.ScriptNumber

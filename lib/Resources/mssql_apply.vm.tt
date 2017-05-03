@@ -9,10 +9,10 @@ GO
 BEGIN TRANSACTION
 GO
 
-USE [MsbuildCXC]
+USE #CLAIMXODATABASE#
 $script.getContent()
 
-USE [MsBuildDbDeploy]
+USE #DBDEPLOYDATABASE#
 UPDATE ${changeLogTableName} 
 SET CompleteDate = getdate(), ScriptStatus = 1, ScriptOutput = '' 
 WHERE Folder = '$script.Folder' AND ScriptNumber = $script.ScriptNumber

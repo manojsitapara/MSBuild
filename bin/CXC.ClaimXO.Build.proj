@@ -293,29 +293,7 @@
     <CallTarget Targets="GDIConfigTransform" Condition="$(BuildGDI) == 'True'"></CallTarget>
     <CallTarget Targets="PrimePayConfigTransform" Condition="$(BuildPrimePay) == 'True'"></CallTarget>
     <CallTarget Targets="PayFlexConfigTransform" Condition="$(BuildPayFlex) == 'True'"></CallTarget>
-
-    <!--Convert mssql_apply.vm.tt file to mssql_apply.vm file-->
-    <Copy SourceFiles="$(LibDir)\Resources\mssql_apply.vm.tt" DestinationFiles="$(LibDir)\Resources\mssql_apply.vm"></Copy>
-    <!--Convert mssql_undo.vm.tt file to mssql_undo.vm file-->
-    <Copy SourceFiles="$(LibDir)\Resources\mssql_undo.vm.tt" DestinationFiles="$(LibDir)\Resources\mssql_undo.vm"></Copy>
-
-
-    <FindAndReplace
-                  Filename="$(LibDir)\Resources\mssql_apply.vm"
-                  FindWord="USE #CLAIMXODATABASE#"
-                  ReplaceWithWord="USE [$(DatabaseName)]" />
-
-
-    <FindAndReplace
-                  Filename="$(LibDir)\Resources\mssql_apply.vm"
-                  FindWord="USE #DBDEPLOYDATABASE#"
-                  ReplaceWithWord="USE [$(dbDeployDBName)]" />
-
-
-    <FindAndReplace
-                  Filename="$(LibDir)\Resources\mssql_undo.vm"
-                  FindWord="USE #DBDEPLOYDATABASE#"
-                  ReplaceWithWord="USE [$(dbDeployDBName)]" />
+    <CallTarget Targets="dbDeployResourceFileTranformation"></CallTarget>
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -486,6 +464,42 @@
   </Target>
 
 
+  <Target Name="dbDeployResourceFileTranformation">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='dbDeployResourceFileTranformation'">dbDeployResourceFileTranformation</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <!--Convert mssql_apply.vm.tt file to mssql_apply.vm file-->
+    <Copy SourceFiles="$(LibDir)\Resources\mssql_apply.vm.tt" DestinationFiles="$(LibDir)\Resources\mssql_apply.vm"></Copy>
+    <!--Convert mssql_undo.vm.tt file to mssql_undo.vm file-->
+    <Copy SourceFiles="$(LibDir)\Resources\mssql_undo.vm.tt" DestinationFiles="$(LibDir)\Resources\mssql_undo.vm"></Copy>
+
+    <FindAndReplace
+                  Filename="$(LibDir)\Resources\mssql_apply.vm"
+                  FindWord="USE #CLAIMXODATABASE#"
+                  ReplaceWithWord="USE [$(DatabaseName)]" />
+
+
+    <FindAndReplace
+                  Filename="$(LibDir)\Resources\mssql_apply.vm"
+                  FindWord="USE #DBDEPLOYDATABASE#"
+                  ReplaceWithWord="USE [$(dbDeployDBName)]" />
+
+
+    <FindAndReplace
+                  Filename="$(LibDir)\Resources\mssql_undo.vm"
+                  FindWord="USE #DBDEPLOYDATABASE#"
+                  ReplaceWithWord="USE [$(dbDeployDBName)]" />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
   <Target Name="CommandFileTransaformation">
 
     <PropertyGroup>
@@ -609,7 +623,7 @@
           SkipUnchangedFiles="true"
           Condition="$(BuildPrimePay)=='true'" />
 
-    
+
     <Copy SourceFiles="@(PayFlexDataChangesFiles)"
              DestinationFolder="$(PayFlexDataChangesSqlDir)\%(RecursiveDir)"
              SkipUnchangedFiles="true"

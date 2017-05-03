@@ -21,7 +21,7 @@
 
     <ParameterGroup>
       <OldAssemblyVersion ParameterType="System.String" Required="true"/>
-      <AssemblyVersion ParameterType="System.String" Output="true"/>
+      <NewAssemblyVersion ParameterType="System.String" Output="true"/>
     </ParameterGroup>
     <Task>
       <Code Type="Fragment" Language="cs">
@@ -44,19 +44,19 @@
             
             if ( major != year)
             {
-                AssemblyVersion = year + "." + currentMonth + ".01.0";    
+                NewAssemblyVersion = year + "." + currentMonth + ".01.0";    
 
             }
             else
             {
                 if (minor != currentMonth)
                 {
-                    AssemblyVersion = year + "." + currentMonth + ".01.0";
+                    NewAssemblyVersion = year + "." + currentMonth + ".01.0";
                 }
                 else
                 {
                     int setVersionNumber = Convert.ToInt32(revision) + 1;
-                    AssemblyVersion = year + "." + currentMonth + "." + setVersionNumber.ToString("D2") + ".0";    
+                    NewAssemblyVersion = year + "." + currentMonth + "." + setVersionNumber.ToString("D2") + ".0";    
                 }
                 
                 

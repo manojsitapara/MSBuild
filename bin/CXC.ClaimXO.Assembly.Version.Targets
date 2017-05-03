@@ -48,18 +48,20 @@
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
     <Message Text="Table status: $(IsTableExist)"></Message>
 
+    <!--Raise an error if changelog table is not exist into dbDeploy database-->
+    <Error Text="Please specify assembly version number in property file to update for this release " Condition="'$(IsTableExist)' == '0' "/>
 
-    <CallTarget Targets="GetNewAssemblyVersionNumberFromSql" Condition="'$(IsTableExist)' != '0'"></CallTarget>
-    <CallTarget Targets="GetNewAssemblyVersionNumberFromPropertyFile" Condition="'$(IsTableExist)' == '0'"></CallTarget>
+    
+    <CallTarget Targets="GetNewAssemblyVersionNumberFromDatabase" Condition="'$(IsTableExist)' == '1' "></CallTarget>
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
 
-  <Target Name="GetNewAssemblyVersionNumberFromSql">
+  <Target Name="GetNewAssemblyVersionNumberFromDatabase">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumberFromSql</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumberFromDatabase</CurrentTargetName>
     </PropertyGroup>
 
     <MSBuild.ExtensionPack.SqlServer.SqlExecute 
@@ -74,7 +76,7 @@
 
 
     <ExtractNewAssemblyVersionNumber OldAssemblyVersion="$(PreviousAssemblyVersionNumber)" Condition="'$(PreviousAssemblyVersionNumber)' != '' ">
-      <Output PropertyName="NewAssemblyVersion" TaskParameter="AssemblyVersion"/>
+      <Output PropertyName="NewAssemblyVersion" TaskParameter="NewAssemblyVersion"/>
     </ExtractNewAssemblyVersionNumber>
 
     <CallTarget Targets="GetNewAssemblyVersionNumberFromPropertyFile" Condition="'$(PreviousAssemblyVersionNumber)' == '' "/>
@@ -85,38 +87,6 @@
   </Target>
 
   
-  <Target Name="GetNewAssemblyVersionNumberFromPropertyFile">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumberFromPropertyFile</CurrentTargetName>
-    </PropertyGroup>
-
-
-    <ReadLinesFromFile File="@(AssemblyInfoFile)">
-      <Output TaskParameter="Lines"
-					ItemName="ItemsFromFile"/>
-    </ReadLinesFromFile>
-
-    <PropertyGroup>
-      <Pattern>\[assembly: AssemblyVersion\(.(\d+)\.(\d+)\.(\d+).(\d+)</Pattern>
-      <In>@(ItemsFromFile)</In>
-      <Out>$([System.Text.RegularExpressions.Regex]::Match($(In), $(Pattern)))</Out>
-      <PreviousAssemblyVersionNumber>$(Out.Remove(0, 28))</PreviousAssemblyVersionNumber>
-    </PropertyGroup>
-
-
-    <ExtractNewAssemblyVersionNumber OldAssemblyVersion="$(Out.Remove(0, 28))">
-      <Output PropertyName="NewAssemblyVersion" TaskParameter="AssemblyVersion"/>
-    </ExtractNewAssemblyVersionNumber>
-
-
-    <Message Text="New assembly version will be: $(NewAssemblyVersion)"></Message>
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-
-  </Target>
-
 
   <!--SetNewAssemblyVersion target use to set new assemly version number -->
   <Target Name="SetNewAssemblyVersion">

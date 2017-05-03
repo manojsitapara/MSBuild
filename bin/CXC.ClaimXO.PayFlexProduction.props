@@ -82,12 +82,13 @@
 
     <!--Assembly Settings -->
 
+    <!-- Set UpdateBuildVersion value true to update build version number else set false -->
+    <UpdateBuildVersion>true</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
     <AssemblyBuildNumber></AssemblyBuildNumber>
-    <!-- Set UpdateBuildVersion value true to update build version number else set false -->
-    <UpdateBuildVersion>true</UpdateBuildVersion>
+    
 
 
     <!--Set value true to create svn lable under svn tag branch-->

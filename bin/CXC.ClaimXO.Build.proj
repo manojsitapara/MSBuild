@@ -603,7 +603,7 @@
     <Copy SourceFiles="@(CXCCoreMetaFiles)"
           DestinationFolder="$(CXCCoreMetaChangesSqlDir)\%(RecursiveDir)"
           SkipUnchangedFiles="true"
-          Condition="$(CopyCXCCoreMetaChangeSql) == 'true' "/>
+          Condition="$(BuildPayFlex) == 'true' "/>
 
 
     <Copy SourceFiles="@(GDIDataChangesFiles)"

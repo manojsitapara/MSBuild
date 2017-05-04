@@ -98,7 +98,6 @@
     <CreateSVNLabel>false</CreateSVNLabel>
 
 
-    <CopyCXCCoreMetaChangeSql>true</CopyCXCCoreMetaChangeSql>
     
 
   </PropertyGroup>

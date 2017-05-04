@@ -12,7 +12,7 @@
     <!-- Source code SVN settings -->
     
     <!-- To download source code from SVN, set value to true else false -->
-    <DownloadSourceCodeFromSVN>false</DownloadSourceCodeFromSVN>
+    <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
     
 
     <!--Solution settings -->
@@ -99,7 +99,6 @@
     <!--Set value true to create svn lable under svn tag branch-->
     <CreateSVNLabel>false</CreateSVNLabel>
 
-    <CopyCXCCoreMetaChangeSql>false</CopyCXCCoreMetaChangeSql>
 
 
   </PropertyGroup>

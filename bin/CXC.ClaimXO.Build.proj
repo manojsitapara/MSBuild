@@ -247,8 +247,18 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy Source="$(BuildDirForApp)" Destination="$(DeploymentDirForApp)" Files="*.*" Options="/MIR">
-    </MSBuild.ExtensionPack.FileSystem.RoboCopy>
+    <ItemGroup>
+      <BuildFiles Include="$(BuildDirForApp)\*.*" />
+    </ItemGroup>
+
+    <Message Text = "Start copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
+
+    <Copy SourceFiles="@(BuildFiles)"
+			  	DestinationFolder="$(DeploymentDirForApp)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+
+    <Message Text = "Completed copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
+
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -265,9 +275,17 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
+    <ItemGroup>
+      <BuildFiles Include="$(DeploymentDirForApp)\*.*" />
+    </ItemGroup>
 
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy Source="$(DeploymentDirForApp)" Destination="$(DestinationDir)" Files="*.*" Options="/MIR">
-    </MSBuild.ExtensionPack.FileSystem.RoboCopy>
+    <Message Text = "Start copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
+
+    <Copy SourceFiles="@(BuildFiles)"
+			  	DestinationFolder="$(DestinationDir)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+
+    <Message Text = "Completed copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 

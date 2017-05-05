@@ -22,7 +22,7 @@
     <NewAssemblyVersion></NewAssemblyVersion>
     <DbDeployScriptFolderName>DbDeployScript</DbDeployScriptFolderName>
     <AppFolderName>App</AppFolderName>
-    <CommandAndSqlFilesFolderName>CommandAndSqlFiles</CommandAndSqlFilesFolderName>
+    <CommandAndSqlFilesFolderName>Workflow</CommandAndSqlFilesFolderName>
 
     <CurrentTargetName></CurrentTargetName>
 

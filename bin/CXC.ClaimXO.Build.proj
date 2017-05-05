@@ -587,8 +587,8 @@
     <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
                                TabName="EnvSetting"
                                Environment ="$(Environment)"
-                               InputFiles="$(BuildDirForApp)\SetEnv.cmd"
-                               OutputFiles="$(BuildDirForApp)\SetEnv.cmd"
+                               InputFiles="$(BuildDirForCommandAndSqlFiles)\Common\SetEnv.cmd"
+                               OutputFiles="$(BuildDirForCommandAndSqlFiles)\Common\SetEnv.cmd"
                                VariableColumnName="$(VariableColumnNameForCommandFile)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
@@ -612,18 +612,20 @@
     <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
                                TabName="EnvSetting"
                                Environment ="$(Environment)"
-                               InputFiles="$(BuildDirForApp)\PayFlex_SetEnv.cmd"
-                               OutputFiles="$(BuildDirForApp)\PayFlex_SetEnv.cmd"
+                               InputFiles="$(BuildDirForCommandAndSqlFiles)\PayFlex\PayFlex_SetEnv.cmd"
+                               OutputFiles="$(BuildDirForCommandAndSqlFiles)\PayFlex\PayFlex_SetEnv.cmd"
                                VariableColumnName="$(VariableColumnNameForCommandFile)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
+
+    <Message Text="$(ErrorMessage)"></Message>
 
 
     <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
                               TabName="EnvSetting"
                               Environment ="$(Environment)"
-                              InputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
-                              OutputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
+                              InputFiles="$(BuildDirForCommandAndSqlFiles)\PayFlex\PayFlexFTP_SetEnv.cmd"
+                              OutputFiles="$(BuildDirForCommandAndSqlFiles)\PayFlex\PayFlexFTP_SetEnv.cmd"
                               VariableColumnName="$(VariableColumnNameForCommandFile)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>

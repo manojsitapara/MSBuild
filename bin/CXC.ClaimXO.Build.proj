@@ -60,20 +60,23 @@
 
     <MakeDir Directories="$(DatabaseBackupDir)" Condition="!Exists('$(DatabaseBackupDir)')"/>
 
+
     <MakeDir Directories="$(CXCCoreSchemaChangesSqlDir)" Condition="!Exists('$(CXCCoreSchemaChangesSqlDir)')"/>
     <MakeDir Directories="$(CXCCoreMetaChangesSqlDir)" Condition="!Exists('$(CXCCoreMetaChangesSqlDir)')"/>
 
     <!-- Below two commands creates folder structure for each TPA  -->
     <MakeDir Directories="$(BuildDirForDbDeploy)\%(TPAName.Identity)\1.%(TPAName.Identity)_MetaChanges" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity)\1.%(TPAName.Identity)_MetaChanges')"/>
     <MakeDir Directories="$(BuildDirForDbDeploy)\%(TPAName.Identity)\2.%(TPAName.Identity)_DataChanges" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity)\2.%(TPAName.Identity)_DataChanges')"/>
-    
+
     <!-- Need to reomve this command once we have seperate script folder for each TPA -->
     <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\Common" Condition="!Exists('$(BuildDirForDbDeploy)\Common')" />
-    
+
     <!-- Below two commands creates folder structure in build directory for each TPA  -->
     <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
     <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
-    
+
+
+    <MakeDir Directories="$(BuildDirForDbDeployOutput)" Condition="!Exists('$(BuildDirForDbDeployOutput)')"/>
 
     <MakeDir Directories="$(TempDir)" Condition="!Exists('$(TempDir))')"/>
 
@@ -265,7 +268,7 @@
 			  	DestinationFolder="$(DeploymentDirForApp)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
-    <Message Text = "Completed copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
+    <Message Text = "Completed copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
 
 
@@ -275,6 +278,35 @@
   </Target>
 
   
+  <Target Name="CopyDbDeployFilesToDeploymentDir" DependsOnTargets="ConfigTransformation">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyDbDeployFilesToDeploymentDir'">CopyDbDeployFilesToDeploymentDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <ItemGroup>
+      <DbDeployFiles Include="$(BuildDirForDbDeployOutput)\*.*" />
+    </ItemGroup>
+
+    <Message Text = "Start copying files from $(BuildDirForDbDeployOutput) to $(DeploymentDirForDbDeploy)"></Message>
+
+    <Copy SourceFiles="@(DbDeployFiles)"
+			  	DestinationFolder="$(DeploymentDirForDbDeploy)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+
+    <Message Text = "Completed copying files from $(BuildDirForDbDeployOutput) to $(DeploymentDirForDbDeploy)"></Message>
+
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+  
+
   <Target Name="CopyCommandAndSqlScriptToDeploymentDir">
 
     <PropertyGroup>
@@ -309,7 +341,7 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-  
+
 
   <Target Name="CopyBuildFilesToDestinationDir">
 
@@ -821,15 +853,17 @@
 
     <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
     <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
+    <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="CopyBuildFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="CopyDbDeployFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="DeploymentBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="CopyCommandAndSqlScriptToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    
+
     <CallTarget Targets="DatabaseDeployment" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="SaveChangedAssemblyVersionInfoInDB" Condition="$(MSBuildLastTaskResult) == 'True'"/>

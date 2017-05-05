@@ -21,6 +21,7 @@
     <PreviousAssemblyVersionNumber></PreviousAssemblyVersionNumber>
     <NewAssemblyVersion></NewAssemblyVersion>
     <DbDeployScriptFolderName>DbDeployScript</DbDeployScriptFolderName>
+    <DbDeployScriptOutputFolderName>DbDeployOutput</DbDeployScriptOutputFolderName>
     <AppFolderName>App</AppFolderName>
     <CommandAndSqlFilesFolderName>Workflow</CommandAndSqlFilesFolderName>
 
@@ -58,6 +59,7 @@
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
     <BuildDirForCommandAndSqlFiles>$(BuildDir)\$(CommandAndSqlFilesFolderName)</BuildDirForCommandAndSqlFiles>
     <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptFolderName)</BuildDirForDbDeploy>
+    <BuildDirForDbDeployOutput>$(BuildDir)\$(DbDeployScriptOutputFolderName)</BuildDirForDbDeployOutput>
 
     <DeploymentDirForApp>$(DeploymentDir)\$(AppFolderName)</DeploymentDirForApp>
 

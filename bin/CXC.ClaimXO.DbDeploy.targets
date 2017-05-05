@@ -1,11 +1,11 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
-  <Target Name="GenerateSqlScript">
+  <Target Name="GenerateSqlScriptFromDbDeploy">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='GenerateSqlScript'">GenerateSqlScript</CurrentTargetName>
-      <DbDeployOutputFileName>$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployOutputFileName>
-      <DbDeployUndoOutputFileName>$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_undo_$(CurrentDateTime).sql</DbDeployUndoOutputFileName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='GenerateSqlScriptFromDbDeploy'">GenerateSqlScriptFromDbDeploy</CurrentTargetName>
+      <DbDeployOutputFileName>$(BuildDirForDbDeployOutput)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployOutputFileName>
+      <DbDeployUndoOutputFileName>$(BuildDirForDbDeployOutput)\dbDeploy_undo_$(CurrentDateTime).sql</DbDeployUndoOutputFileName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -13,7 +13,7 @@
 
     <MSBuild.ExtensionPack.FileSystem.Folder
             TaskAction="RemoveContent" 
-            Path="$(DeploymentDirForDbDeploy)"/>
+            Path="$(BuildDirForDbDeployOutput)"/>
     
     
     <MSBuild.Dbdeploy.Task.Dbdeploy
@@ -35,10 +35,11 @@
   </Target>
 
   
-  <Target Name="ExecuteSqlScript" DependsOnTargets="GenerateSqlScript">
+  <Target Name="DatabaseDeployment" DependsOnTargets="GenerateSqlScriptFromDbDeploy">
     
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='ExecuteSqlScript'">ExecuteSqlScript</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DatabaseDeployment'">DatabaseDeployment</CurrentTargetName>
+      <DbDeployFileToRun>$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployFileToRun>
     </PropertyGroup>
     
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -51,14 +52,14 @@
       Database="$(dbDeployDBName)" 
       LogOn="$(SqlServerUserName)" 
       Password="$(SqlServerPassword)" 
-      InputFiles="$(DbDeployOutputFileName)"  
+      InputFiles="$(DbDeployFileToRun)"  
       Condition="$(IsSqlWindowsAuthentication)=='false'"/>
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd 
       TaskAction="Execute" 
       Server="$(SqlServerName)" 
       Database="$(dbDeployDBName)" 
-      InputFiles="$(DbDeployOutputFileName)"  
+      InputFiles="$(DbDeployFileToRun)"  
       Condition="$(IsSqlWindowsAuthentication)=='true'"/>
 
     
@@ -69,12 +70,6 @@
   </Target>
 
 
-  <Target Name="DatabaseDeployment" >
-    
-    <CallTarget Targets="GenerateSqlScript" />
-    <CallTarget Targets="ExecuteSqlScript" Condition="$(MSBuildLastTaskResult) == 'True'" />
-    
-  </Target>
-
+  
 
 </Project>

@@ -22,6 +22,7 @@
     <NewAssemblyVersion></NewAssemblyVersion>
     <DbDeployScriptFolderName>DbDeployScript</DbDeployScriptFolderName>
     <AppFolderName>App</AppFolderName>
+    <CommandAndSqlFilesFolderName>CommandAndSqlFiles</CommandAndSqlFilesFolderName>
 
     <CurrentTargetName></CurrentTargetName>
 
@@ -55,6 +56,7 @@
 
 
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
+    <BuildDirForCommandAndSqlFiles>$(BuildDir)\$(CommandAndSqlFilesFolderName)</BuildDirForCommandAndSqlFiles>
     <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptFolderName)</BuildDirForDbDeploy>
 
     <DeploymentDirForApp>$(DeploymentDir)\$(AppFolderName)</DeploymentDirForApp>
@@ -71,7 +73,7 @@
     <XmlPreprocessorValidateFile>true</XmlPreprocessorValidateFile>
 
     <!-- This setting is for command file transformation -->
-    <VariableColumnName>Environment Name</VariableColumnName>
+    <VariableColumnNameForCommandFile>Environment Name</VariableColumnNameForCommandFile>
 
 
     <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);Integrated Security=SSPI</DatabaseConnectionString>

@@ -63,9 +63,17 @@
     <MakeDir Directories="$(CXCCoreSchemaChangesSqlDir)" Condition="!Exists('$(CXCCoreSchemaChangesSqlDir)')"/>
     <MakeDir Directories="$(CXCCoreMetaChangesSqlDir)" Condition="!Exists('$(CXCCoreMetaChangesSqlDir)')"/>
 
-    <!-- Below two commands creates folder structure for each TPA which is mentioned into ItemGroup as TPAName in common property file -->
+    <!-- Below two commands creates folder structure for each TPA  -->
     <MakeDir Directories="$(BuildDirForDbDeploy)\%(TPAName.Identity)\1.%(TPAName.Identity)_MetaChanges" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity)\1.%(TPAName.Identity)_MetaChanges')"/>
     <MakeDir Directories="$(BuildDirForDbDeploy)\%(TPAName.Identity)\2.%(TPAName.Identity)_DataChanges" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity)\2.%(TPAName.Identity)_DataChanges')"/>
+    
+    <!-- Need to reomve this command once we have seperate script folder for each TPA -->
+    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\Common" Condition="!Exists('$(BuildDirForDbDeploy)\Common')" />
+    
+    <!-- Below two commands creates folder structure in build directory for each TPA  -->
+    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
+    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
+    
 
     <MakeDir Directories="$(TempDir)" Condition="!Exists('$(TempDir))')"/>
 
@@ -191,7 +199,7 @@
 			  	DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
-    <CallTarget Targets="CopyCommandAndSqlScriptFilesToBuildDir" />
+    <CallTarget Targets="CopyCommandAndSqlFilesToBuildDir" />
 
     <CallTarget Targets="CopySqlFilesToBuildDir"/>
 
@@ -202,10 +210,10 @@
   </Target>
 
 
-  <Target Name="CopyCommandAndSqlScriptFilesToBuildDir">
+  <Target Name="CopyCommandAndSqlFilesToBuildDir">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlScriptFilesToBuildDir'">CopyCommandAndSqlScriptFilesToBuildDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToBuildDir'">CopyCommandAndSqlFilesToBuildDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -218,17 +226,17 @@
     </ItemGroup>
 
     <Copy SourceFiles="@(CommonCommandAndSqlFiles)"
-			  	DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
+			  	DestinationFolder="$(BuildDirForCommandAndSqlFiles)\Common\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
     <Copy SourceFiles="@(PayFlexCommandAndSqlFiles)"
-			DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
+			DestinationFolder="$(BuildDirForCommandAndSqlFiles)\PayFlex\%(RecursiveDir)"
       SkipUnchangedFiles="true"
       Condition="$(BuildPayFlex) == 'True'"/>
 
 
     <Copy SourceFiles="@(PrimePayCommandAndSqlFiles)"
-			DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
+			DestinationFolder="$(BuildDirForCommandAndSqlFiles)\PrimePay\%(RecursiveDir)"
       SkipUnchangedFiles="true"
       Condition="$(BuildPrimePay) == 'True'"/>
 
@@ -266,6 +274,42 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
+  
+  <Target Name="CopyCommandAndSqlScriptToDeploymentDir">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlScriptToDeploymentDir'">CopyCommandAndSqlScriptToDeploymentDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <ItemGroup>
+      <CommonCommandAndSqlFiles Include="$(BuildDirForCommandAndSqlFiles)\Common\*.*" />
+      <PayFlexCommandAndSqlFiles Include="$(BuildDirForCommandAndSqlFiles)\PayFlex\*.*" />
+      <PrimePayCommandAndSqlFiles Include="$(BuildDirForCommandAndSqlFiles)\PrimePay\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CommonCommandAndSqlFiles)"
+			  	DestinationFolder="$(DeploymentDirForApp)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+
+    <Copy SourceFiles="@(PayFlexCommandAndSqlFiles)"
+			DestinationFolder="$(DeploymentDirForApp)\%(RecursiveDir)"
+      SkipUnchangedFiles="true"
+      Condition="$(BuildPayFlex) == 'True' "/>
+
+
+    <Copy SourceFiles="@(PrimePayCommandAndSqlFiles)"
+			DestinationFolder="$(DeploymentDirForApp)\%(RecursiveDir)"
+      SkipUnchangedFiles="true"
+      Condition="$(BuildPrimePay) == 'True' "/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+  
 
   <Target Name="CopyBuildFilesToDestinationDir">
 
@@ -545,7 +589,7 @@
                                Environment ="$(Environment)"
                                InputFiles="$(BuildDirForApp)\SetEnv.cmd"
                                OutputFiles="$(BuildDirForApp)\SetEnv.cmd"
-                               VariableColumnName="$(VariableColumnName)" >
+                               VariableColumnName="$(VariableColumnNameForCommandFile)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
 
@@ -570,7 +614,7 @@
                                Environment ="$(Environment)"
                                InputFiles="$(BuildDirForApp)\PayFlex_SetEnv.cmd"
                                OutputFiles="$(BuildDirForApp)\PayFlex_SetEnv.cmd"
-                               VariableColumnName="$(VariableColumnName)" >
+                               VariableColumnName="$(VariableColumnNameForCommandFile)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
 
@@ -580,7 +624,7 @@
                               Environment ="$(Environment)"
                               InputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
                               OutputFiles="$(BuildDirForApp)\PayFlexFTP_SetEnv.cmd"
-                              VariableColumnName="$(VariableColumnName)" >
+                              VariableColumnName="$(VariableColumnNameForCommandFile)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
 
@@ -782,6 +826,8 @@
 
     <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
+    <CallTarget Targets="CopyCommandAndSqlScriptToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    
     <CallTarget Targets="DatabaseDeployment" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="SaveChangedAssemblyVersionInfoInDB" Condition="$(MSBuildLastTaskResult) == 'True'"/>

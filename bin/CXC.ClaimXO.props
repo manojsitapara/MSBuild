@@ -85,12 +85,6 @@
   </PropertyGroup>
 
 
-  <!--Add TPAName while onborading new TPA -->
-  <ItemGroup>
-    <TPAName Include="GDI"/>
-    <TPAName Include="PrimePay"/>
-    <TPAName Include="PayFlex"/>
-  </ItemGroup>
 
 
   <ItemGroup>

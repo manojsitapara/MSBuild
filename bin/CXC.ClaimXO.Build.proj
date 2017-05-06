@@ -64,17 +64,11 @@
     <MakeDir Directories="$(CXCCoreSchemaChangesSqlDir)" Condition="!Exists('$(CXCCoreSchemaChangesSqlDir)')"/>
     <MakeDir Directories="$(CXCCoreMetaChangesSqlDir)" Condition="!Exists('$(CXCCoreMetaChangesSqlDir)')"/>
 
-    <!-- Below two commands creates folder structure for each TPA  -->
-    <MakeDir Directories="$(BuildDirForDbDeploy)\%(TPAName.Identity)\1.%(TPAName.Identity)_MetaChanges" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity)\1.%(TPAName.Identity)_MetaChanges')"/>
-    <MakeDir Directories="$(BuildDirForDbDeploy)\%(TPAName.Identity)\2.%(TPAName.Identity)_DataChanges" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity)\2.%(TPAName.Identity)_DataChanges')"/>
-
+    
     <!-- Need to reomve this command once we have seperate script folder for each TPA -->
     <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\Common" Condition="!Exists('$(BuildDirForDbDeploy)\Common')" />
 
-    <!-- Below two commands creates folder structure in build directory for each TPA  -->
-    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
-    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
-
+    
 
     <MakeDir Directories="$(BuildDirForDbDeployOutput)" Condition="!Exists('$(BuildDirForDbDeployOutput)')"/>
 
@@ -83,6 +77,27 @@
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+  <Target Name="CreateTPASpecificFolderStructure"
+          Inputs="%(SolutionName.Identity)"
+          Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CreateFolderStructure">
+
+    <PropertyGroup>
+      <TPAName>%(SolutionName.TPAName)</TPAName>
+    </PropertyGroup>
+    <Message Text="$(MergeSolution)"></Message>
+    
+    <!-- Below two commands creates folder structure for each TPA  -->
+    <MakeDir Directories="$(BuildDirForDbDeploy)\$(TPAName)\1.$(TPAName)_MetaChanges" Condition="!Exists('$(BuildDirForDbDeploy)\$(TPAName)\1.$(TPAName)_MetaChanges')"/>
+    <MakeDir Directories="$(BuildDirForDbDeploy)\$(TPAName)\2.$(TPAName)_DataChanges" Condition="!Exists('$(BuildDirForDbDeploy)\$(TPAName)\2.$(TPAName)_DataChanges')"/>
+    
+    
+     <!-- Below two commands creates folder structure in build directory for each TPA  -->
+    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
+    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
+
 
   </Target>
 
@@ -748,17 +763,17 @@
     </PropertyGroup>
 
 
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy 
-      Source="$(MetaChangeScriptDir)" 
-      Destination="$(BuildDirForMetaSqlScript)" 
-      Files="*.*" 
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(MetaChangeScriptDir)"
+      Destination="$(BuildDirForMetaSqlScript)"
+      Files="*.*"
       Options="/MIR" />
 
-    
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy 
-      Source="$(DataChangeScriptDir)" 
-      Destination="$(BuildDirForDataSqlScript)" 
-      Files="*.*" 
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(DataChangeScriptDir)"
+      Destination="$(BuildDirForDataSqlScript)"
+      Files="*.*"
       Options="/MIR" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />

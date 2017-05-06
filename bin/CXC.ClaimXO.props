@@ -93,5 +93,35 @@
   </ItemGroup>
 
 
+  <ItemGroup>
+
+    <SolutionName Include="$(SourceDir)\TPA\GDI\CXCGDI.sln"  Condition="$(BuildGDI)=='true' ">
+      <TPAName>GDI</TPAName>
+      <MetaChangeScriptDir>$(SourceDir)\TPA\GDI\GDI\Build\MetaChanges</MetaChangeScriptDir>
+      <DataChangeScriptDir>$(SourceDir)\TPA\GDI\GDI\Build\DataChanges</DataChangeScriptDir>
+      <ScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\</ScriptDir>
+      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\GDI\1.GDI_MetaChanges</BuildDirForMetaSqlScript>
+      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\GDI\2.GDI_DataChanges</BuildDirForDataSqlScript>
+    </SolutionName>
+
+
+    <SolutionName Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay.sln"  Condition="$(BuildPrimePay)=='true' ">
+      <TPAName>PrimePay</TPAName>
+      <MetaChangeScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges</MetaChangeScriptDir>
+      <DataChangeScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\DataChanges</DataChangeScriptDir>
+      <ScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\</ScriptDir>
+      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PrimePay\1.PrimePay_MetaChanges</BuildDirForMetaSqlScript>
+      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PrimePay\2.PrimePay_DataChanges</BuildDirForDataSqlScript>
+    </SolutionName>
+
+    <SolutionName Include="$(SourceDir)\TPA\PayFlex\CXCPayFlex.sln"  Condition="$(BuildPayFlex)=='true' " >
+      <TPAName>PayFlex</TPAName>
+      <MetaChangeScriptDir>$(SourceDir)\TPA\PayFlex\PayFlex\Build\MetaChanges</MetaChangeScriptDir>
+      <DataChangeScriptDir>$(SourceDir)\TPA\PayFlex\PayFlex\Build\DataChanges</DataChangeScriptDir>
+      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PayFlex\1.PayFlex_MetaChanges</BuildDirForMetaSqlScript>
+      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PayFlex\2.PayFlex_DataChanges</BuildDirForDataSqlScript>
+    </SolutionName>
+
+  </ItemGroup>
 
 </Project>

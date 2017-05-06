@@ -111,79 +111,7 @@
   </Target>
 
 
-  <Target Name="BuildCXCEngineSolution" >
 
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCEngineSolution'">BuildCXCEngineSolution</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCEngineSolutionFile)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
-
-
-  <Target Name="BuildGDISolution" Condition="$(BuildGDI)=='true'">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildGDISolution'">BuildGDISolution</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-
-    <MSBuild Projects="@(GDISolutionFile)"
-             Properties="@(UpdateAssemblyVersionTarget)"  Targets="Build"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-  </Target>
-
-
-  <Target Name="BuildPrimePaySolution" Condition="$(BuildPrimePay)=='true'">
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPrimePaySolution'">BuildPrimePaySolution</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="Target BuildPrimePaySolution has been started." />
-
-    <MSBuild Projects="@(PrimePaySolutionFile)"
-             Properties="@(UpdateAssemblyVersionTarget)" Targets="Build"  />
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
-
-
-  <Target Name="BuildPayFlexSolution" Condition="$(BuildPayFlex)=='true'" >
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPayFlexSolution'">BuildPayFlexSolution</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-
-    <MSBuild Projects="@(PayFlexSolutionFile)"
-             Properties="@(UpdateAssemblyVersionTarget)"  Targets="Build"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
 
 
   <Target Name="CopyBuildFilesToBuildDir">
@@ -204,6 +132,7 @@
 
     <CallTarget Targets="CopyCommandAndSqlFilesToBuildDir" />
 
+    <CallTarget Targets="CopyCXCCoreSqlFilesToBuildDir"></CallTarget>
     <CallTarget Targets="CopySqlFilesToBuildDir"/>
 
 
@@ -277,7 +206,7 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
-  
+
   <Target Name="CopyDbDeployFilesToDeploymentDir" DependsOnTargets="ConfigTransformation">
 
     <PropertyGroup>
@@ -305,7 +234,7 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-  
+
 
   <Target Name="CopyCommandAndSqlScriptToDeploymentDir">
 
@@ -670,11 +599,10 @@
   </Target>
 
 
-
-  <Target Name="CopySqlFilesToBuildDir">
+  <Target Name="CopyCXCCoreSqlFilesToBuildDir">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToBuildDir'">CopySqlFilesToBuildDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreSqlFilesToBuildDir'">CopyCXCCoreSqlFilesToBuildDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -682,12 +610,6 @@
     <ItemGroup>
       <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
       <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
-      <GDIMetaFiles Include="$(SourceDir)\TPA\GDI\GDI\Build\MetaChanges\**\*.*" />
-      <GDIDataChangesFiles Include="$(SourceDir)\TPA\GDI\GDI\Build\DataChanges\**\*.*" />
-      <PrimePayMetaFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges\**\*.*" />
-      <PrimePayDataChangesFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\DataChanges\**\*.*" />
-      <PayFlexMetaFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\Build\MetaChanges\**\*.*" />
-      <PayFlexDataChangesFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\Build\DataChanges\**\*.*" />
     </ItemGroup>
 
 
@@ -701,41 +623,6 @@
           SkipUnchangedFiles="true"
           Condition="$(BuildPayFlex) == 'true' "/>
 
-
-    <Copy SourceFiles="@(GDIDataChangesFiles)"
-          DestinationFolder="$(GDIDataChangesSqlDir)\%(RecursiveDir)"
-          SkipUnchangedFiles="true"
-          Condition="$(BuildGDI)=='true'" />
-
-
-    <Copy SourceFiles="@(GDIMetaFiles)"
-			  	DestinationFolder="$(GDIMetaChangesSqlDir)\%(RecursiveDir)"
-          SkipUnchangedFiles="true"
-          Condition="$(BuildGDI)=='true'" />
-
-
-    <Copy SourceFiles="@(PrimePayDataChangesFiles)"
-          DestinationFolder="$(PrimePayDataChangesSqlDir)\%(RecursiveDir)"
-          SkipUnchangedFiles="true"
-          Condition="$(BuildPrimePay)=='true'" />
-
-
-    <Copy SourceFiles="@(PrimePayMetaFiles)"
-          DestinationFolder="$(PrimePayMetaChangesSqlDir)\%(RecursiveDir)"
-          SkipUnchangedFiles="true"
-          Condition="$(BuildPrimePay)=='true'" />
-
-
-    <Copy SourceFiles="@(PayFlexDataChangesFiles)"
-             DestinationFolder="$(PayFlexDataChangesSqlDir)\%(RecursiveDir)"
-             SkipUnchangedFiles="true"
-             Condition="$(BuildPayFlex)=='true'" />
-
-
-    <Copy SourceFiles="@(PayFlexMetaFiles)"
-          DestinationFolder="$(PayFlexMetaChangesSqlDir)\%(RecursiveDir)"
-          SkipUnchangedFiles="true"
-          Condition="$(BuildPayFlex)=='true'" />
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -831,8 +718,57 @@
   </Target>
 
 
-  <Target Name="Run">
+  <Target Name="BuildSolutions" >
 
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildSolutions'">BuildSolutions</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(SolutionName)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="CopySqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)"
+        Outputs="%(SolutionName.Identity)\Ignore_this">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToBuildDir'">CopySqlFilesToBuildDir</CurrentTargetName>
+      <MetaChangeScriptDir>%(SolutionName.MetaChangeScriptDir)</MetaChangeScriptDir>
+      <DataChangeScriptDir>%(SolutionName.DataChangeScriptDir)</DataChangeScriptDir>
+      <BuildDirForMetaSqlScript>%(SolutionName.BuildDirForMetaSqlScript)</BuildDirForMetaSqlScript>
+      <BuildDirForDataSqlScript>%(SolutionName.BuildDirForDataSqlScript)</BuildDirForDataSqlScript>
+    </PropertyGroup>
+
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy 
+      Source="$(MetaChangeScriptDir)" 
+      Destination="$(BuildDirForMetaSqlScript)" 
+      Files="*.*" 
+      Options="/MIR" />
+
+    
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy 
+      Source="$(DataChangeScriptDir)" 
+      Destination="$(BuildDirForDataSqlScript)" 
+      Files="*.*" 
+      Options="/MIR" />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+
+  <Target Name="Run">
 
     <CallTarget Targets="CreateFolderStructure" />
 
@@ -843,10 +779,8 @@
     <CallTarget Targets="SourceBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
 
-    <CallTarget Targets="BuildCXCEngineSolution" Condition="$(MSBuildLastTaskResult) == 'True'" />
-    <CallTarget Targets="BuildGDISolution" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="BuildPrimepaySolution" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="BuildPayFlexSolution" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+    <CallTarget Targets="BuildSolutions" Condition="$(MSBuildLastTaskResult) == 'True'"></CallTarget>
 
 
     <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>

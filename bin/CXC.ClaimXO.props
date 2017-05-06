@@ -96,6 +96,8 @@
       <ScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\</ScriptDir>
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\GDI\1.GDI_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\GDI\2.GDI_DataChanges</BuildDirForDataSqlScript>
+      <CommandAndSqlFilesDir>$(SourceDir)\CXC\Scripts</CommandAndSqlFilesDir>
+      <CommandAndSqlFilesBuildDir>$(BuildDirForCommandAndSqlFiles)\Common</CommandAndSqlFilesBuildDir>
     </SolutionName>
 
 
@@ -106,6 +108,8 @@
       <ScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\</ScriptDir>
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PrimePay\1.PrimePay_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PrimePay\2.PrimePay_DataChanges</BuildDirForDataSqlScript>
+      <CommandAndSqlFilesDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Scripts</CommandAndSqlFilesDir>
+      <CommandAndSqlFilesBuildDir>$(BuildDirForCommandAndSqlFiles)\PrimePay</CommandAndSqlFilesBuildDir>
     </SolutionName>
 
     <SolutionName Include="$(SourceDir)\TPA\PayFlex\CXCPayFlex.sln"  Condition="$(BuildPayFlex)=='true' " >
@@ -114,6 +118,8 @@
       <DataChangeScriptDir>$(SourceDir)\TPA\PayFlex\PayFlex\Build\DataChanges</DataChangeScriptDir>
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PayFlex\1.PayFlex_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PayFlex\2.PayFlex_DataChanges</BuildDirForDataSqlScript>
+      <CommandAndSqlFilesDir>$(SourceDir)\TPA\PayFlex\PayFlex\Scripts</CommandAndSqlFilesDir>
+      <CommandAndSqlFilesBuildDir>$(BuildDirForCommandAndSqlFiles)\PayFlex</CommandAndSqlFilesBuildDir>
     </SolutionName>
 
   </ItemGroup>

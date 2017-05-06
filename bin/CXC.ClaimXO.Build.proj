@@ -18,17 +18,8 @@
   <!-- EndRegion -->
 
 
-  <!--This item group has definitions related to solution files-->
   <ItemGroup>
-    <CXCEngineSolutionFile Include="$(SourceDir)\CXC\CXCEngine.sln"></CXCEngineSolutionFile>
-    <PrimePaySolutionFile Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay.sln"></PrimePaySolutionFile>
-    <PayFlexSolutionFile Include="$(SourceDir)\TPA\PayFlex\CXCPayFlex.sln"></PayFlexSolutionFile>
-    <GDISolutionFile Include="$(SourceDir)\TPA\GDI\CXCGDI.sln"></GDISolutionFile>
     <GeneratedAssemblyFileName Include="$(TempDir)\AssemblyVersionNumber.txt"/>
-  </ItemGroup>
-
-
-  <ItemGroup>
     <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
   </ItemGroup>
 
@@ -64,11 +55,11 @@
     <MakeDir Directories="$(CXCCoreSchemaChangesSqlDir)" Condition="!Exists('$(CXCCoreSchemaChangesSqlDir)')"/>
     <MakeDir Directories="$(CXCCoreMetaChangesSqlDir)" Condition="!Exists('$(CXCCoreMetaChangesSqlDir)')"/>
 
-    
+
     <!-- Need to reomve this command once we have seperate script folder for each TPA -->
     <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\Common" Condition="!Exists('$(BuildDirForDbDeploy)\Common')" />
 
-    
+
 
     <MakeDir Directories="$(BuildDirForDbDeployOutput)" Condition="!Exists('$(BuildDirForDbDeployOutput)')"/>
 
@@ -88,13 +79,13 @@
       <TPAName>%(SolutionName.TPAName)</TPAName>
     </PropertyGroup>
     <Message Text="$(MergeSolution)"></Message>
-    
+
     <!-- Below two commands creates folder structure for each TPA  -->
     <MakeDir Directories="$(BuildDirForDbDeploy)\$(TPAName)\1.$(TPAName)_MetaChanges" Condition="!Exists('$(BuildDirForDbDeploy)\$(TPAName)\1.$(TPAName)_MetaChanges')"/>
     <MakeDir Directories="$(BuildDirForDbDeploy)\$(TPAName)\2.$(TPAName)_DataChanges" Condition="!Exists('$(BuildDirForDbDeploy)\$(TPAName)\2.$(TPAName)_DataChanges')"/>
-    
-    
-     <!-- Below two commands creates folder structure in build directory for each TPA  -->
+
+
+    <!-- Below two commands creates folder structure in build directory for each TPA  -->
     <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
     <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
 
@@ -126,9 +117,9 @@
   </Target>
 
 
-
-
-
+  
+  
+  
   <Target Name="CopyBuildFilesToBuildDir">
 
     <PropertyGroup>
@@ -145,7 +136,7 @@
 			  	DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
-    <CallTarget Targets="CopyCommandAndSqlFilesToBuildDir" />
+    <CallTarget Targets="CopyTPASpecificCommandAndSqlFilesToBuildDir" />
 
     <CallTarget Targets="CopyCXCCoreSqlFilesToBuildDir"></CallTarget>
     <CallTarget Targets="CopySqlFilesToBuildDir"/>
@@ -157,35 +148,28 @@
   </Target>
 
 
-  <Target Name="CopyCommandAndSqlFilesToBuildDir">
+  <Target Name="CopyTPASpecificCommandAndSqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)"
+        Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToBuildDir'">CopyCommandAndSqlFilesToBuildDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyTPASpecificCommandAndSqlFilesToBuildDir'">CopyTPASpecificCommandAndSqlFilesToBuildDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-
-    <ItemGroup>
-      <CommonCommandAndSqlFiles Include="$(SourceDir)\CXC\Scripts\*.*" />
-      <PayFlexCommandAndSqlFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\Scripts\*.*" />
-      <PrimePayCommandAndSqlFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Scripts\*.*" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(CommonCommandAndSqlFiles)"
-			  	DestinationFolder="$(BuildDirForCommandAndSqlFiles)\Common\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
-
-    <Copy SourceFiles="@(PayFlexCommandAndSqlFiles)"
-			DestinationFolder="$(BuildDirForCommandAndSqlFiles)\PayFlex\%(RecursiveDir)"
-      SkipUnchangedFiles="true"
-      Condition="$(BuildPayFlex) == 'True'"/>
+    <PropertyGroup>
+      <CommandAndSqlFileDir>%(SolutionName.CommandAndSqlFilesDir)</CommandAndSqlFileDir>
+      <CommandAndSqlFilesBuildDir>%(SolutionName.CommandAndSqlFilesBuildDir)</CommandAndSqlFilesBuildDir>
+    </PropertyGroup>
 
 
-    <Copy SourceFiles="@(PrimePayCommandAndSqlFiles)"
-			DestinationFolder="$(BuildDirForCommandAndSqlFiles)\PrimePay\%(RecursiveDir)"
-      SkipUnchangedFiles="true"
-      Condition="$(BuildPrimePay) == 'True'"/>
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(CommandAndSqlFileDir)"
+      Destination="$(CommandAndSqlFilesBuildDir)"
+      Files="*.*"
+      Options="/MIR"  />
+
+
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 

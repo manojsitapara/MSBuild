@@ -66,14 +66,14 @@
     <MakeDir Directories="$(TempDir)" Condition="!Exists('$(TempDir))')"/>
 
     <CallTarget Targets="CreateTPASpecificFolderStructure"></CallTarget>
-    
+
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
 
-  
+
   <Target Name="CreateTPASpecificFolderStructure" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
@@ -88,7 +88,7 @@
 
     <!-- Below two commands creates folder structure in build directory for each TPA  -->
     <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\$(TPAName)" Condition="!Exists('$(BuildDirForCommandAndSqlFiles)\$(TPAName')"/>
-    
+
 
 
   </Target>
@@ -117,7 +117,7 @@
 
   </Target>
 
-  
+
   <Target Name="BuildSolutions" >
 
     <PropertyGroup>
@@ -134,8 +134,8 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-  
-  
+
+
   <Target Name="CopyBuildFilesToBuildDir">
 
     <PropertyGroup>
@@ -195,16 +195,13 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-
-    <ItemGroup>
-      <BuildFiles Include="$(BuildDirForApp)\*.*" />
-    </ItemGroup>
-
     <Message Text = "Start copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
-    <Copy SourceFiles="@(BuildFiles)"
-			  	DestinationFolder="$(DeploymentDirForApp)\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(BuildDirForApp)"
+      Destination="$(DeploymentDirForApp)"
+      Files="*.*"
+      Options="/E" />
 
     <Message Text = "Completed copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
@@ -273,15 +270,13 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <ItemGroup>
-      <BuildFiles Include="$(DeploymentDirForApp)\*.*" />
-    </ItemGroup>
-
     <Message Text = "Start copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
 
-    <Copy SourceFiles="@(BuildFiles)"
-			  	DestinationFolder="$(DestinationDir)\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(DeploymentDirForApp)"
+      Destination="$(DestinationDir)"
+      Files="*.*"
+      Options="/E"  />
 
     <Message Text = "Completed copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
 
@@ -302,7 +297,7 @@
 
     <CallTarget Targets="CXCCoreConfigTranformation"></CallTarget>
     <CallTarget Targets="TPASpecificConfigTransform"></CallTarget>
-    
+
     <CallTarget Targets="dbDeployResourceFileTranformation"></CallTarget>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -403,7 +398,7 @@
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='GDIConfigTransform'">GDIConfigTransform</CurrentTargetName>
-       <StateParamXmlFileDir>%(SolutionName.StateParamXmlFileDir)</StateParamXmlFileDir>
+      <StateParamXmlFileDir>%(SolutionName.StateParamXmlFileDir)</StateParamXmlFileDir>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -661,7 +656,7 @@
   </Target>
 
 
-  
+
 
 
   <Target Name="CopySqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreSqlFilesToBuildDir">
@@ -714,7 +709,7 @@
     <CallTarget Targets="CopySqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
     <CallTarget Targets="CopyCommandAndSqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
-    
+
     <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
     <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
     <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition="$(MSBuildLastTaskResult) == 'True'"/>
@@ -727,7 +722,7 @@
     <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    
+
     <CallTarget Targets="DatabaseDeployment" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="InsertAssemblyVersionInfoIntoDB" Condition="$(MSBuildLastTaskResult) == 'True'"/>

@@ -89,8 +89,8 @@
 
 
     <!-- Below two commands creates folder structure in build directory for each TPA  -->
-    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
-    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\%(TPAName.Identity)" Condition="!Exists('$(BuildDirForDbDeploy)\%(TPAName.Identity')"/>
+    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\$(TPAName)" Condition="!Exists('$(BuildDirForCommandAndSqlFiles)\$(TPAName')"/>
+    
 
 
   </Target>
@@ -310,11 +310,9 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <CallTarget Targets="CXCCoreConfigTranformation"></CallTarget>
-    <CallTarget Targets="GDIConfigTransform" Condition="$(BuildGDI) == 'True'"></CallTarget>
-    <CallTarget Targets="PrimePayConfigTransform" Condition="$(BuildPrimePay) == 'True'"></CallTarget>
-    <CallTarget Targets="PayFlexConfigTransform" Condition="$(BuildPayFlex) == 'True'"></CallTarget>
+    <CallTarget Targets="TPASpecificConfigTransform"></CallTarget>
+    
     <CallTarget Targets="dbDeployResourceFileTranformation"></CallTarget>
-
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -410,67 +408,19 @@
   </Target>
 
 
-  <Target Name="GDIConfigTransform">
+  <Target Name="TPASpecificConfigTransform" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='GDIConfigTransform'">GDIConfigTransform</CurrentTargetName>
+       <StateParamXmlFileDir>%(SolutionName.StateParamXmlFileDir)</StateParamXmlFileDir>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <XmlPreprocess
       ToolPath="$(LibDir)"
-      InputFiles="$(BuildDirForApp)\GDI\config\StateParams.xml"
-      OutputFiles="$(BuildDirForApp)\GDI\config\StateParams.xml"
-      SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
-      Environment="$(Environment)"
-  	  Clean="$(XmlPreprocessorCleanFile)"
-	    Validate="$(XmlPreprocessorValidateFile)" />
-
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
-
-
-  <Target Name="PrimePayConfigTransform">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='PrimePayConfigTransform'">PrimePayConfigTransform</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <XmlPreprocess
-    ToolPath="$(LibDir)"
-    InputFiles="$(BuildDirForApp)\PrimePay\config\StateParams.xml"
-    OutputFiles="$(BuildDirForApp)\PrimePay\config\StateParams.xml"
-    SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
-    Environment="$(Environment)"
-    Clean="$(XmlPreprocessorCleanFile)"
-    Validate="$(XmlPreprocessorValidateFile)"  />
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
-
-
-  <Target Name="PayFlexConfigTransform">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='PayFlexConfigTransform'">PayFlexConfigTransform</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <XmlPreprocess
-      ToolPath="$(LibDir)"
-      InputFiles="$(BuildDirForApp)\PayFlex\config\StateParams.xml"
-      OutputFiles="$(BuildDirForApp)\PayFlex\config\StateParams.xml"
+      InputFiles="$(StateParamXmlFileDir)"
+      OutputFiles="$(StateParamXmlFileDir)"
       SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
       Environment="$(Environment)"
   	  Clean="$(XmlPreprocessorCleanFile)"

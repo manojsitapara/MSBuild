@@ -65,15 +65,18 @@
 
     <MakeDir Directories="$(TempDir)" Condition="!Exists('$(TempDir))')"/>
 
+    <CallTarget Targets="CreateTPASpecificFolderStructure"></CallTarget>
+    
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
 
+  
   <Target Name="CreateTPASpecificFolderStructure"
           Inputs="%(SolutionName.Identity)"
-          Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CreateFolderStructure">
+          Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
       <TPAName>%(SolutionName.TPAName)</TPAName>
@@ -116,8 +119,23 @@
 
   </Target>
 
-
   
+  <Target Name="BuildSolutions" >
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildSolutions'">BuildSolutions</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(SolutionName)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
   
   
   <Target Name="CopyBuildFilesToBuildDir">
@@ -136,10 +154,10 @@
 			  	DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
-    <CallTarget Targets="CopyTPASpecificCommandAndSqlFilesToBuildDir" />
+    
 
-    <CallTarget Targets="CopyCXCCoreSqlFilesToBuildDir"></CallTarget>
-    <CallTarget Targets="CopySqlFilesToBuildDir"/>
+    
+    
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -148,11 +166,11 @@
   </Target>
 
 
-  <Target Name="CopyTPASpecificCommandAndSqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)"
+  <Target Name="CopyCommandAndSqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)"
         Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyTPASpecificCommandAndSqlFilesToBuildDir'">CopyTPASpecificCommandAndSqlFilesToBuildDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToBuildDir'">CopyCommandAndSqlFilesToBuildDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -198,18 +216,16 @@
 
     <Message Text = "Completed copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
-
-
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
 
-  <Target Name="CopyDbDeployFilesToDeploymentDir" DependsOnTargets="ConfigTransformation">
+  <Target Name="CopyDbDeployOutputFilesToDeploymentDir" DependsOnTargets="ConfigTransformation">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyDbDeployFilesToDeploymentDir'">CopyDbDeployFilesToDeploymentDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyDbDeployOutputFilesToDeploymentDir'">CopyDbDeployOutputFilesToDeploymentDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -235,35 +251,22 @@
   </Target>
 
 
-  <Target Name="CopyCommandAndSqlScriptToDeploymentDir">
+  <Target Name="CopyCommandAndSqlScriptToDeploymentDir" Inputs="%(SolutionName.Identity)"
+        Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlScriptToDeploymentDir'">CopyCommandAndSqlScriptToDeploymentDir</CurrentTargetName>
+      <CommandAndSqlFilesBuildDir>%(SolutionName.CommandAndSqlFilesBuildDir)</CommandAndSqlFilesBuildDir>
+      <CommandAndSqlFilesDeploymentDir>%(SolutionName.CommandAndSqlFilesDeploymentDir)</CommandAndSqlFilesDeploymentDir>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-    <ItemGroup>
-      <CommonCommandAndSqlFiles Include="$(BuildDirForCommandAndSqlFiles)\Common\*.*" />
-      <PayFlexCommandAndSqlFiles Include="$(BuildDirForCommandAndSqlFiles)\PayFlex\*.*" />
-      <PrimePayCommandAndSqlFiles Include="$(BuildDirForCommandAndSqlFiles)\PrimePay\*.*" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(CommonCommandAndSqlFiles)"
-			  	DestinationFolder="$(DeploymentDirForApp)\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
-
-    <Copy SourceFiles="@(PayFlexCommandAndSqlFiles)"
-			DestinationFolder="$(DeploymentDirForApp)\%(RecursiveDir)"
-      SkipUnchangedFiles="true"
-      Condition="$(BuildPayFlex) == 'True' "/>
-
-
-    <Copy SourceFiles="@(PrimePayCommandAndSqlFiles)"
-			DestinationFolder="$(DeploymentDirForApp)\%(RecursiveDir)"
-      SkipUnchangedFiles="true"
-      Condition="$(BuildPrimePay) == 'True' "/>
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(CommandAndSqlFilesBuildDir)"
+      Destination="$(CommandAndSqlFilesDeploymentDir)"
+      Files="*.*" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -717,26 +720,11 @@
   </Target>
 
 
-  <Target Name="BuildSolutions" >
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildSolutions'">BuildSolutions</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(SolutionName)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
+  
 
 
   <Target Name="CopySqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)"
-        Outputs="%(SolutionName.Identity)\Ignore_this">
+        Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreSqlFilesToBuildDir">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToBuildDir'">CopySqlFilesToBuildDir</CurrentTargetName>
@@ -783,13 +771,16 @@
 
 
     <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="CopySqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="CopyCommandAndSqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
+    
     <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
     <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
     <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="CopyBuildFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="CopyDbDeployFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="DeploymentBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 

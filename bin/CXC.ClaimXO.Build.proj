@@ -74,9 +74,7 @@
   </Target>
 
   
-  <Target Name="CreateTPASpecificFolderStructure"
-          Inputs="%(SolutionName.Identity)"
-          Outputs="%(SolutionName.Identity)\Ignore_this">
+  <Target Name="CreateTPASpecificFolderStructure" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
       <TPAName>%(SolutionName.TPAName)</TPAName>
@@ -154,11 +152,6 @@
 			  	DestinationFolder="$(BuildDirForApp)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
-    
-
-    
-    
-
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -166,8 +159,7 @@
   </Target>
 
 
-  <Target Name="CopyCommandAndSqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)"
-        Outputs="%(SolutionName.Identity)\Ignore_this">
+  <Target Name="CopyCommandAndSqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToBuildDir'">CopyCommandAndSqlFilesToBuildDir</CurrentTargetName>
@@ -251,11 +243,10 @@
   </Target>
 
 
-  <Target Name="CopyCommandAndSqlScriptToDeploymentDir" Inputs="%(SolutionName.Identity)"
-        Outputs="%(SolutionName.Identity)\Ignore_this">
+  <Target Name="CopyCommandAndSqlFilesToDeploymentDir" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlScriptToDeploymentDir'">CopyCommandAndSqlScriptToDeploymentDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToDeploymentDir'">CopyCommandAndSqlFilesToDeploymentDir</CurrentTargetName>
       <CommandAndSqlFilesBuildDir>%(SolutionName.CommandAndSqlFilesBuildDir)</CommandAndSqlFilesBuildDir>
       <CommandAndSqlFilesDeploymentDir>%(SolutionName.CommandAndSqlFilesDeploymentDir)</CommandAndSqlFilesDeploymentDir>
     </PropertyGroup>
@@ -607,10 +598,10 @@
   </Target>
 
 
-  <Target Name="SaveChangedAssemblyVersionInfoInDB" Condition="Exists(@(GeneratedAssemblyFileName))">
+  <Target Name="InsertAssemblyVersionInfoIntoDB" Condition="Exists(@(GeneratedAssemblyFileName))">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SaveChangedVersionInfoInDB'">SaveChangedVersionInfoInDB</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='InsertAssemblyVersionInfoIntoDB'">InsertAssemblyVersionInfoIntoDB</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -673,8 +664,7 @@
   
 
 
-  <Target Name="CopySqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)"
-        Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreSqlFilesToBuildDir">
+  <Target Name="CopySqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreSqlFilesToBuildDir">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToBuildDir'">CopySqlFilesToBuildDir</CurrentTargetName>
@@ -736,11 +726,11 @@
 
     <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
-    <CallTarget Targets="CopyCommandAndSqlScriptToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="DatabaseDeployment" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
-    <CallTarget Targets="SaveChangedAssemblyVersionInfoInDB" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="InsertAssemblyVersionInfoIntoDB" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="CreateSVNLabel" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 

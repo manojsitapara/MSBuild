@@ -19,8 +19,9 @@
 
 
   <ItemGroup>
-    <GeneratedAssemblyFileName Include="$(TempDir)\AssemblyVersionNumber.txt"/>
+    <CXCEngineSolutionFile Include="$(SourceDir)\CXC\CXCEngine.sln"></CXCEngineSolutionFile>
     <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
+    <GeneratedAssemblyFileName Include="$(TempDir)\AssemblyVersionNumber.txt"/>
   </ItemGroup>
 
 
@@ -117,8 +118,29 @@
 
   </Target>
 
+  
+  <Target Name="BuildCXCEngineSolution" >
 
-  <Target Name="BuildSolutions" >
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCEngineSolution'">BuildCXCEngineSolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCEngineSolutionFile)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+
+
+  </Target>
+
+  <Target Name="BuildSolutions" DependsOnTargets="BuildCXCEngineSolution">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildSolutions'">BuildSolutions</CurrentTargetName>
@@ -465,7 +487,7 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <CallTarget Targets="CommonCommandFileTransform" />
-    <CallTarget Targets="PayFlexCommandFileTransform" />
+    <CallTarget Targets="TPASpecificCommandFileTransform" />
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -500,10 +522,11 @@
   </Target>
 
 
-  <Target Name="PayFlexCommandFileTransform" Condition="$(BuildPayFlex)=='true'">
+  <Target Name="TPASpecificCommandFileTransform" Inputs="%(CommandFileName.Identity)" Outputs="%(CommandFileName.Identity)\Ignore_this">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='PayFlexCommandFileTransform'">PayFlexCommandFileTransform</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='TPASpecificCommandFileTransform'">TPASpecificCommandFileTransform</CurrentTargetName>
+      <CommandFileName>@(CommandFileName)</CommandFileName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -511,23 +534,13 @@
     <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
                                TabName="EnvSetting"
                                Environment ="$(Environment)"
-                               InputFiles="$(BuildDirForCommandAndSqlFiles)\PayFlex\PayFlex_SetEnv.cmd"
-                               OutputFiles="$(BuildDirForCommandAndSqlFiles)\PayFlex\PayFlex_SetEnv.cmd"
+                               InputFiles="$(CommandFileName)"
+                               OutputFiles="$(CommandFileName)"
                                VariableColumnName="$(VariableColumnNameForCommandFile)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
 
     <Message Text="$(ErrorMessage)"></Message>
-
-
-    <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
-                              TabName="EnvSetting"
-                              Environment ="$(Environment)"
-                              InputFiles="$(BuildDirForCommandAndSqlFiles)\PayFlex\PayFlexFTP_SetEnv.cmd"
-                              OutputFiles="$(BuildDirForCommandAndSqlFiles)\PayFlex\PayFlexFTP_SetEnv.cmd"
-                              VariableColumnName="$(VariableColumnNameForCommandFile)" >
-      <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
-    </CommandFileTransformation>
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />

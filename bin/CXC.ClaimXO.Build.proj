@@ -219,8 +219,8 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <ItemGroup>
-      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
       <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
+      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
     </ItemGroup>
 
 
@@ -612,10 +612,10 @@
   </Target>
 
 
-  <Target Name="CreateSVNLabel" Condition="$(CreateSVNLabel) == 'True'">
+  <Target Name="CreateSVNLabelOnSVN" Condition="$(CreateSVNLabel) == 'True'">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CreateSVNLabel'">CreateSVNLabel</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CreateSVNLabelOnSVN'">CreateSVNLabelOnSVN</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -735,7 +735,7 @@
 
     <CallTarget Targets="InsertAssemblyVersionInfoIntoDB" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
-    <CallTarget Targets="CreateSVNLabel" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="CreateSVNLabelOnSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="CleanTempFolder"></CallTarget>
 

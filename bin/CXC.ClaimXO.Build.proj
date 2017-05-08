@@ -13,8 +13,6 @@
   <Import Project="CXC.ClaimXO.Backup.targets"/>
   <Import Project="CXC.ClaimXO.EmailNotification.targets"/>
 
-
-
   <!-- EndRegion -->
 
 
@@ -119,6 +117,24 @@
   </Target>
 
   
+  <Target Name="BuildSolutions" DependsOnTargets="BuildCXCEngineSolution">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildSolutions'">BuildSolutions</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(SolutionName)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+  
+  
   <Target Name="BuildCXCEngineSolution" >
 
     <PropertyGroup>
@@ -139,24 +155,7 @@
 
 
   </Target>
-
-  <Target Name="BuildSolutions" DependsOnTargets="BuildCXCEngineSolution">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildSolutions'">BuildSolutions</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(SolutionName)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
-
+  
 
   <Target Name="CopyBuildFilesToBuildDir">
 
@@ -179,7 +178,69 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
+  
+  
+  <Target Name="CopySqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreSqlFilesToBuildDir">
 
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToBuildDir'">CopySqlFilesToBuildDir</CurrentTargetName>
+      <MetaChangeScriptDir>%(SolutionName.MetaChangeScriptDir)</MetaChangeScriptDir>
+      <DataChangeScriptDir>%(SolutionName.DataChangeScriptDir)</DataChangeScriptDir>
+      <BuildDirForMetaSqlScript>%(SolutionName.BuildDirForMetaSqlScript)</BuildDirForMetaSqlScript>
+      <BuildDirForDataSqlScript>%(SolutionName.BuildDirForDataSqlScript)</BuildDirForDataSqlScript>
+    </PropertyGroup>
+
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(MetaChangeScriptDir)"
+      Destination="$(BuildDirForMetaSqlScript)"
+      Files="*.*"
+      Options="/MIR" />
+
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(DataChangeScriptDir)"
+      Destination="$(BuildDirForDataSqlScript)"
+      Files="*.*"
+      Options="/MIR" />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+  
+  <Target Name="CopyCXCCoreSqlFilesToBuildDir">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreSqlFilesToBuildDir'">CopyCXCCoreSqlFilesToBuildDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <ItemGroup>
+      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
+      <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
+    </ItemGroup>
+
+
+    <Copy SourceFiles="@(CXCCoreSchemaChangesFiles)"
+          DestinationFolder="$(CXCCoreSchemaChangesSqlDir)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+
+
+    <Copy SourceFiles="@(CXCCoreMetaFiles)"
+          DestinationFolder="$(CXCCoreMetaChangesSqlDir)\%(RecursiveDir)"
+          SkipUnchangedFiles="true"
+          Condition="$(BuildPayFlex) == 'true' "/>
+
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+  
 
   <Target Name="CopyCommandAndSqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
 
@@ -207,108 +268,8 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-
-
-  <Target Name="CopyBuildFilesToDeploymentDir" DependsOnTargets="ConfigTransformation">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToDeploymentDir'">CopyBuildFilesToDeploymentDir</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <Message Text = "Start copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
-
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(BuildDirForApp)"
-      Destination="$(DeploymentDirForApp)"
-      Files="*.*"
-      Options="/E" />
-
-    <Message Text = "Completed copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-  </Target>
-
-
-  <Target Name="CopyDbDeployOutputFilesToDeploymentDir" DependsOnTargets="ConfigTransformation">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyDbDeployOutputFilesToDeploymentDir'">CopyDbDeployOutputFilesToDeploymentDir</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-
-    <ItemGroup>
-      <DbDeployFiles Include="$(BuildDirForDbDeployOutput)\*.*" />
-    </ItemGroup>
-
-    <Message Text = "Start copying files from $(BuildDirForDbDeployOutput) to $(DeploymentDirForDbDeploy)"></Message>
-
-    <Copy SourceFiles="@(DbDeployFiles)"
-			  	DestinationFolder="$(DeploymentDirForDbDeploy)\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
-
-    <Message Text = "Completed copying files from $(BuildDirForDbDeployOutput) to $(DeploymentDirForDbDeploy)"></Message>
-
-
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-  </Target>
-
-
-  <Target Name="CopyCommandAndSqlFilesToDeploymentDir" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToDeploymentDir'">CopyCommandAndSqlFilesToDeploymentDir</CurrentTargetName>
-      <CommandAndSqlFilesBuildDir>%(SolutionName.CommandAndSqlFilesBuildDir)</CommandAndSqlFilesBuildDir>
-      <CommandAndSqlFilesDeploymentDir>%(SolutionName.CommandAndSqlFilesDeploymentDir)</CommandAndSqlFilesDeploymentDir>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(CommandAndSqlFilesBuildDir)"
-      Destination="$(CommandAndSqlFilesDeploymentDir)"
-      Files="*.*" />
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-  </Target>
-
-
-  <Target Name="CopyBuildFilesToDestinationDir">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToDestinationDir'">CopyBuildFilesToDestinationDir</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <Message Text = "Start copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
-
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(DeploymentDirForApp)"
-      Destination="$(DestinationDir)"
-      Files="*.*"
-      Options="/E"  />
-
-    <Message Text = "Completed copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
-
-
+  
+  
   <Target Name="ConfigTransformation">
 
     <PropertyGroup>
@@ -317,10 +278,10 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <CallTarget Targets="CXCCoreConfigTranformation"></CallTarget>
-    <CallTarget Targets="TPASpecificConfigTransform"></CallTarget>
+    <CallTarget Targets="ConfigTranformationForCXCCore"></CallTarget>
+    <CallTarget Targets="ConfigTranformationForTPA"></CallTarget>
 
-    <CallTarget Targets="dbDeployResourceFileTranformation"></CallTarget>
+    <CallTarget Targets="ConfigTranformationForDbDeploy"></CallTarget>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -328,12 +289,12 @@
 
 
   </Target>
-
-
-  <Target Name="CXCCoreConfigTranformation">
+  
+  
+  <Target Name="ConfigTranformationForCXCCore">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CXCCoreConfigTranformation'">CXCCoreConfigTranformation</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='ConfigTranformationForCXCCore'">ConfigTranformationForCXCCore</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -414,12 +375,12 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
-
-  <Target Name="TPASpecificConfigTransform" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
+  
+  
+  <Target Name="ConfigTranformationForTPA" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='GDIConfigTransform'">GDIConfigTransform</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='ConfigTranformationForTPA'">ConfigTranformationForTPA</CurrentTargetName>
       <StateParamXmlFileDir>%(SolutionName.StateParamXmlFileDir)</StateParamXmlFileDir>
     </PropertyGroup>
 
@@ -442,10 +403,10 @@
   </Target>
 
 
-  <Target Name="dbDeployResourceFileTranformation">
+  <Target Name="ConfigTranformationForDbDeploy">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='dbDeployResourceFileTranformation'">dbDeployResourceFileTranformation</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='ConfigTranformationForDbDeploy'">ConfigTranformationForDbDeploy</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -477,7 +438,8 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
+  
+  
   <Target Name="CommandFileTransaformation">
 
     <PropertyGroup>
@@ -495,8 +457,8 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
-
+  
+  
   <Target Name="CommonCommandFileTransform">
 
     <PropertyGroup>
@@ -520,8 +482,8 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
-
+  
+  
   <Target Name="TPASpecificCommandFileTransform" Inputs="%(CommandFileName.Identity)" Outputs="%(CommandFileName.Identity)\Ignore_this">
 
     <PropertyGroup>
@@ -548,37 +510,105 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
-
-  <Target Name="CopyCXCCoreSqlFilesToBuildDir">
+  
+  
+  <Target Name="CopyBuildFilesToDeploymentDir">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreSqlFilesToBuildDir'">CopyCXCCoreSqlFilesToBuildDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToDeploymentDir'">CopyBuildFilesToDeploymentDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
+    <Message Text = "Start copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(BuildDirForApp)"
+      Destination="$(DeploymentDirForApp)"
+      Files="*.*"
+      Options="/E" />
+
+    <Message Text = "Completed copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  <Target Name="CopyDbDeployOutputFilesToDeploymentDir">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyDbDeployOutputFilesToDeploymentDir'">CopyDbDeployOutputFilesToDeploymentDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
     <ItemGroup>
-      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
-      <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
+      <DbDeployFiles Include="$(BuildDirForDbDeployOutput)\*.*" />
     </ItemGroup>
 
+    <Message Text = "Start copying files from $(BuildDirForDbDeployOutput) to $(DeploymentDirForDbDeploy)"></Message>
 
-    <Copy SourceFiles="@(CXCCoreSchemaChangesFiles)"
-          DestinationFolder="$(CXCCoreSchemaChangesSqlDir)\%(RecursiveDir)"
+    <Copy SourceFiles="@(DbDeployFiles)"
+			  	DestinationFolder="$(DeploymentDirForDbDeploy)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
-
-    <Copy SourceFiles="@(CXCCoreMetaFiles)"
-          DestinationFolder="$(CXCCoreMetaChangesSqlDir)\%(RecursiveDir)"
-          SkipUnchangedFiles="true"
-          Condition="$(BuildPayFlex) == 'true' "/>
+    <Message Text = "Completed copying files from $(BuildDirForDbDeployOutput) to $(DeploymentDirForDbDeploy)"></Message>
 
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  <Target Name="CopyCommandAndSqlFilesToDeploymentDir" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToDeploymentDir'">CopyCommandAndSqlFilesToDeploymentDir</CurrentTargetName>
+      <CommandAndSqlFilesBuildDir>%(SolutionName.CommandAndSqlFilesBuildDir)</CommandAndSqlFilesBuildDir>
+      <CommandAndSqlFilesDeploymentDir>%(SolutionName.CommandAndSqlFilesDeploymentDir)</CommandAndSqlFilesDeploymentDir>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(CommandAndSqlFilesBuildDir)"
+      Destination="$(CommandAndSqlFilesDeploymentDir)"
+      Files="*.*" />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  <Target Name="CopyBuildFilesToDestinationDir">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToDestinationDir'">CopyBuildFilesToDestinationDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <Message Text = "Start copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(DeploymentDirForApp)"
+      Destination="$(DestinationDir)"
+      Files="*.*"
+      Options="/E"  />
+
+    <Message Text = "Completed copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
   </Target>
 
 
@@ -669,40 +699,6 @@
   </Target>
 
 
-
-
-
-  <Target Name="CopySqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreSqlFilesToBuildDir">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToBuildDir'">CopySqlFilesToBuildDir</CurrentTargetName>
-      <MetaChangeScriptDir>%(SolutionName.MetaChangeScriptDir)</MetaChangeScriptDir>
-      <DataChangeScriptDir>%(SolutionName.DataChangeScriptDir)</DataChangeScriptDir>
-      <BuildDirForMetaSqlScript>%(SolutionName.BuildDirForMetaSqlScript)</BuildDirForMetaSqlScript>
-      <BuildDirForDataSqlScript>%(SolutionName.BuildDirForDataSqlScript)</BuildDirForDataSqlScript>
-    </PropertyGroup>
-
-
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(MetaChangeScriptDir)"
-      Destination="$(BuildDirForMetaSqlScript)"
-      Files="*.*"
-      Options="/MIR" />
-
-
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(DataChangeScriptDir)"
-      Destination="$(BuildDirForDataSqlScript)"
-      Files="*.*"
-      Options="/MIR" />
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-  </Target>
-
-
-
   <Target Name="Run">
 
     <CallTarget Targets="CreateFolderStructure" />
@@ -729,10 +725,9 @@
 
     <CallTarget Targets="CopyBuildFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
     <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="DeploymentBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-
-    <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition="$(MSBuildLastTaskResult) == 'True'"/>
 

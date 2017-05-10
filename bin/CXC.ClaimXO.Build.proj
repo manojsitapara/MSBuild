@@ -135,7 +135,7 @@
   </Target>
   
   
-  <Target Name="BuildCXCEngineSolution" >
+  <Target Name="BuildCXCEngineSolution" Condition="$(BuildCXCEngine) == 'true' ">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCEngineSolution'">BuildCXCEngineSolution</CurrentTargetName>
@@ -210,7 +210,7 @@
   </Target>
 
   
-  <Target Name="CopyCXCCoreSqlFilesToBuildDir">
+  <Target Name="CopyCXCCoreSqlFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreSqlFilesToBuildDir'">CopyCXCCoreSqlFilesToBuildDir</CurrentTargetName>
@@ -291,7 +291,7 @@
   </Target>
   
   
-  <Target Name="ConfigTranformationForCXCCore">
+  <Target Name="ConfigTranformationForCXCCore" Condition="$(BuildCXCEngine) == 'true' ">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='ConfigTranformationForCXCCore'">ConfigTranformationForCXCCore</CurrentTargetName>

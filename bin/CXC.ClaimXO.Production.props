@@ -17,6 +17,8 @@
 
     <!--Solution settings -->
 
+     <!-- To build CXC Engine solution, set value to true -->
+    <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
     <BuildGDI>true</BuildGDI>
     <!-- To build PrimePay solution, set value to true -->

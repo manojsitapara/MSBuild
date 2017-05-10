@@ -10,13 +10,15 @@
 
 
     <!-- Source code SVN settings -->
-    
+
     <!-- To download source code from SVN, set value to true else false -->
     <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
-    
+
 
     <!--Solution settings -->
 
+    <!-- To build CXC Engine solution, set value to true -->
+    <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
     <BuildGDI>true</BuildGDI>
     <!-- To build PrimePay solution, set value to true -->
@@ -25,6 +27,8 @@
     <BuildPayFlex>true</BuildPayFlex>
 
 
+    <!-- Build code settings-->
+    <PushCodeOnDestination>true</PushCodeOnDestination>
 
 
     <!--Sql server settings -->
@@ -92,8 +96,8 @@
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2016.01.01.0</AssemblyBuildNumber>
-    
+    <AssemblyBuildNumber></AssemblyBuildNumber>
+
 
 
     <!--Set value true to create svn lable under svn tag branch-->

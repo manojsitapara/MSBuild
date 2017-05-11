@@ -10,12 +10,15 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
+     <MSBuild.ExtensionPack.FileSystem.Folder
+            TaskAction="RemoveContent"
+            Path="$(DeploymentDirForDbDeploy)"/>
 
     <MSBuild.ExtensionPack.FileSystem.Folder
-            TaskAction="RemoveContent" 
+            TaskAction="RemoveContent"
             Path="$(BuildDirForDbDeployOutput)"/>
-    
-    
+
+
     <MSBuild.Dbdeploy.Task.Dbdeploy
             DbType="mssql"
             templatedir="$(DbDeployTemplateDir)"
@@ -28,48 +31,59 @@
             forceUpdate="true"  />
 
 
-    
+    <WriteLinesToFile File="$(TempDir)\dbDeployFileName.txt" Lines="$(DbDeployOutputFileName)" Overwrite="true" Condition="$(PushCodeOnDestination) == 'false' "/>
+
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
-  
-  <Target Name="DatabaseDeployment" DependsOnTargets="GenerateSqlScriptFromDbDeploy">
+
+  <Target Name="DatabaseDeployment">
+
+    
+    <ItemGroup Condition="$(PushCodeOnDestination) == 'true' ">
+      <dbDeployFileName Include="$(TempDir)\dbDeployFileName.txt"/>
+    </ItemGroup>
+    
+    <ReadLinesFromFile File="@(dbDeployFileName)" Condition="$(PushCodeOnDestination) == 'true' ">
+      <Output TaskParameter="Lines" ItemName="dbDeployOutputFilePath" />
+    </ReadLinesFromFile>
     
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='DatabaseDeployment'">DatabaseDeployment</CurrentTargetName>
       <DbDeployFileToRun>$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployFileToRun>
+      <DbDeployFileToRun Condition="$(PushCodeOnDestination) == 'true' ">@(dbDeployOutputFilePath)</DbDeployFileToRun>
     </PropertyGroup>
     
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-    
+
     <Message Text="Executing change script ($(GenerateOutputSqlFileName)) on $(dbDeployDBName) ..."/>
 
-    <MSBuild.ExtensionPack.SqlServer.SqlCmd 
-      TaskAction="Execute" 
-      Server="$(SqlServerName)" 
-      Database="$(dbDeployDBName)" 
-      LogOn="$(SqlServerUserName)" 
-      Password="$(SqlServerPassword)" 
-      InputFiles="$(DbDeployFileToRun)"  
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd
+      TaskAction="Execute"
+      Server="$(SqlServerName)"
+      Database="$(dbDeployDBName)"
+      LogOn="$(SqlServerUserName)"
+      Password="$(SqlServerPassword)"
+      InputFiles="$(DbDeployFileToRun)"
       Condition="$(IsSqlWindowsAuthentication)=='false'"/>
 
-    <MSBuild.ExtensionPack.SqlServer.SqlCmd 
-      TaskAction="Execute" 
-      Server="$(SqlServerName)" 
-      Database="$(dbDeployDBName)" 
-      InputFiles="$(DbDeployFileToRun)"  
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd
+      TaskAction="Execute"
+      Server="$(SqlServerName)"
+      Database="$(dbDeployDBName)"
+      InputFiles="$(DbDeployFileToRun)"
       Condition="$(IsSqlWindowsAuthentication)=='true'"/>
 
-    
-    
+
+
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
 
-  
+
 
 </Project>

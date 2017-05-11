@@ -10,7 +10,7 @@
 
 
     <!-- Source code SVN settings -->
-    
+
     <!-- To download source code from SVN, set value to true else false -->
     <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
 
@@ -26,6 +26,11 @@
     <BuildPayFlex>true</BuildPayFlex>
 
 
+    <!-- Build code settings-->
+    <!--Set value to true to push build code on destination-->
+    <!--Set value to false to just build code on deployment -->
+    <!--Set value to empty to execute normal msbuild workflow -->
+    <PushCodeOnDestination></PushCodeOnDestination>
 
 
     <!--Sql server settings -->
@@ -94,13 +99,13 @@
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
     <AssemblyBuildNumber>2017.02.01.01</AssemblyBuildNumber>
-    
+
 
     <!--Set value true to create svn lable under svn tag branch-->
     <CreateSVNLabel>false</CreateSVNLabel>
 
 
-    
+
 
   </PropertyGroup>
 

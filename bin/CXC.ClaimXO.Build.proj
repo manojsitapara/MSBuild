@@ -695,49 +695,47 @@
   <Target Name="CleanTempFolder">
 
     <RemoveDir Directories="$(TempDir)" />
+    
 
   </Target>
 
 
   <Target Name="Run">
 
-    <CallTarget Targets="CreateFolderStructure" />
+    
+    <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeOnDestination) != 'true' " />
 
-    <CallTarget Targets="DatabaseBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="DestinationBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="DatabaseBackup" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="DestinationBackup" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
-    <CallTarget Targets="DownloadSourceFromSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="SourceBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="DownloadSourceFromSVN" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="SourceBackup" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
+    <CallTarget Targets="BuildSolutions" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
+    <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="CopySqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="CopyCommandAndSqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
-    <CallTarget Targets="BuildSolutions" Condition="$(MSBuildLastTaskResult) == 'True'"></CallTarget>
+    <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' " />
+    <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' " />
+    <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
+    <CallTarget Targets="CopyBuildFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
-    <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="CopySqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="CopyCommandAndSqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="DeploymentBackup" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
+    <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition=" $(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '' " />
 
-    <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
-    <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True'" />
-    <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="DatabaseDeployment" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
 
-    <CallTarget Targets="CopyBuildFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-    <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-
-    <CallTarget Targets="DeploymentBackup" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-
-    <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition="$(MSBuildLastTaskResult) == 'True'"/>
-
-    <CallTarget Targets="DatabaseDeployment" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-
-    <CallTarget Targets="InsertAssemblyVersionInfoIntoDB" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="InsertAssemblyVersionInfoIntoDB" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
 
     <CallTarget Targets="CreateSVNLabelOnSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
-    <CallTarget Targets="CleanTempFolder"></CallTarget>
+    <CallTarget Targets="CleanTempFolder" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " /> 
 
   </Target>
 

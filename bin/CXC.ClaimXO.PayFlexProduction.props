@@ -28,7 +28,10 @@
 
 
     <!-- Build code settings-->
-    <PushCodeOnDestination>true</PushCodeOnDestination>
+    <!--Set value to true to push build code on destination-->
+    <!--Set value to false to just build code on deployment -->
+    <!--Set value to empty to execute normal msbuild workflow -->
+    <PushCodeOnDestination></PushCodeOnDestination>
 
 
     <!--Sql server settings -->
@@ -96,7 +99,7 @@
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber></AssemblyBuildNumber>
+    <AssemblyBuildNumber>2016.01.01.0</AssemblyBuildNumber>
 
 
 

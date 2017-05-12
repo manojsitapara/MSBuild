@@ -39,7 +39,7 @@
   </Target>
 
 
-  <Target Name="DatabaseDeployment">
+  <Target Name="UpdateDestinationDatabase">
 
     
     <ItemGroup Condition="$(PushCodeOnDestination) == 'true' ">
@@ -51,7 +51,7 @@
     </ReadLinesFromFile>
     
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DatabaseDeployment'">DatabaseDeployment</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='UpdateDestinationDatabase'">UpdateDestinationDatabase</CurrentTargetName>
       <DbDeployFileToRun>$(DeploymentDirForDbDeploy)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployFileToRun>
       <DbDeployFileToRun Condition="$(PushCodeOnDestination) == 'true' ">@(dbDeployOutputFilePath)</DbDeployFileToRun>
     </PropertyGroup>

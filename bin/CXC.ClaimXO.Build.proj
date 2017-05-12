@@ -729,7 +729,7 @@
 
     <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition=" $(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '' " />
 
-    <CallTarget Targets="DatabaseDeployment" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
+    <CallTarget Targets="UpdateDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
 
     <CallTarget Targets="InsertAssemblyVersionInfoIntoDB" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
 

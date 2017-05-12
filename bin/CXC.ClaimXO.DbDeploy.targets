@@ -31,7 +31,7 @@
             forceUpdate="true"  />
 
 
-    <WriteLinesToFile File="$(TempDir)\dbDeployFileName.txt" Lines="$(DbDeployOutputFileName)" Overwrite="true" Condition="$(PushCodeOnDestination) == 'false' "/>
+    <WriteLinesToFile File="$(TempDbDeployFile)" Lines="$(DbDeployOutputFileName)" Overwrite="true" Condition="$(PushCodeOnDestination) == 'false' "/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 

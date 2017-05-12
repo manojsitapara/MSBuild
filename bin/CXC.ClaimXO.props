@@ -56,7 +56,7 @@
 
     <TempDir>$(RootDir)\Staging\temp</TempDir>
     <TempAssemblyFile>$(TempDir)\AssemblyVersionNumber.txt</TempAssemblyFile>
-
+    <TempDbDeployFile>$(TempDir)\dbDeployFileName.txt</TempDbDeployFile>
 
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
     <BuildDirForCommandAndSqlFiles>$(BuildDir)\$(CommandAndSqlFilesFolderName)</BuildDirForCommandAndSqlFiles>

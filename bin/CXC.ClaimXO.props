@@ -21,7 +21,8 @@
     <PreviousAssemblyVersionNumber></PreviousAssemblyVersionNumber>
     <NewAssemblyVersion></NewAssemblyVersion>
     <DbDeployScriptFolderName>DbDeployScript</DbDeployScriptFolderName>
-    <DbDeployScriptOutputFolderName>DbDeployOutput</DbDeployScriptOutputFolderName>
+    <DbDeployScriptInputFolderName>$(DbDeployScriptFolderName)\Input</DbDeployScriptInputFolderName>
+    <DbDeployScriptOutputFolderName>$(DbDeployScriptFolderName)\Output</DbDeployScriptOutputFolderName>
     <AppFolderName>App</AppFolderName>
     <CommandAndSqlFilesFolderName>Workflow</CommandAndSqlFilesFolderName>
 
@@ -58,7 +59,7 @@
 
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
     <BuildDirForCommandAndSqlFiles>$(BuildDir)\$(CommandAndSqlFilesFolderName)</BuildDirForCommandAndSqlFiles>
-    <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptFolderName)</BuildDirForDbDeploy>
+    <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptInputFolderName)</BuildDirForDbDeploy>
     <BuildDirForDbDeployOutput>$(BuildDir)\$(DbDeployScriptOutputFolderName)</BuildDirForDbDeployOutput>
 
     <DeploymentDirForApp>$(DeploymentDir)\$(AppFolderName)</DeploymentDirForApp>
@@ -95,8 +96,8 @@
       <MetaChangeScriptDir>$(SourceDir)\TPA\GDI\GDI\Build\MetaChanges</MetaChangeScriptDir>
       <DataChangeScriptDir>$(SourceDir)\TPA\GDI\GDI\Build\DataChanges</DataChangeScriptDir>
       <ScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\</ScriptDir>
-      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\GDI\1.GDI_MetaChanges</BuildDirForMetaSqlScript>
-      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\GDI\2.GDI_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\1.GDI_MetaChanges</BuildDirForMetaSqlScript>
+      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\2.GDI_DataChanges</BuildDirForDataSqlScript>
 
       <CommandAndSqlFilesDir>$(SourceDir)\CXC\Scripts</CommandAndSqlFilesDir>
       <CommandAndSqlFilesBuildDir>$(BuildDirForCommandAndSqlFiles)\Common</CommandAndSqlFilesBuildDir>
@@ -113,8 +114,8 @@
       <MetaChangeScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges</MetaChangeScriptDir>
       <DataChangeScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\DataChanges</DataChangeScriptDir>
       <ScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\</ScriptDir>
-      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PrimePay\1.PrimePay_MetaChanges</BuildDirForMetaSqlScript>
-      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PrimePay\2.PrimePay_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\1.PrimePay_MetaChanges</BuildDirForMetaSqlScript>
+      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\2.PrimePay_DataChanges</BuildDirForDataSqlScript>
 
       <CommandAndSqlFilesDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Scripts</CommandAndSqlFilesDir>
       <CommandAndSqlFilesBuildDir>$(BuildDirForCommandAndSqlFiles)\PrimePay</CommandAndSqlFilesBuildDir>
@@ -129,8 +130,8 @@
 
       <MetaChangeScriptDir>$(SourceDir)\TPA\PayFlex\PayFlex\Build\MetaChanges</MetaChangeScriptDir>
       <DataChangeScriptDir>$(SourceDir)\TPA\PayFlex\PayFlex\Build\DataChanges</DataChangeScriptDir>
-      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PayFlex\1.PayFlex_MetaChanges</BuildDirForMetaSqlScript>
-      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptFolderName)\PayFlex\2.PayFlex_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PayFlex\1.PayFlex_MetaChanges</BuildDirForMetaSqlScript>
+      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PayFlex\2.PayFlex_DataChanges</BuildDirForDataSqlScript>
 
       <CommandAndSqlFilesDir>$(SourceDir)\TPA\PayFlex\PayFlex\Scripts</CommandAndSqlFilesDir>
       <CommandAndSqlFilesBuildDir>$(BuildDirForCommandAndSqlFiles)\PayFlex</CommandAndSqlFilesBuildDir>

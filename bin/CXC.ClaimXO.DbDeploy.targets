@@ -52,7 +52,7 @@
     
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='DatabaseDeployment'">DatabaseDeployment</CurrentTargetName>
-      <DbDeployFileToRun>$(DeploymentDir)\$(DbDeployScriptFolderName)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployFileToRun>
+      <DbDeployFileToRun>$(DeploymentDirForDbDeploy)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployFileToRun>
       <DbDeployFileToRun Condition="$(PushCodeOnDestination) == 'true' ">@(dbDeployOutputFilePath)</DbDeployFileToRun>
     </PropertyGroup>
     

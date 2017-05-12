@@ -7,7 +7,7 @@
   <!--msbuild CXC.ClaimXO.Build.proj /l:SecureFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.txt-->
   <!-- Region Import External target -->
 
-
+  <Import Project="CXC.ClaimXO.BuildTasks.tasks" />
   <Import Project="CXC.ClaimXO.Assembly.Version.Targets"/>
   <Import Project="CXC.ClaimXO.DbDeploy.targets"/>
   <Import Project="CXC.ClaimXO.Backup.targets"/>
@@ -19,8 +19,7 @@
   <ItemGroup>
     <CXCEngineSolutionFile Include="$(SourceDir)\CXC\CXCEngine.sln"></CXCEngineSolutionFile>
     <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
-    <GeneratedAssemblyFileName Include="$(TempAssemblyFile)"/>
-  </ItemGroup>
+    </ItemGroup>
 
 
   <Target Name="CreateFolderStructure">
@@ -112,6 +111,99 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="GetNewAssemblyVersionNumber">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumber</CurrentTargetName>
+    </PropertyGroup>
+
+
+    <CallTarget Targets="GetNewAssemblyVersionNumberFromDatabase" Condition="$(AssemblyBuildNumber)== '' "></CallTarget>
+    <CallTarget Targets="GetNewAssemblyVersionNumberFromPropertyFile" Condition="$(AssemblyBuildNumber) != '' " ></CallTarget>
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+
+
+  <Target Name="CheckChangeLogTableExist">
+    
+     <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">CheckChangeLogTableExist</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute
+      TaskAction="ExecuteScalar"
+      UseTransaction="true"
+      Sql="select case when exists((select * from information_schema.tables where table_name = '$(DatabaseChangeLogTableName)')) then 1 else 0 end"
+      ConnectionString="$(DatabaseConnectionString)">
+      <Output PropertyName="IsTableExist" TaskParameter="ScalarResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+    <Message Text="Table status: $(IsTableExist)"></Message>
+
+    <!--Raise an error if changelog table is not exist into dbDeploy database-->
+    <Error Text="Please specify assembly version number in property file to update for this release." Condition="'$(IsTableExist)' == '0' "/>
+    
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+    
+    </Target>
+
+
+  <Target Name="GetNewAssemblyVersionNumberFromDatabase" DependsOnTargets="CheckChangeLogTableExist">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumberFromDatabase</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+    
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute
+      TaskAction="ExecuteScalar"
+      UseTransaction="true"
+      Sql="select top 1  ScriptOutput from $(DatabaseChangeLogTableName) where ScriptOutput!=''  order by CompleteDate desc"
+      ConnectionString="$(DatabaseConnectionString)">
+      <Output PropertyName="PreviousAssemblyVersionNumber" TaskParameter="ScalarResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+
+    <Message Text="Previous assembly version number was: $(PreviousAssemblyVersionNumber)"></Message>
+
+    <GenerateNewAssemblyVersionNumber OldAssemblyVersion="$(PreviousAssemblyVersionNumber)" Condition="'$(PreviousAssemblyVersionNumber)' != '' ">
+      <Output PropertyName="NewAssemblyVersion" TaskParameter="NewAssemblyVersion"/>
+    </GenerateNewAssemblyVersionNumber>
+
+    <Message Text="Setting new assembly version number: $(NewAssemblyVersion)"></Message>
+    
+    <WriteLinesToFile File="$(TempAssemblyFile)" Lines="$(NewAssemblyVersion)" Overwrite="true"/>
+    
+    
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+    
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+  
+  <Target Name="GetNewAssemblyVersionNumberFromPropertyFile">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumberFromPropertyFile</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+    
+    <WriteLinesToFile File="$(TempAssemblyFile)" Lines="$(AssemblyBuildNumber)" Overwrite="true"/>
+
+    <Message Text="Setting new assembly version number: $(AssemblyBuildNumber)"></Message>
+    
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+    
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
@@ -623,7 +715,7 @@
     <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
       <Output TaskParameter="Lines" PropertyName="VersionNumber" />
     </ReadLinesFromFile>
-    
+
     <PropertyGroup>
       <SvnDestinationPath Condition="'$(VersionNumber)' != '' ">$(SVNTagURL)/$(Environment)_$(CurrentDateTime)_$(VersionNumber)</SvnDestinationPath>
       <SvnDestinationPath Condition="'$(VersionNumber)' == '' ">$(SVNTagURL)/$(Environment)_$(CurrentDateTime)</SvnDestinationPath>
@@ -707,7 +799,6 @@
 
   <Target Name="Run">
 
-
     <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeOnDestination) != 'true' " />
 
     <CallTarget Targets="DatabaseBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
@@ -716,6 +807,8 @@
     <CallTarget Targets="DownloadSourceFromSVNPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
     <CallTarget Targets="SourceBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
+    <CallTarget Targets="GetNewAssemblyVersionNumber" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    
     <CallTarget Targets="BuildSolutions" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
     <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>

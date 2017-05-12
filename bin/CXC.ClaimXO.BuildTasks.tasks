@@ -17,7 +17,7 @@
   
   
   <!--This target will use custom c# code which accept input of current assembly version and return updated assembly version.-->
-  <UsingTask TaskName="ExtractNewAssemblyVersionNumber" TaskFactory="CodeTaskFactory"  AssemblyFile="$(MicrosoftBuildTasks)" >
+  <UsingTask TaskName="GenerateNewAssemblyVersionNumber" TaskFactory="CodeTaskFactory"  AssemblyFile="$(MicrosoftBuildTasks)" >
 
     <ParameterGroup>
       <OldAssemblyVersion ParameterType="System.String" Required="true"/>

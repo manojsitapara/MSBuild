@@ -3,14 +3,16 @@
 
   <Import Project="CXC.ClaimXO.props" />
   <Import Project="CXC.ClaimXO.ExternalLibraryLocation.props" />
-  <Import Project="CXC.ClaimXO.BuildTasks.tasks" />
   <Import Project="$(MSBuildCommunityTaskstargets)"/>
   <Import Project="$(MSBuildExtensionPacktargets)" Condition="Exists('$(MSBuildExtensionPacktargets)')"/>
 
 
   <ItemGroup>
     <AssemblyInfoFile Include="$(MSBuildProjectDirectory)\Properties\AssemblyInfo.cs" />
+    <GeneratedAssemblyFileName Include="$(TempAssemblyFile)"/>
   </ItemGroup>
+  
+   
 
 
 
@@ -23,7 +25,6 @@
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BeforeCompile'">BeforeCompile</CurrentTargetName>
     </PropertyGroup>
 
-    <CallTarget Targets="GetNewAssemblyVersionNumber"></CallTarget>
     <CallTarget Targets="SetNewAssemblyVersionNumber"></CallTarget>
     <CallTarget Targets="CommitAssemblyInfoFileInSVN" Condition="$(CheckInAssemblyInfo)=='true'"></CallTarget>
 
@@ -31,88 +32,36 @@
   </Target>
 
 
-  <!-- GetNewAssemblyVersionNumber target will update existing assemblyInfo.cs file with new assembly version-->
-  <Target Name="GetNewAssemblyVersionNumber" Condition="$(AssemblyBuildNumber)==''">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumber</CurrentTargetName>
-    </PropertyGroup>
-
-
-    <MSBuild.ExtensionPack.SqlServer.SqlExecute 
-      TaskAction="ExecuteScalar" 
-      UseTransaction="true" 
-      Sql="select case when exists((select * from information_schema.tables where table_name = '$(DatabaseChangeLogTableName)')) then 1 else 0 end" 
-      ConnectionString="$(DatabaseConnectionString)">
-      <Output PropertyName="IsTableExist" TaskParameter="ScalarResult"/>
-    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
-    <Message Text="Table status: $(IsTableExist)"></Message>
-
-    <!--Raise an error if changelog table is not exist into dbDeploy database-->
-    <Error Text="Please specify assembly version number in property file to update for this release " Condition="'$(IsTableExist)' == '0' "/>
-
-    
-    <CallTarget Targets="GetNewAssemblyVersionNumberFromDatabase" Condition="'$(IsTableExist)' == '1' "></CallTarget>
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-  </Target>
-
-
-  <Target Name="GetNewAssemblyVersionNumberFromDatabase">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumberFromDatabase</CurrentTargetName>
-    </PropertyGroup>
-
-    <MSBuild.ExtensionPack.SqlServer.SqlExecute 
-      TaskAction="ExecuteScalar" 
-      UseTransaction="true" 
-      Sql="select top 1  ScriptOutput from $(DatabaseChangeLogTableName) where ScriptOutput!=''  order by CompleteDate desc" 
-      ConnectionString="$(DatabaseConnectionString)">
-      <Output PropertyName="PreviousAssemblyVersionNumber" TaskParameter="ScalarResult"/>
-    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
-    <Message Text="Previous Assembly version number was: $(PreviousAssemblyVersionNumber)"></Message>
-
-
-
-    <ExtractNewAssemblyVersionNumber OldAssemblyVersion="$(PreviousAssemblyVersionNumber)" Condition="'$(PreviousAssemblyVersionNumber)' != '' ">
-      <Output PropertyName="NewAssemblyVersion" TaskParameter="NewAssemblyVersion"/>
-    </ExtractNewAssemblyVersionNumber>
-
-    <Message Text="New assembly version will be: $(NewAssemblyVersion)"></Message>
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-  </Target>
-
-  
-
-  <!--SetNewAssemblyVersionNumber target use to set new assemly version number -->
   <Target Name="SetNewAssemblyVersionNumber">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='SetNewAssemblyVersionNumber'">SetNewAssemblyVersionNumber</CurrentTargetName>
-      <NewAssemblyVersion Condition="$(AssemblyBuildNumber)!=''">$(AssemblyBuildNumber)</NewAssemblyVersion>
     </PropertyGroup>
 
+    <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
+      <Output TaskParameter="Lines" PropertyName="VersionNumber" />
+    </ReadLinesFromFile>
+    
     <FileUpdate Files="@(AssemblyInfoFile)"
                 Regex="(\d+)\.(\d+)\.(\d+)\.(\d+)"
-                ReplacementText="$(NewAssemblyVersion)" />
+                ReplacementText="$(VersionNumber)" />
     
-    <WriteLinesToFile File="$(TempAssemblyFile)" Lines="$(NewAssemblyVersion)" Overwrite="true"/>
-
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
 
-  <!--CommitAssemblyInfoFileInSVN target use to commit assembly info file back to svn -->
   <Target Name="CommitAssemblyInfoFileInSVN">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CommitAssemblyInfoFileInSVN'">CommitAssemblyInfoFileInSVN</CurrentTargetName>
     </PropertyGroup>
 
-    <SvnCommit Targets="@(AssemblyInfoFile)" Message="Changed version from $(PreviousAssemblyVersionNumber) to $(NewAssemblyVersion)"
+     <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
+      <Output TaskParameter="Lines" PropertyName="VersionNumber" />
+    </ReadLinesFromFile>
+    
+    <SvnCommit Targets="@(AssemblyInfoFile)" Message="Set assembly version number: $(VersionNumber)"
      Username="$(SvnUsername)" Password="$(SvnPassword)">
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </SvnCommit>

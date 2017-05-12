@@ -55,6 +55,7 @@
     <DeploymentDir>$(RootDir)\Deployment</DeploymentDir>
 
     <TempDir>$(RootDir)\Staging\temp</TempDir>
+    <TempAssemblyFile>$(TempDir)\AssemblyVersionNumber.txt</TempAssemblyFile>
 
 
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>

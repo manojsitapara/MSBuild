@@ -98,7 +98,7 @@
                 Regex="(\d+)\.(\d+)\.(\d+)\.(\d+)"
                 ReplacementText="$(NewAssemblyVersion)" />
     
-    <WriteLinesToFile File="$(TempDir)\AssemblyVersionNumber.txt" Lines="$(NewAssemblyVersion)" Overwrite="true"/>
+    <WriteLinesToFile File="$(TempAssemblyFile)" Lines="$(NewAssemblyVersion)" Overwrite="true"/>
 
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />

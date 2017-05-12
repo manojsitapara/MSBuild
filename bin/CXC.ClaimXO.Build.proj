@@ -636,10 +636,10 @@
   </Target>
 
 
-  <Target Name="InsertAssemblyVersionInfoIntoDB" Condition="Exists(@(GeneratedAssemblyFileName))">
+  <Target Name="SaveAssemblyVersionInDestinationDatabase" Condition="Exists(@(GeneratedAssemblyFileName))">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='InsertAssemblyVersionInfoIntoDB'">InsertAssemblyVersionInfoIntoDB</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SaveAssemblyVersionInDestinationDatabase'">SaveAssemblyVersionInDestinationDatabase</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -650,12 +650,12 @@
       UseTransaction="false"
       Sql="select max(ScriptNumber) from $(DatabaseChangeLogTableName) where Folder='Dummy' "
       ConnectionString="$(DatabaseConnectionString)">
-      <Output PropertyName="MaxScriptNumber" TaskParameter="ScalarResult"/>
+      <Output PropertyName="MaxScriptNumberFromDbDeployDatabase" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
 
 
-    <MSBuild.ExtensionPack.Science.Maths TaskAction="Add" Numbers="$(MaxScriptNumber);1">
-      <Output PropertyName="NextScriptNumber" TaskParameter="Result"/>
+    <MSBuild.ExtensionPack.Science.Maths TaskAction="Add" Numbers="$(MaxScriptNumberFromDbDeployDatabase);1">
+      <Output PropertyName="NextScriptNumberForDbDeployDatabase" TaskParameter="Result"/>
     </MSBuild.ExtensionPack.Science.Maths>
 
 
@@ -664,7 +664,7 @@
     </ReadLinesFromFile>
 
     <PropertyGroup>
-      <CommandLineSqlForInsertNewAssemblyVersionNumber>Use $(dbDeployDBName) INSERT INTO $(DatabaseChangeLogTableName) VALUES('Dummy', $(NextScriptNumber), 'DummyScript', GETDATE(), GETDATE(),'dbo','1',  '$(AssemblyVersionNumber)' )</CommandLineSqlForInsertNewAssemblyVersionNumber>
+      <CommandLineSqlForInsertNewAssemblyVersionNumber>Use $(dbDeployDBName) INSERT INTO $(DatabaseChangeLogTableName) VALUES('Dummy', $(NextScriptNumberForDbDeployDatabase), 'DummyScript', GETDATE(), GETDATE(),'dbo','1',  '$(AssemblyVersionNumber)' )</CommandLineSqlForInsertNewAssemblyVersionNumber>
     </PropertyGroup>
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd
@@ -726,14 +726,14 @@
     <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
     <CallTarget Targets="DeploymentBackupPostBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    
+    <CallTarget Targets="CreateSVNLabelOnSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
     <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition=" $(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '' " />
 
     <CallTarget Targets="UpdateDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
 
-    <CallTarget Targets="InsertAssemblyVersionInfoIntoDB" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
-
-    <CallTarget Targets="CreateSVNLabelOnSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
 
     <CallTarget Targets="CleanTempFolder" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " /> 
 

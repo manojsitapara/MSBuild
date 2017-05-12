@@ -93,10 +93,10 @@
   </Target>
 
 
-  <Target Name="DownloadSourceFromSVN" Condition="$(DownloadSourceCodeFromSVN) == 'true' ">
+  <Target Name="DownloadSourceFromSVNPreBuild" Condition="$(DownloadSourceCodeFromSVN) == 'true' ">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DownloadSourceFromSVN'">DownloadSourceFromSVN</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DownloadSourceFromSVNPreBuild'">DownloadSourceFromSVNPreBuild</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -705,11 +705,11 @@
     
     <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeOnDestination) != 'true' " />
 
-    <CallTarget Targets="DatabaseBackup" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
-    <CallTarget Targets="DestinationBackup" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="DatabaseBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="DestinationBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
-    <CallTarget Targets="DownloadSourceFromSVN" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
-    <CallTarget Targets="SourceBackup" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="DownloadSourceFromSVNPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="SourceBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
     <CallTarget Targets="BuildSolutions" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
@@ -725,7 +725,7 @@
     <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
     <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
-    <CallTarget Targets="DeploymentBackup" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="DeploymentBackupPostBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
     <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition=" $(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '' " />
 

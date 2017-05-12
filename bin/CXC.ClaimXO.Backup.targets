@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   
-  <Target Name="DatabaseBackup">
+  <Target Name="DatabaseBackupPreBuild">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DatabaseBackup'">DatabaseBackup</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DatabaseBackupPreBuild'">DatabaseBackupPreBuild</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -103,10 +103,10 @@
   </Target>
 
 
-  <Target Name="SourceBackup" Condition="$(SourceCodeBackup) == 'true'">
+  <Target Name="SourceBackupPreBuild" Condition="$(SourceCodeBackup) == 'true'">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SourceBackup'">SourceBackup</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SourceBackupPreBuild'">SourceBackupPreBuild</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -125,10 +125,10 @@
   </Target>
 
 
-  <Target Name="DeploymentBackup">
+  <Target Name="DeploymentBackupPostBuild">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DeploymentBackup'">DeploymentBackup</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DeploymentBackupPostBuild'">DeploymentBackupPostBuild</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="Target DatabaseBackupCompiledAssembliesBackup has been started." />
@@ -144,22 +144,21 @@
   </Target>
 
   
-  <Target Name="DestinationBackup">
+  <Target Name="DestinationBackupPreBuild">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DestinationBackup'">DestinationBackup</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DestinationBackupPreBuild'">DestinationBackupPreBuild</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <Message Text="DestinationBackup target has been started." />
-
+    
     <MSBuild.ExtensionPack.Compression.Zip
       TaskAction="Create"
       CompressPath="$(DestinationDir)"
       ZipFileName="$(DestinationBackupFile)"/>
     
-    <Message Text="DestinationBackup has been sucessfully completed at this location: $(DestinationBackupFile)"></Message>
+    <Message Text="$(CurrentTargetName) has been sucessfully completed at this location: $(DestinationBackupFile)"></Message>
     
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
     

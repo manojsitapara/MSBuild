@@ -24,7 +24,7 @@
     </PropertyGroup>
 
     <CallTarget Targets="GetNewAssemblyVersionNumber"></CallTarget>
-    <CallTarget Targets="SetNewAssemblyVersion"></CallTarget>
+    <CallTarget Targets="SetNewAssemblyVersionNumber"></CallTarget>
     <CallTarget Targets="CommitAssemblyInfoFileInSVN" Condition="$(CheckInAssemblyInfo)=='true'"></CallTarget>
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
@@ -86,11 +86,11 @@
 
   
 
-  <!--SetNewAssemblyVersion target use to set new assemly version number -->
-  <Target Name="SetNewAssemblyVersion">
+  <!--SetNewAssemblyVersionNumber target use to set new assemly version number -->
+  <Target Name="SetNewAssemblyVersionNumber">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SetNewAssemblyVersion'">SetNewAssemblyVersion</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SetNewAssemblyVersionNumber'">SetNewAssemblyVersionNumber</CurrentTargetName>
       <NewAssemblyVersion Condition="$(AssemblyBuildNumber)!=''">$(AssemblyBuildNumber)</NewAssemblyVersion>
     </PropertyGroup>
 
@@ -106,7 +106,7 @@
 
 
   <!--CommitAssemblyInfoFileInSVN target use to commit assembly info file back to svn -->
-  <Target Name="CommitAssemblyInfoFileInSVN" DependsOnTargets="SetNewAssemblyVersion">
+  <Target Name="CommitAssemblyInfoFileInSVN">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CommitAssemblyInfoFileInSVN'">CommitAssemblyInfoFileInSVN</CurrentTargetName>

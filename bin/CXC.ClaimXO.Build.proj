@@ -312,7 +312,7 @@
 
     <ItemGroup>
       <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
-      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
+      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" Condition="$(BuildPayFlex) == 'false' "/>
     </ItemGroup>
 
 
@@ -576,7 +576,7 @@
   </Target>
 
 
-  <Target Name="CommonCommandFileTransform">
+  <Target Name="CommonCommandFileTransform" Condition="$(BuildCXCEngine) == 'true' ">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CommonCommandFileTransform'">CommonCommandFileTransform</CurrentTargetName>

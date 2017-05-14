@@ -3,6 +3,9 @@
 
   <PropertyGroup>
 
+    <!-- Change following properties value to run PayFlex QA Environment-->
+    <!--trun off these properties BuildGDI & BuildPrimePay-->
+    
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
@@ -40,7 +43,7 @@
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
     <SqlServerVersion>2012</SqlServerVersion>
     <!--Specify Sql server name-->
-    <SqlServerName>(local)</SqlServerName>
+    <SqlServerName>DESKTOP-BJ7IIE5\QA</SqlServerName>
 
     <!--Specify sql user name, if IsSqlWindowsAuthentication flag value is false -->
     <SqlServerUserName>sa</SqlServerUserName>

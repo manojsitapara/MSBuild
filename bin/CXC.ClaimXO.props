@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
 
   <PropertyGroup>
-    <Environment>PayFlexProduction</Environment>
+    <Environment>QA</Environment>
     <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
     <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
     <SvnUsername></SvnUsername>
@@ -51,6 +51,9 @@
     <TargetBackupDir>$(RootDir)\Backup\Destination</TargetBackupDir>
 
 
+    
+
+
     <!--Specify the path for deployment directory (i.e. ready to run code) -->
     <DeploymentDir>$(RootDir)\Deployment</DeploymentDir>
 
@@ -60,6 +63,7 @@
 
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
     <BuildDirForCommandAndSqlFiles>$(BuildDir)\$(CommandAndSqlFilesFolderName)</BuildDirForCommandAndSqlFiles>
+    <BuildDirForCommonCommandAndSqlFiles>$(BuildDirForCommandAndSqlFiles)\Common</BuildDirForCommonCommandAndSqlFiles>
     <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptInputFolderName)</BuildDirForDbDeploy>
     <BuildDirForDbDeployOutput>$(BuildDir)\$(DbDeployScriptOutputFolderName)</BuildDirForDbDeployOutput>
 
@@ -100,7 +104,7 @@
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\1.GDI_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\2.GDI_DataChanges</BuildDirForDataSqlScript>
 
-      <CommandAndSqlFilesDir>$(SourceDir)\CXC\Scripts</CommandAndSqlFilesDir>
+      <CommandAndSqlFilesDir>$(SourceDir)\TPA\GDI\GDI\Scripts</CommandAndSqlFilesDir>
       <CommandAndSqlFilesBuildDir>$(BuildDirForCommandAndSqlFiles)\Common</CommandAndSqlFilesBuildDir>
       <CommandAndSqlFilesDeploymentDir>$(DeploymentDirForApp)</CommandAndSqlFilesDeploymentDir>
 
@@ -143,11 +147,11 @@
 
   </ItemGroup>
 
-  
+
   <ItemGroup>
     <CommandFileName Include="$(BuildDirForCommandAndSqlFiles)\PayFlex\PayFlex_SetEnv.cmd"  Condition="$(BuildPayFlex)=='true' " />
     <CommandFileName Include="$(BuildDirForCommandAndSqlFiles)\PayFlex\PayFlexFTP_SetEnv.cmd"  Condition="$(BuildPayFlex)=='true' " />
   </ItemGroup>
-  
-  
+
+
 </Project>

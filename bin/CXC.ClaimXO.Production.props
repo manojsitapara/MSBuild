@@ -42,7 +42,7 @@
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
     <SqlServerVersion>2012</SqlServerVersion>
     <!--Specify Sql server name-->
-    <SqlServerName>(local)</SqlServerName>
+    <SqlServerName>DESKTOP-BJ7IIE5\PRODUCTION</SqlServerName>
 
     <!--Specify sql user name, if IsSqlWindowsAuthentication flag value is false -->
     <SqlServerUserName>sa</SqlServerUserName>

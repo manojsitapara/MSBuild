@@ -334,7 +334,7 @@
   </Target>
 
 
-  <Target Name="CopyCommandAndSqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
+  <Target Name="CopyCommandAndSqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreCommandAndSqlFilesToBuildDir">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToBuildDir'">CopyCommandAndSqlFilesToBuildDir</CurrentTargetName>
@@ -347,7 +347,7 @@
       <CommandAndSqlFilesBuildDir>%(SolutionName.CommandAndSqlFilesBuildDir)</CommandAndSqlFilesBuildDir>
     </PropertyGroup>
 
-
+    
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
       Source="$(CommandAndSqlFileDir)"
       Destination="$(CommandAndSqlFilesBuildDir)"
@@ -362,6 +362,31 @@
   </Target>
 
 
+  <Target Name="CopyCXCCoreCommandAndSqlFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreCommandAndSqlFilesToBuildDir'">CopyCXCCoreCommandAndSqlFilesToBuildDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <ItemGroup>
+      <CXCCoreCommandAndSqlFiles Include="$(SourceDir)\CXC\Scripts\**\*.*" />
+    </ItemGroup>
+
+
+    <Copy SourceFiles="@(CXCCoreCommandAndSqlFiles)"
+          DestinationFolder="$(BuildDirForCommonCommandAndSqlFiles)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+  
+  
+  
   <Target Name="ConfigTransformation">
 
     <PropertyGroup>

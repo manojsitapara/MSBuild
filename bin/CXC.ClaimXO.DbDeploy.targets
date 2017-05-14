@@ -1,18 +1,21 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
+  <PropertyGroup>
+    <DbDeployOutputFileName>$(BuildDirForDbDeployOutput)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployOutputFileName>
+    <DbDeployUndoOutputFileName>$(BuildDirForDbDeployOutput)\dbDeploy_undo_$(CurrentDateTime).sql</DbDeployUndoOutputFileName>
+  </PropertyGroup>
+
   <Target Name="GenerateSqlScriptFromDbDeploy">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='GenerateSqlScriptFromDbDeploy'">GenerateSqlScriptFromDbDeploy</CurrentTargetName>
-      <DbDeployOutputFileName>$(BuildDirForDbDeployOutput)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployOutputFileName>
-      <DbDeployUndoOutputFileName>$(BuildDirForDbDeployOutput)\dbDeploy_undo_$(CurrentDateTime).sql</DbDeployUndoOutputFileName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-     <MSBuild.ExtensionPack.FileSystem.Folder
-            TaskAction="RemoveContent"
-            Path="$(DeploymentDirForDbDeploy)"/>
+    <MSBuild.ExtensionPack.FileSystem.Folder
+           TaskAction="RemoveContent"
+           Path="$(DeploymentDirForDbDeploy)"/>
 
     <MSBuild.ExtensionPack.FileSystem.Folder
             TaskAction="RemoveContent"
@@ -41,21 +44,21 @@
 
   <Target Name="UpdateDestinationDatabase">
 
-    
+
     <ItemGroup Condition="$(PushCodeOnDestination) == 'true' ">
       <dbDeployFileName Include="$(TempDir)\dbDeployFileName.txt"/>
     </ItemGroup>
-    
+
     <ReadLinesFromFile File="@(dbDeployFileName)" Condition="$(PushCodeOnDestination) == 'true' ">
       <Output TaskParameter="Lines" ItemName="dbDeployOutputFilePath" />
     </ReadLinesFromFile>
-    
+
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='UpdateDestinationDatabase'">UpdateDestinationDatabase</CurrentTargetName>
-      <DbDeployFileToRun>$(DeploymentDirForDbDeploy)\dbDeploy_output_$(CurrentDateTime).sql</DbDeployFileToRun>
-      <DbDeployFileToRun Condition="$(PushCodeOnDestination) == 'true' ">@(dbDeployOutputFilePath)</DbDeployFileToRun>
+      <SqlCmdInputFile>$(DbDeployOutputFileName)</SqlCmdInputFile>
+      <SqlCmdInputFile Condition="$(PushCodeOnDestination) == 'true' ">@(dbDeployOutputFilePath)</SqlCmdInputFile>
     </PropertyGroup>
-    
+
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <Message Text="Executing change script ($(GenerateOutputSqlFileName)) on $(dbDeployDBName) ..."/>
@@ -66,14 +69,14 @@
       Database="$(dbDeployDBName)"
       LogOn="$(SqlServerUserName)"
       Password="$(SqlServerPassword)"
-      InputFiles="$(DbDeployFileToRun)"
+      InputFiles="$(SqlCmdInputFile)"
       Condition="$(IsSqlWindowsAuthentication)=='false'"/>
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd
       TaskAction="Execute"
       Server="$(SqlServerName)"
       Database="$(dbDeployDBName)"
-      InputFiles="$(DbDeployFileToRun)"
+      InputFiles="$(SqlCmdInputFile)"
       Condition="$(IsSqlWindowsAuthentication)=='true'"/>
 
 

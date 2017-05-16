@@ -19,7 +19,7 @@
   <ItemGroup>
     <CXCEngineSolutionFile Include="$(SourceDir)\CXC\CXCEngine.sln"></CXCEngineSolutionFile>
     <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
-    </ItemGroup>
+  </ItemGroup>
 
 
   <Target Name="CreateFolderStructure">
@@ -131,8 +131,8 @@
 
 
   <Target Name="CheckChangeLogTableExist">
-    
-     <PropertyGroup>
+
+    <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">CheckChangeLogTableExist</CurrentTargetName>
     </PropertyGroup>
 
@@ -149,10 +149,10 @@
 
     <!--Raise an error if changelog table is not exist into dbDeploy database-->
     <Error Text="Please specify assembly version number in property file for this release." Condition=" '$(IsTableExist)' == '0' AND $(AssemblyBuildNumber) == '' "/>
-    
+
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-    
-    </Target>
+
+  </Target>
 
 
   <Target Name="GetNewAssemblyVersionNumberFromDatabase">
@@ -162,7 +162,7 @@
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-    
+
     <MSBuild.ExtensionPack.SqlServer.SqlExecute
       TaskAction="ExecuteScalar"
       UseTransaction="true"
@@ -178,18 +178,18 @@
     </GenerateNewAssemblyVersionNumber>
 
     <Message Text="Setting new assembly version number: $(NewAssemblyVersion)"></Message>
-    
+
     <WriteLinesToFile File="$(TempAssemblyFile)" Lines="$(NewAssemblyVersion)" Overwrite="true"/>
-    
-    
+
+
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-    
+
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
 
-  
+
   <Target Name="GetNewAssemblyVersionNumberFromPropertyFile">
 
     <PropertyGroup>
@@ -197,13 +197,13 @@
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-    
+
     <WriteLinesToFile File="$(TempAssemblyFile)" Lines="$(AssemblyBuildNumber)" Overwrite="true"/>
 
     <Message Text="Setting new assembly version number: $(AssemblyBuildNumber)"></Message>
-    
+
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-    
+
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
@@ -347,7 +347,7 @@
       <BuildDirForCommandAndSqlFiles>%(SolutionName.BuildDirForCommandAndSqlFiles)</BuildDirForCommandAndSqlFiles>
     </PropertyGroup>
 
-    
+
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
       Source="$(SourceDirForCommandAndSqlFile)"
       Destination="$(BuildDirForCommandAndSqlFiles)"
@@ -383,9 +383,9 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-  
-  
-  
+
+
+
   <Target Name="ConfigTransformation">
 
     <PropertyGroup>
@@ -701,8 +701,8 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-  
-  
+
+
   <Target Name="CopyCommonCommandAndSqlFilesToDeploymentDir">
 
     <PropertyGroup>
@@ -733,11 +733,15 @@
 
     <Message Text = "Start copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
 
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(DeploymentDirForApp)"
-      Destination="$(DestinationDir)"
-      Files="*.*"
-      Options="/E"  />
+    <ItemGroup>
+      <DeploymentAppDir Include="$(DeploymentDirForApp)\**\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(DeploymentAppDir)"
+			  	DestinationFolder="$(DestinationDir)\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+
+
 
     <Message Text = "Completed copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
 
@@ -850,7 +854,7 @@
   <Target Name="Run">
 
     <CallTarget Targets="Init"></CallTarget>
-    
+
     <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeOnDestination) != 'true' " />
 
     <CallTarget Targets="DatabaseBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
@@ -860,7 +864,7 @@
     <CallTarget Targets="SourceBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
     <CallTarget Targets="GetNewAssemblyVersionNumber" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
-    
+
     <CallTarget Targets="BuildSolutions" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
 
     <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>

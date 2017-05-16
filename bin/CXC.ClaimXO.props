@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
 
   <PropertyGroup>
-    <Environment>PayFlexProduction</Environment>
+    <Environment>QA</Environment>
     <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
     <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
     <SvnUsername></SvnUsername>
@@ -35,7 +35,7 @@
     <!-- Specify the path of source code -->
     <SourceDir>$(RootDir)\Source</SourceDir>
     <!-- Specify the path to save build code -->
-    <BuildDir>$(RootDir)\Staging</BuildDir>
+    <BuildDir>$(RootDir)\Build</BuildDir>
     <!-- Specify the path to copy build code on server -->
     <DestinationDir>$(RootDir)\Destination</DestinationDir>
     <!-- Specify the path to backup -->

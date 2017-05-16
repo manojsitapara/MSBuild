@@ -6,7 +6,7 @@
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
-    <RootDir>G:\MSBuildTesting\XOProductionFromSeperateFile</RootDir>
+    <RootDir>G:\MSBuildTesting\Production</RootDir>
 
 
     <!-- Source code SVN settings -->

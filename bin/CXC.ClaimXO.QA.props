@@ -9,7 +9,7 @@
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
-    <RootDir>G:\MSBuildTesting\XOQAFromSeperateFile</RootDir>
+    <RootDir>G:\MSBuildTesting\QA</RootDir>
 
 
     <!-- Source code SVN settings -->

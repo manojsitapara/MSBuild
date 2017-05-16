@@ -33,25 +33,25 @@
     <RemoveDir Directories="$(SourceDir)" Condition="$(ForceSourceOverwrite)== 'true'"/>
 
     <MakeDir Directories="$(SourceDir)" Condition="!Exists('$(SourceDir)')"/>
-    <MakeDir Directories="$(SourceBackupDir)" Condition="!Exists('$(SourceBackupDir)')"/>
+    <MakeDir Directories="$(BackupDirForSource)" Condition="!Exists('$(BackupDirForSource)')"/>
 
     <MakeDir Directories="$(BuildDir)" Condition="!Exists('$(BuildDir)')"/>
     <MakeDir Directories="$(BuildDirForApp)" Condition="!Exists('$(BuildDirForApp)')"/>
     <MakeDir Directories="$(BuildDirForDbDeploy)" Condition="!Exists('$(BuildDirForDbDeploy)')"/>
 
     <MakeDir Directories="$(DeploymentDir)" Condition="!Exists('$(DeploymentDir)')"/>
-    <MakeDir Directories="$(DeploymentBackupDir)" Condition="!Exists('$(DeploymentBackupDir)')"/>
+    <MakeDir Directories="$(BackupDirForDeployment)" Condition="!Exists('$(BackupDirForDeployment)')"/>
     <MakeDir Directories="$(DeploymentDirForApp)" Condition="!Exists('$(DeploymentDirForApp)')"/>
     <MakeDir Directories="$(DeploymentDirForDbDeploy)" Condition="!Exists('$(DeploymentDirForDbDeploy)')"/>
 
     <MakeDir Directories="$(DestinationDir)" Condition="!Exists('$(DestinationDir)')"/>
-    <MakeDir Directories="$(TargetBackupDir)" Condition="!Exists('$(TargetBackupDir)')"/>
+    <MakeDir Directories="$(BackupDirForDestination)" Condition="!Exists('$(BackupDirForDestination)')"/>
 
-    <MakeDir Directories="$(DatabaseBackupDir)" Condition="!Exists('$(DatabaseBackupDir)')"/>
+    <MakeDir Directories="$(BackupDirForDatabase)" Condition="!Exists('$(BackupDirForDatabase)')"/>
 
 
-    <MakeDir Directories="$(CXCCoreSchemaChangesSqlDir)" Condition="!Exists('$(CXCCoreSchemaChangesSqlDir)')"/>
-    <MakeDir Directories="$(CXCCoreMetaChangesSqlDir)" Condition="!Exists('$(CXCCoreMetaChangesSqlDir)')"/>
+    <MakeDir Directories="$(BuildDirForCXCCoreSchemaChangesSql)" Condition="!Exists('$(BuildDirForCXCCoreSchemaChangesSql)')"/>
+    <MakeDir Directories="$(BuildDirForCXCCoreMetaChangesSql)" Condition="!Exists('$(BuildDirForCXCCoreMetaChangesSql)')"/>
 
 
     <!-- Need to reomve this command once we have seperate script folder for each TPA -->
@@ -148,14 +148,14 @@
     <Message Text="Table status: $(IsTableExist)"></Message>
 
     <!--Raise an error if changelog table is not exist into dbDeploy database-->
-    <Error Text="Please specify assembly version number in property file to update for this release." Condition="'$(IsTableExist)' == '0' "/>
+    <Error Text="Please specify assembly version number in property file for this release." Condition=" '$(IsTableExist)' == '0' AND $(AssemblyBuildNumber) == '' "/>
     
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
     
     </Target>
 
 
-  <Target Name="GetNewAssemblyVersionNumberFromDatabase" DependsOnTargets="CheckChangeLogTableExist">
+  <Target Name="GetNewAssemblyVersionNumberFromDatabase">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumberFromDatabase</CurrentTargetName>
@@ -276,22 +276,22 @@
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopySqlFilesToBuildDir'">CopySqlFilesToBuildDir</CurrentTargetName>
-      <MetaChangeScriptDir>%(SolutionName.MetaChangeScriptDir)</MetaChangeScriptDir>
-      <DataChangeScriptDir>%(SolutionName.DataChangeScriptDir)</DataChangeScriptDir>
+      <SourceDirForMetaChangeScript>%(SolutionName.SourceDirForMetaChangeScript)</SourceDirForMetaChangeScript>
+      <SourceDirForDataChangeScript>%(SolutionName.SourceDirForDataChangeScript)</SourceDirForDataChangeScript>
       <BuildDirForMetaSqlScript>%(SolutionName.BuildDirForMetaSqlScript)</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>%(SolutionName.BuildDirForDataSqlScript)</BuildDirForDataSqlScript>
     </PropertyGroup>
 
 
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(MetaChangeScriptDir)"
+      Source="$(SourceDirForMetaChangeScript)"
       Destination="$(BuildDirForMetaSqlScript)"
       Files="*.*"
       Options="/MIR" />
 
 
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(DataChangeScriptDir)"
+      Source="$(SourceDirForDataChangeScript)"
       Destination="$(BuildDirForDataSqlScript)"
       Files="*.*"
       Options="/MIR" />
@@ -312,19 +312,19 @@
 
     <ItemGroup>
       <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
-      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" Condition="$(BuildPayFlex) == 'false' "/>
+      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
     </ItemGroup>
 
 
     <Copy SourceFiles="@(CXCCoreSchemaChangesFiles)"
-          DestinationFolder="$(CXCCoreSchemaChangesSqlDir)\%(RecursiveDir)"
+          DestinationFolder="$(BuildDirForCXCCoreSchemaChangesSql)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
 
     <Copy SourceFiles="@(CXCCoreMetaFiles)"
-          DestinationFolder="$(CXCCoreMetaChangesSqlDir)\%(RecursiveDir)"
+          DestinationFolder="$(BuildDirForCXCCoreMetaChangesSql)\%(RecursiveDir)"
           SkipUnchangedFiles="true"
-          Condition="$(BuildPayFlex) == 'true' "/>
+          Condition="$(BuildPayFlex) != 'true' "/>
 
 
 
@@ -343,16 +343,15 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <PropertyGroup>
-      <CommandAndSqlFileDir>%(SolutionName.CommandAndSqlFilesDir)</CommandAndSqlFileDir>
-      <CommandAndSqlFilesBuildDir>%(SolutionName.CommandAndSqlFilesBuildDir)</CommandAndSqlFilesBuildDir>
+      <SourceDirForCommandAndSqlFile>%(SolutionName.SourceDirForCommandAndSqlFiles)</SourceDirForCommandAndSqlFile>
+      <BuildDirForCommandAndSqlFiles>%(SolutionName.BuildDirForCommandAndSqlFiles)</BuildDirForCommandAndSqlFiles>
     </PropertyGroup>
 
     
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(CommandAndSqlFileDir)"
-      Destination="$(CommandAndSqlFilesBuildDir)"
-      Files="*.*"
-      Options="/MIR"  />
+      Source="$(SourceDirForCommandAndSqlFile)"
+      Destination="$(BuildDirForCommandAndSqlFiles)"
+      Files="*.*" />
 
 
 
@@ -371,11 +370,11 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <ItemGroup>
-      <CXCCoreCommandAndSqlFiles Include="$(SourceDir)\CXC\Scripts\**\*.*" />
+      <SourceDirForCXCCoreCommandAndSqlFiles Include="$(SourceDir)\CXC\Scripts\**\*.*" />
     </ItemGroup>
 
 
-    <Copy SourceFiles="@(CXCCoreCommandAndSqlFiles)"
+    <Copy SourceFiles="@(SourceDirForCXCCoreCommandAndSqlFiles)"
           DestinationFolder="$(BuildDirForCommonCommandAndSqlFiles)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
@@ -498,15 +497,15 @@
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='ConfigTranformationForTPA'">ConfigTranformationForTPA</CurrentTargetName>
-      <StateParamXmlFileDir>%(SolutionName.StateParamXmlFileDir)</StateParamXmlFileDir>
+      <BuildDirForStateParamXmlFile>%(SolutionName.BuildDirForStateParamXmlFile)</BuildDirForStateParamXmlFile>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <XmlPreprocess
       ToolPath="$(LibDir)"
-      InputFiles="$(StateParamXmlFileDir)"
-      OutputFiles="$(StateParamXmlFileDir)"
+      InputFiles="$(BuildDirForStateParamXmlFile)"
+      OutputFiles="$(BuildDirForStateParamXmlFile)"
       SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
       Environment="$(Environment)"
   	  Clean="$(XmlPreprocessorCleanFile)"
@@ -587,8 +586,8 @@
     <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
                                TabName="EnvSetting"
                                Environment ="$(Environment)"
-                               InputFiles="$(BuildDirForCommandAndSqlFiles)\Common\SetEnv.cmd"
-                               OutputFiles="$(BuildDirForCommandAndSqlFiles)\Common\SetEnv.cmd"
+                               InputFiles="$(BuildDirForCommonCommandAndSqlFiles)\SetEnv.cmd"
+                               OutputFiles="$(BuildDirForCommonCommandAndSqlFiles)\SetEnv.cmd"
                                VariableColumnName="$(VariableColumnNameForCommandFile)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
@@ -682,20 +681,40 @@
   </Target>
 
 
-  <Target Name="CopyCommandAndSqlFilesToDeploymentDir" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
+  <Target Name="CopyCommandAndSqlFilesToDeploymentDir" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommonCommandAndSqlFilesToDeploymentDir">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToDeploymentDir'">CopyCommandAndSqlFilesToDeploymentDir</CurrentTargetName>
-      <CommandAndSqlFilesBuildDir>%(SolutionName.CommandAndSqlFilesBuildDir)</CommandAndSqlFilesBuildDir>
-      <CommandAndSqlFilesDeploymentDir>%(SolutionName.CommandAndSqlFilesDeploymentDir)</CommandAndSqlFilesDeploymentDir>
+      <BuildDirForCommandAndSqlFiles>%(SolutionName.BuildDirForCommandAndSqlFiles)</BuildDirForCommandAndSqlFiles>
+      <!--<CommandAndSqlFilesDeploymentDir>%(SolutionName.CommandAndSqlFilesDeploymentDir)</CommandAndSqlFilesDeploymentDir>-->
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(CommandAndSqlFilesBuildDir)"
-      Destination="$(CommandAndSqlFilesDeploymentDir)"
+      Source="$(BuildDirForCommandAndSqlFiles)"
+      Destination="$(DeploymentDirForApp)"
+      Files="*.*" />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+  </Target>
+  
+  
+  <Target Name="CopyCommonCommandAndSqlFilesToDeploymentDir">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToDeploymentDir'">CopyCommandAndSqlFilesToDeploymentDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(BuildDirForCommonCommandAndSqlFiles)"
+      Destination="$(DeploymentDirForApp)"
       Files="*.*" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -821,9 +840,17 @@
 
   </Target>
 
+  <Target Name="Init">
+
+    <Error Text="PayFlex cannot build together with other TPAs, Please check your property file values." Condition=" $(BuildGDI) == 'true' AND $(BuildPrimePay) == 'true' AND $(BuildPayFlex) == 'true' "></Error>
+    <CallTarget Targets="CheckChangeLogTableExist"></CallTarget>
+  </Target>
+
 
   <Target Name="Run">
 
+    <CallTarget Targets="Init"></CallTarget>
+    
     <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeOnDestination) != 'true' " />
 
     <CallTarget Targets="DatabaseBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>

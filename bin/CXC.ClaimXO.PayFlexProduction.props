@@ -20,9 +20,9 @@
     <!-- To build CXC Engine solution, set value to true -->
     <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
-    <BuildGDI>true</BuildGDI>
+    <BuildGDI>false</BuildGDI>
     <!-- To build PrimePay solution, set value to true -->
-    <BuildPrimePay>true</BuildPrimePay>
+    <BuildPrimePay>false</BuildPrimePay>
     <!-- To build PayFlex solution, set value to true -->
     <BuildPayFlex>true</BuildPayFlex>
 

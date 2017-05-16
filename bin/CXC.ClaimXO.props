@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
 
   <PropertyGroup>
-    <Environment>QA</Environment>
+    <Environment>PayFlexProduction</Environment>
     <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
     <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
     <SvnUsername></SvnUsername>
@@ -38,17 +38,19 @@
     <BuildDir>$(RootDir)\Staging</BuildDir>
     <!-- Specify the path to copy build code on server -->
     <DestinationDir>$(RootDir)\Destination</DestinationDir>
+    <!-- Specify the path to backup -->
+    <BackupDir>$(RootDir)\Backup</BackupDir>
 
 
 
     <!-- Specify the path to backup of source code -->
-    <SourceBackupDir>$(RootDir)\Backup\Source</SourceBackupDir>
+    <BackupDirForSource>$(BackupDir)\Source</BackupDirForSource>
     <!-- Specify the path to backup of deployment code -->
-    <DeploymentBackupDir>$(RootDir)\Backup\Deployment</DeploymentBackupDir>
+    <BackupDirForDeployment>$(BackupDir)\Deployment</BackupDirForDeployment>
     <!-- Specify the path to backup of database -->
-    <DatabaseBackupDir>$(RootDir)\Backup\Database</DatabaseBackupDir>
+    <BackupDirForDatabase>$(BackupDir)\Database</BackupDirForDatabase>
     <!-- Specify the path to back up build code on server -->
-    <TargetBackupDir>$(RootDir)\Backup\Destination</TargetBackupDir>
+    <BackupDirForDestination>$(BackupDir)\Destination</BackupDirForDestination>
 
 
     
@@ -68,12 +70,12 @@
     <BuildDirForDbDeployOutput>$(BuildDir)\$(DbDeployScriptOutputFolderName)</BuildDirForDbDeployOutput>
 
     <DeploymentDirForApp>$(DeploymentDir)\$(AppFolderName)</DeploymentDirForApp>
-
     <DeploymentDirForDbDeploy>$(DeploymentDir)\$(DbDeployScriptFolderName)</DeploymentDirForDbDeploy>
+    
+    
 
-
-    <CXCCoreSchemaChangesSqlDir>$(BuildDirForDbDeploy)\CXCCore\1.CXCCore_SchemaChanges</CXCCoreSchemaChangesSqlDir>
-    <CXCCoreMetaChangesSqlDir>$(BuildDirForDbDeploy)\CXCCore\2.CXCCore_Meta</CXCCoreMetaChangesSqlDir>
+    <BuildDirForCXCCoreSchemaChangesSql>$(BuildDirForDbDeploy)\CXCCore\1.CXCCore_SchemaChanges</BuildDirForCXCCoreSchemaChangesSql>
+    <BuildDirForCXCCoreMetaChangesSql>$(BuildDirForDbDeploy)\CXCCore\2.CXCCore_Meta</BuildDirForCXCCoreMetaChangesSql>
 
 
     <!--TODO: Make group of related property together-->
@@ -96,53 +98,56 @@
   <ItemGroup>
 
     <SolutionName Include="$(SourceDir)\TPA\GDI\CXCGDI.sln"  Condition="$(BuildGDI)=='true' ">
+      
       <TPAName>GDI</TPAName>
 
-      <MetaChangeScriptDir>$(SourceDir)\TPA\GDI\GDI\Build\MetaChanges</MetaChangeScriptDir>
-      <DataChangeScriptDir>$(SourceDir)\TPA\GDI\GDI\Build\DataChanges</DataChangeScriptDir>
-      <ScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\</ScriptDir>
+      <SourceDirForMetaChangeScript>$(SourceDir)\TPA\GDI\GDI\Build\MetaChanges</SourceDirForMetaChangeScript>
+      <SourceDirForDataChangeScript>$(SourceDir)\TPA\GDI\GDI\Build\DataChanges</SourceDirForDataChangeScript>
+      <SourceDirForCommandAndSqlFiles>$(SourceDir)\TPA\GDI\GDI\Scripts</SourceDirForCommandAndSqlFiles>
+      
+      <!--<ScriptDir>$(SourceDir)\TPA\GDI\GDI\Build\</ScriptDir>-->
+      
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\1.GDI_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\2.GDI_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForCommandAndSqlFiles>$(BuildDirForCommandAndSqlFiles)\GDI</BuildDirForCommandAndSqlFiles>
 
-      <CommandAndSqlFilesDir>$(SourceDir)\TPA\GDI\GDI\Scripts</CommandAndSqlFilesDir>
-      <CommandAndSqlFilesBuildDir>$(BuildDirForCommandAndSqlFiles)\Common</CommandAndSqlFilesBuildDir>
-      <CommandAndSqlFilesDeploymentDir>$(DeploymentDirForApp)</CommandAndSqlFilesDeploymentDir>
-
-      <StateParamXmlFileDir>$(BuildDirForApp)\GDI\config\StateParams.xml</StateParamXmlFileDir>
+      <BuildDirForStateParamXmlFile>$(BuildDirForApp)\GDI\config\StateParams.xml</BuildDirForStateParamXmlFile>
 
     </SolutionName>
 
 
     <SolutionName Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay.sln"  Condition="$(BuildPrimePay)=='true' ">
+      
       <TPAName>PrimePay</TPAName>
 
-      <MetaChangeScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges</MetaChangeScriptDir>
-      <DataChangeScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\DataChanges</DataChangeScriptDir>
-      <ScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\</ScriptDir>
+      <SourceDirForMetaChangeScript>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges</SourceDirForMetaChangeScript>
+      <SourceDirForDataChangeScript>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\DataChanges</SourceDirForDataChangeScript>
+      <SourceDirForCommandAndSqlFiles>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Scripts</SourceDirForCommandAndSqlFiles>
+
+      <!--<ScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\</ScriptDir>-->
+      
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\1.PrimePay_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\2.PrimePay_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForCommandAndSqlFiles>$(BuildDirForCommandAndSqlFiles)\PrimePay</BuildDirForCommandAndSqlFiles>
 
-      <CommandAndSqlFilesDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Scripts</CommandAndSqlFilesDir>
-      <CommandAndSqlFilesBuildDir>$(BuildDirForCommandAndSqlFiles)\PrimePay</CommandAndSqlFilesBuildDir>
-      <CommandAndSqlFilesDeploymentDir>$(DeploymentDirForApp)</CommandAndSqlFilesDeploymentDir>
-
-      <StateParamXmlFileDir>$(BuildDirForApp)\PrimePay\config\StateParams.xml</StateParamXmlFileDir>
+      <BuildDirForStateParamXmlFile>$(BuildDirForApp)\PrimePay\config\StateParams.xml</BuildDirForStateParamXmlFile>
 
     </SolutionName>
 
     <SolutionName Include="$(SourceDir)\TPA\PayFlex\CXCPayFlex.sln"  Condition="$(BuildPayFlex)=='true' " >
+     
       <TPAName>PayFlex</TPAName>
 
-      <MetaChangeScriptDir>$(SourceDir)\TPA\PayFlex\PayFlex\Build\MetaChanges</MetaChangeScriptDir>
-      <DataChangeScriptDir>$(SourceDir)\TPA\PayFlex\PayFlex\Build\DataChanges</DataChangeScriptDir>
+      <SourceDirForMetaChangeScript>$(SourceDir)\TPA\PayFlex\PayFlex\Build\MetaChanges</SourceDirForMetaChangeScript>
+      <SourceDirForDataChangeScript>$(SourceDir)\TPA\PayFlex\PayFlex\Build\DataChanges</SourceDirForDataChangeScript>
+      <SourceDirForCommandAndSqlFiles>$(SourceDir)\TPA\PayFlex\PayFlex\Scripts</SourceDirForCommandAndSqlFiles>
+     
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PayFlex\1.PayFlex_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PayFlex\2.PayFlex_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForCommandAndSqlFiles>$(BuildDirForCommandAndSqlFiles)\PayFlex</BuildDirForCommandAndSqlFiles>
 
-      <CommandAndSqlFilesDir>$(SourceDir)\TPA\PayFlex\PayFlex\Scripts</CommandAndSqlFilesDir>
-      <CommandAndSqlFilesBuildDir>$(BuildDirForCommandAndSqlFiles)\PayFlex</CommandAndSqlFilesBuildDir>
-      <CommandAndSqlFilesDeploymentDir>$(DeploymentDirForApp)</CommandAndSqlFilesDeploymentDir>
-
-      <StateParamXmlFileDir>$(BuildDirForApp)\PayFlex\config\StateParams.xml</StateParamXmlFileDir>
+      <BuildDirForStateParamXmlFile>$(BuildDirForApp)\PayFlex\config\StateParams.xml</BuildDirForStateParamXmlFile>
+      
     </SolutionName>
 
   </ItemGroup>

@@ -101,7 +101,7 @@
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2017.02.01.01</AssemblyBuildNumber>
+    <AssemblyBuildNumber>2017.01.01.0</AssemblyBuildNumber>
 
 
     <!--Set value true to create svn lable under svn tag branch-->

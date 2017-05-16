@@ -2,10 +2,10 @@
   
   
   <PropertyGroup>
-    <DatabaseBackupFile>$(DatabaseBackupDir)\$(DatabaseName)_PreBuild_$(CurrentDateTime).bak</DatabaseBackupFile>
-    <SourceBackupFile>$(SourceBackupDir)\ClaimXO_PreBuild_$(CurrentDateTime).zip</SourceBackupFile>
-    <DeploymentBackupFile>$(DeploymentBackupDir)\ClaimXO_PostBuild_$(CurrentDateTime).zip</DeploymentBackupFile>
-    <DestinationBackupFile>$(TargetBackupDir)\ClaimXO_PreBuild_$(CurrentDateTime).zip</DestinationBackupFile>
+    <DatabaseBackupFile>$(BackupDirForDatabase)\$(DatabaseName)_PreBuild_$(CurrentDateTime).bak</DatabaseBackupFile>
+    <SourceBackupFile>$(BackupDirForSource)\ClaimXO_PreBuild_$(CurrentDateTime).zip</SourceBackupFile>
+    <DeploymentBackupFile>$(BackupDirForDeployment)\ClaimXO_PostBuild_$(CurrentDateTime).zip</DeploymentBackupFile>
+    <DestinationBackupFile>$(BackupDirForDestination)\ClaimXO_PreBuild_$(CurrentDateTime).zip</DestinationBackupFile>
   </PropertyGroup>
 
   
@@ -43,7 +43,7 @@
       UserName="$(SqlServerUserName)"
       UserPassword="$(SqlServerPassword)"
       DataFilePath="$(DatabaseBackupFile)" />
-    <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)"></Message>
+    <Message Text="Database backup has been sucessfully completed at this location: $(BackupDirForDatabase)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -68,7 +68,7 @@
       UserName="$(SqlServerUserName)"
       UserPassword="$(SqlServerPassword)"
       DataFilePath="$(DatabaseBackupFile)" />
-    <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)"></Message>
+    <Message Text="Database backup has been sucessfully completed at this location: $(BackupDirForDatabase)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -93,7 +93,7 @@
       UserName="$(SqlServerUserName)"
       UserPassword="$(SqlServerPassword)"
       DataFilePath="$(DatabaseBackupFile)" />
-    <Message Text="Database backup has been sucessfully completed at this location: $(DatabaseBackupDir)"></Message>
+    <Message Text="Database backup has been sucessfully completed at this location: $(BackupDirForDatabase)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 

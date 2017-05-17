@@ -22,11 +22,11 @@
     <!-- To build CXC Engine solution, set value to true -->
     <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
-    <BuildGDI>false</BuildGDI>
+    <BuildGDI>true</BuildGDI>
     <!-- To build PrimePay solution, set value to true -->
-    <BuildPrimePay>false</BuildPrimePay>
+    <BuildPrimePay>true</BuildPrimePay>
     <!-- To build PayFlex solution, set value to true -->
-    <BuildPayFlex>true</BuildPayFlex>
+    <BuildPayFlex>false</BuildPayFlex>
 
 
     <!-- Build code settings-->
@@ -101,7 +101,7 @@
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2017.01.01.0</AssemblyBuildNumber>
+    <AssemblyBuildNumber></AssemblyBuildNumber>
 
 
     <!--Set value true to create svn lable under svn tag branch-->

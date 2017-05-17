@@ -11,8 +11,8 @@
     <AssemblyInfoFile Include="$(MSBuildProjectDirectory)\Properties\AssemblyInfo.cs" />
     <GeneratedAssemblyFileName Include="$(TempAssemblyFile)"/>
   </ItemGroup>
-  
-   
+
+
 
 
 
@@ -41,11 +41,17 @@
     <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
       <Output TaskParameter="Lines" PropertyName="VersionNumber" />
     </ReadLinesFromFile>
-    
+
     <FileUpdate Files="@(AssemblyInfoFile)"
-                Regex="(\d+)\.(\d+)\.(\d+)\.(\d+)"
-                ReplacementText="$(VersionNumber)" />
-    
+                Regex='(AssemblyVersion\("\d+\.\d+\.\d+\.)\d+("\))'
+                ReplacementText="AssemblyVersion(&quot;$(VersionNumber)&quot;)" />
+
+
+    <FileUpdate Files="@(AssemblyInfoFile)"
+            Regex='(AssemblyFileVersion\("\d+\.\d+\.\d+\.)\d+("\))'
+            ReplacementText="AssemblyFileVersion(&quot;$(VersionNumber)&quot;)" />
+
+
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
@@ -57,10 +63,10 @@
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CommitAssemblyInfoFileInSVN'">CommitAssemblyInfoFileInSVN</CurrentTargetName>
     </PropertyGroup>
 
-     <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
+    <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
       <Output TaskParameter="Lines" PropertyName="VersionNumber" />
     </ReadLinesFromFile>
-    
+
     <SvnCommit Targets="@(AssemblyInfoFile)" Message="Set assembly version number: $(VersionNumber)"
      Username="$(SvnUsername)" Password="$(SvnPassword)">
       <Output TaskParameter="Revision" PropertyName="Revision" />

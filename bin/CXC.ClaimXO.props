@@ -90,6 +90,11 @@
     <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword)</DatabaseConnectionString>
 
 
+    <LogDir>..\Log</LogDir>
+    <TempDirForLog>$(LogDir)\temp</TempDirForLog>
+    <ErrorLogFileName>$(TempDirForLog)\CXC.ClaimXO.MSBuild.Error_$(CurrentDateTime).log</ErrorLogFileName>
+    <LogFileName>$(LogDir)\CXC.ClaimXO.MSBuild_$(CurrentDateTime).log</LogFileName>
+    
   </PropertyGroup>
 
 
@@ -104,8 +109,6 @@
       <SourceDirForMetaChangeScript>$(SourceDir)\TPA\GDI\GDI\Build\MetaChanges</SourceDirForMetaChangeScript>
       <SourceDirForDataChangeScript>$(SourceDir)\TPA\GDI\GDI\Build\DataChanges</SourceDirForDataChangeScript>
       <SourceDirForCommandAndSqlFiles>$(SourceDir)\TPA\GDI\GDI\Scripts</SourceDirForCommandAndSqlFiles>
-      
-      <!--<ScriptDir>$(SourceDir)\TPA\GDI\GDI\Build\</ScriptDir>-->
       
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\1.GDI_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\2.GDI_DataChanges</BuildDirForDataSqlScript>
@@ -124,8 +127,6 @@
       <SourceDirForDataChangeScript>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\DataChanges</SourceDirForDataChangeScript>
       <SourceDirForCommandAndSqlFiles>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Scripts</SourceDirForCommandAndSqlFiles>
 
-      <!--<ScriptDir>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\</ScriptDir>-->
-      
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\1.PrimePay_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\2.PrimePay_DataChanges</BuildDirForDataSqlScript>
       <BuildDirForCommandAndSqlFiles>$(BuildDirForCommandAndSqlFiles)\PrimePay</BuildDirForCommandAndSqlFiles>

@@ -5,6 +5,11 @@
   <!--msbuild CXC.ClaimXO.Build.proj /l:XMLFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.xml-->
   <!--msbuild CXC.ClaimXO.Build.proj /l:SqlLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;BID=123;BN=2016;DS=.;IC=MSBuildLogs;SP=msbep_SqlLogger-->
   <!--msbuild CXC.ClaimXO.Build.proj /l:SecureFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.txt-->
+
+  <!--Microsoft logger-->
+  <!--msbuild CXC.ClaimXO.Build.proj /fileLogger /fileLoggerParameters:LogFile=MyLog.log;-->
+  <!--msbuild CXC.ClaimXO.Build.proj /fl1 /fl2 /fl3 /flp2:logfile=JustErrors.log;errorsonly /flp3:logfile=JustWarnings.log;warningsonly-->
+
   <!-- Region Import External target -->
 
   <Import Project="CXC.ClaimXO.BuildTasks.tasks" />
@@ -837,9 +842,15 @@
   </Target>
 
 
-  <Target Name="CleanTempFolder">
+  <Target Name="CleanTempFiles">
 
     <RemoveDir Directories="$(TempDir)" />
+    
+     <ItemGroup>
+      <DeleteTempErrorLog Include="$(TempDirForLog)/**/*.*" Exclude="$(ErrorLogFileName)" />
+   </ItemGroup>
+    
+   <Delete Files="@(DeleteTempErrorLog)" ContinueOnError="true" />
 
 
   </Target>
@@ -848,11 +859,11 @@
 
     <Error Text="PayFlex cannot build together with other TPAs, Please check your property file values." Condition=" $(BuildGDI) == 'true' AND $(BuildPrimePay) == 'true' AND $(BuildPayFlex) == 'true' "></Error>
     <CallTarget Targets="CheckChangeLogTableExist"></CallTarget>
+    
   </Target>
 
-
-  <Target Name="Run">
-
+  <Target Name="Build">
+    
     <CallTarget Targets="Init"></CallTarget>
 
     <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeOnDestination) != 'true' " />
@@ -889,8 +900,17 @@
 
     <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
 
-    <CallTarget Targets="CleanTempFolder" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
+    <CallTarget Targets="CleanTempFiles" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
 
+    
+  </Target>
+  
+
+  <Target Name="Run">
+
+    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /fl1 /fl2 /flp1:logfile=$(LogFileName) /flp2:logfile=$(ErrorLogFileName);errorsonly "/>
+    
+    
   </Target>
 
 

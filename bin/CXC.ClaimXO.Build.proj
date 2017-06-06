@@ -37,6 +37,7 @@
 
     <RemoveDir Directories="$(SourceDir)" Condition="$(ForceSourceOverwrite)== 'true'"/>
 
+    <MakeDir Directories="$(RootDir)" Condition="!Exists('$(RootDir)')"/>
     <MakeDir Directories="$(SourceDir)" Condition="!Exists('$(SourceDir)')"/>
     <MakeDir Directories="$(BackupDirForSource)" Condition="!Exists('$(BackupDirForSource)')"/>
 
@@ -121,7 +122,7 @@
   </Target>
 
 
-  <Target Name="GetNewAssemblyVersionNumber">
+  <Target Name="GetNewAssemblyVersionNumber" Condition="$(UpdateBuildVersion)=='true'">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumber</CurrentTargetName>
@@ -142,6 +143,7 @@
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+    
 
     <MSBuild.ExtensionPack.SqlServer.SqlExecute
       TaskAction="ExecuteScalar"
@@ -156,6 +158,8 @@
     <Error Text="Please specify assembly version number in property file for this release." Condition=" '$(IsTableExist)' == '0' AND $(AssemblyBuildNumber) == '' "/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+    
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
 
@@ -589,11 +593,11 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
-                               TabName="EnvSetting"
+                               TabName="CommandSettings"
                                Environment ="$(Environment)"
                                InputFiles="$(BuildDirForCommonCommandAndSqlFiles)\SetEnv.cmd"
                                OutputFiles="$(BuildDirForCommonCommandAndSqlFiles)\SetEnv.cmd"
-                               VariableColumnName="$(VariableColumnNameForCommandFile)" >
+                               VariableColumnName="$(PropertiesColumnInSettingSpreadsheet)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
 
@@ -615,11 +619,11 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
-                               TabName="EnvSetting"
+                               TabName="CommandSettings"
                                Environment ="$(Environment)"
                                InputFiles="$(CommandFileName)"
                                OutputFiles="$(CommandFileName)"
-                               VariableColumnName="$(VariableColumnNameForCommandFile)" >
+                               VariableColumnName="$(PropertiesColumnInSettingSpreadsheet)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
 
@@ -866,39 +870,39 @@
     
     <CallTarget Targets="Init"></CallTarget>
 
-    <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeOnDestination) != 'true' " />
+    <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeToDestination) != 'true' " />
 
-    <CallTarget Targets="DatabaseBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
-    <CallTarget Targets="DestinationBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="DatabaseBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="DestinationBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="DownloadSourceFromSVNPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
-    <CallTarget Targets="SourceBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="DownloadSourceFromSVNPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="SourceBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="GetNewAssemblyVersionNumber" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="GetNewAssemblyVersionNumber" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="BuildSolutions" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="BuildSolutions" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
-    <CallTarget Targets="CopySqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
-    <CallTarget Targets="CopyCommandAndSqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="CopySqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="CopyCommandAndSqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' " />
-    <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' " />
-    <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' " />
+    <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' " />
+    <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="CopyBuildFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
-    <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
-    <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="CopyBuildFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="DeploymentBackupPostBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeOnDestination) != 'true' "/>
+    <CallTarget Targets="DeploymentBackupPostBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
     <CallTarget Targets="CreateSVNLabelOnSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
 
-    <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition=" $(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '' " />
+    <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition=" $(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '' " />
 
-    <CallTarget Targets="UpdateDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
+    <CallTarget Targets="UpdateDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '') " />
 
-    <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
+    <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '') " />
 
     
   </Target>
@@ -908,7 +912,7 @@
 
     <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /fl1 /fl2 /flp1:logfile=$(LogFileName) /flp2:logfile=$(ErrorLogFileName);errorsonly "/>
     
-    <CallTarget Targets="CleanTempFiles" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeOnDestination) == 'true' or $(PushCodeOnDestination) == '') " />
+    <CallTarget Targets="CleanTempFiles" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '') " />
     
     
   </Target>

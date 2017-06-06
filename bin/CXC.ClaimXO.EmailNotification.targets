@@ -12,6 +12,11 @@
       <Output TaskParameter="Lines" ItemName="FileContents" />
     </ReadLinesFromFile>
 
+
+    <PropertyGroup>
+      <ErrorLogFile>@(FileContents->'%(Identity)', '%0a%0d')</ErrorLogFile>
+      <TrimValue>$(ErrorLogFile.Replace('\n', ''))</TrimValue>
+    </PropertyGroup>
     
     <SendEmail
       ToEmailAddress="$(ErrorNotificationToAddress)"
@@ -19,6 +24,10 @@
       Message="Error details: @(FileContents->'%(Identity)', '%0a%0d') See log file for additional details..." />
     
     
+    <!--<Exec Command='$(LibDir)\sendemail.exe -f $(EmailNotificationFromAddress) -t $(ErrorNotificationToAddress) -u Build failed: Target name $(CurrentTargetName) -m Error details: $(TrimValue) See log file for additional details... -s email-smtp.us-east-1.amazonaws.com:587 -xu AKIAIMBVIJNHT6VQN4VA -xp ArFbvt4Wmb+1L20FZ94fz0XA0biN4Y0p3wYUVN0ljVna -o tls=yes' />-->
+    
+      
+
     
   </Target>
 

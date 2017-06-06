@@ -34,7 +34,7 @@
             forceUpdate="true"  />
 
 
-    <WriteLinesToFile File="$(TempDbDeployFile)" Lines="$(DbDeployOutputFileName)" Overwrite="true" Condition="$(PushCodeOnDestination) == 'false' "/>
+    <WriteLinesToFile File="$(TempDbDeployFile)" Lines="$(DbDeployOutputFileName)" Overwrite="true" Condition="$(PushCodeToDestination) == 'false' "/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -45,18 +45,18 @@
   <Target Name="UpdateDestinationDatabase">
 
 
-    <ItemGroup Condition="$(PushCodeOnDestination) == 'true' ">
+    <ItemGroup Condition="$(PushCodeToDestination) == 'true' ">
       <dbDeployFileName Include="$(TempDir)\dbDeployFileName.txt"/>
     </ItemGroup>
 
-    <ReadLinesFromFile File="@(dbDeployFileName)" Condition="$(PushCodeOnDestination) == 'true' ">
+    <ReadLinesFromFile File="@(dbDeployFileName)" Condition="$(PushCodeToDestination) == 'true' ">
       <Output TaskParameter="Lines" ItemName="dbDeployOutputFilePath" />
     </ReadLinesFromFile>
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='UpdateDestinationDatabase'">UpdateDestinationDatabase</CurrentTargetName>
       <SqlCmdInputFile>$(DbDeployOutputFileName)</SqlCmdInputFile>
-      <SqlCmdInputFile Condition="$(PushCodeOnDestination) == 'true' ">@(dbDeployOutputFilePath)</SqlCmdInputFile>
+      <SqlCmdInputFile Condition="$(PushCodeToDestination) == 'true' ">@(dbDeployOutputFilePath)</SqlCmdInputFile>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />

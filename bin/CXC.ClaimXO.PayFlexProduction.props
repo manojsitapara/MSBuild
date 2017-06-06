@@ -31,7 +31,7 @@
     <!--Set value to true to push build code on destination-->
     <!--Set value to false to just build code on deployment -->
     <!--Set value to empty to execute normal msbuild workflow -->
-    <PushCodeOnDestination></PushCodeOnDestination>
+    <PushCodeToDestination></PushCodeToDestination>
 
 
     <!--Sql server settings -->
@@ -51,14 +51,8 @@
     <!--specify database name -->
     <DatabaseName>MsbuildCXC</DatabaseName>
 
-
-
-    <!--Config settings -->
-
-    <!--Specify environment -->
-    <EnvironmentName>ManojDev</EnvironmentName>
-
-
+    <!--Set value true to take database backup else false -->
+    <DatabaseBackup>false</DatabaseBackup>
 
 
     <!--DbDeploy Settings -->

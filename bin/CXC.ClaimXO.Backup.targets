@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   
-  <Target Name="DatabaseBackupPreBuild">
+  <Target Name="DatabaseBackupPreBuild" Condition="$(DatabaseBackup) == 'true' ">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='DatabaseBackupPreBuild'">DatabaseBackupPreBuild</CurrentTargetName>

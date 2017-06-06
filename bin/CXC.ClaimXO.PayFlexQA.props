@@ -14,7 +14,7 @@
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
-    <RootDir>G:\MSBuildTesting\QA</RootDir>
+    <RootDir>G:\MSBuildTesting\PayFlexQA</RootDir>
 
 
     <!-- Source code SVN settings -->
@@ -25,7 +25,7 @@
     <!--Solution settings -->
 
     <!-- To build CXC Engine solution, set value to true -->
-    <BuildCXCEngine>false</BuildCXCEngine>
+    <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
     <BuildGDI>false</BuildGDI>
     <!-- To build PrimePay solution, set value to true -->
@@ -48,7 +48,7 @@
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
     <SqlServerVersion>2012</SqlServerVersion>
     <!--Specify Sql server name-->
-    <SqlServerName>LAPTOP-4857HARD\QA</SqlServerName>
+    <SqlServerName>LAPTOP-4857HARD\PAYFLEXQA</SqlServerName>
 
     <!--Specify sql user name, if IsSqlWindowsAuthentication flag value is false -->
     <SqlServerUserName>sa</SqlServerUserName>

@@ -2,15 +2,15 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
 
   <PropertyGroup>
-    <Environment>QA</Environment>
-    <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
-    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
+    <Environment>PayFlexQA</Environment>
+ 
     <SvnUsername></SvnUsername>
     <SvnPassword></SvnPassword>
   </PropertyGroup>
 
 
   <Import Project="CXC.ClaimXO.QA.props" Condition="$(Environment) == 'QA'"/>
+  <Import Project="CXC.ClaimXO.PayFlexQA.props" Condition="$(Environment) == 'PayFlexQA' "/>
   <Import Project="CXC.ClaimXO.Production.props" Condition="$(Environment) == 'Production'"/>
   <Import Project="CXC.ClaimXO.PayFlexProduction.props" Condition="$(Environment) == 'PayFlexProduction'"/>
 
@@ -83,7 +83,7 @@
     <XmlPreprocessorValidateFile>true</XmlPreprocessorValidateFile>
 
     <!-- This setting is for command file transformation -->
-    <VariableColumnNameForCommandFile>Environment Name</VariableColumnNameForCommandFile>
+    <PropertiesColumnInSettingSpreadsheet>Environment Name</PropertiesColumnInSettingSpreadsheet>
 
 
     <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);Integrated Security=SSPI</DatabaseConnectionString>
@@ -94,6 +94,8 @@
     <TempDirForLog>$(LogDir)\temp</TempDirForLog>
     <ErrorLogFileName>$(TempDirForLog)\CXC.ClaimXO.MSBuild.Error_$(CurrentDateTime).log</ErrorLogFileName>
     <LogFileName>$(LogDir)\CXC.ClaimXO.MSBuild_$(CurrentDateTime).log</LogFileName>
+
+    <EmailNotificationFromAddress>alertsqa@cxcnetwork.com</EmailNotificationFromAddress>
     
   </PropertyGroup>
 

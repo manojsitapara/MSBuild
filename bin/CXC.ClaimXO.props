@@ -36,8 +36,7 @@
     <SourceDir>$(RootDir)\Source</SourceDir>
     <!-- Specify the path to save build code -->
     <BuildDir>$(RootDir)\Build</BuildDir>
-    <!-- Specify the path to copy build code on server -->
-    <DestinationDir>$(RootDir)\Destination</DestinationDir>
+   
     <!-- Specify the path to backup -->
     <BackupDir>$(RootDir)\Backup</BackupDir>
 

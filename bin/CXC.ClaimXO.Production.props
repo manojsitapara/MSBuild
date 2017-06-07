@@ -7,7 +7,8 @@
 
     <!-- Specify the root directory to create msbuild script folder structure -->
     <RootDir>G:\MSBuildTesting\Production</RootDir>
-
+    <!-- Specify the path to copy build code on server -->
+    <DestinationDir>H:\PayFlexProductionServer</DestinationDir>
 
     <!-- Source code SVN settings -->
     

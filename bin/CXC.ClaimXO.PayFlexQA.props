@@ -14,8 +14,9 @@
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
-    <RootDir>G:\MSBuildTesting\PayFlexQA</RootDir>
-
+    <RootDir>G:\MSBuildTesting\QA</RootDir>
+    <!-- Specify the path to copy build code on server -->
+    <DestinationDir>H:\PayFlexServer</DestinationDir>
 
     <!-- Source code SVN settings -->
 
@@ -100,7 +101,7 @@
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2016.06.01.0</AssemblyBuildNumber>
+    <AssemblyBuildNumber></AssemblyBuildNumber>
 
 
     <!--Set value true to create svn lable under svn tag branch-->

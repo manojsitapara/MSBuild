@@ -58,7 +58,7 @@
     <!--Specify the path for deployment directory (i.e. ready to run code) -->
     <DeploymentDir>$(RootDir)\Deployment</DeploymentDir>
 
-    <TempDir>$(RootDir)\Staging\temp</TempDir>
+    <TempDir>$(BuildDir)\temp</TempDir>
     <TempAssemblyFile>$(TempDir)\AssemblyVersionNumber.txt</TempAssemblyFile>
     <TempDbDeployFile>$(TempDir)\dbDeployFileName.txt</TempDbDeployFile>
 

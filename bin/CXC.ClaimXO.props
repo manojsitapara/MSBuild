@@ -64,7 +64,7 @@
 
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
     <BuildDirForWorkflowFiles>$(BuildDir)\$(WorkflowScriptFolderName)</BuildDirForWorkflowFiles>
-    <BuildDirForCommonCommandAndSqlFiles>$(BuildDirForWorkflowScript)\Common</BuildDirForCommonCommandAndSqlFiles>
+    <BuildDirForCommonWorkflowScript>$(BuildDirForWorkflowScript)\Common</BuildDirForCommonWorkflowScript>
     <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptInputFolderName)</BuildDirForDbDeploy>
     <BuildDirForDbDeployOutput>$(BuildDir)\$(DbDeployScriptOutputFolderName)</BuildDirForDbDeployOutput>
 

@@ -379,12 +379,12 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <ItemGroup>
-      <SourceDirForCXCCoreCommandAndSqlFiles Include="$(SourceDir)\CXC\Scripts\**\*.*" />
+      <SourceDirForCommandWorkflowScript Include="$(SourceDir)\CXC\Scripts\**\*.*" />
     </ItemGroup>
 
 
-    <Copy SourceFiles="@(SourceDirForCXCCoreCommandAndSqlFiles)"
-          DestinationFolder="$(BuildDirForCommonCommandAndSqlFiles)\%(RecursiveDir)"
+    <Copy SourceFiles="@(SourceDirForCommandWorkflowScript)"
+          DestinationFolder="$(BuildDirForCommonWorkflowScript)\%(RecursiveDir)"
           SkipUnchangedFiles="true" />
 
 
@@ -595,8 +595,8 @@
     <CommandFileTransformation SpreadsheetFiles="$(ConfigValuesSpreadsheetFileLocation)"
                                TabName="CommandSettings"
                                Environment ="$(Environment)"
-                               InputFiles="$(BuildDirForCommonCommandAndSqlFiles)\SetEnv.cmd"
-                               OutputFiles="$(BuildDirForCommonCommandAndSqlFiles)\SetEnv.cmd"
+                               InputFiles="$(BuildDirForCommonWorkflowScript)\SetEnv.cmd"
+                               OutputFiles="$(BuildDirForCommonWorkflowScript)\SetEnv.cmd"
                                VariableColumnName="$(PropertiesColumnInSettingSpreadsheet)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
@@ -722,7 +722,7 @@
 
 
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(BuildDirForCommonCommandAndSqlFiles)"
+      Source="$(BuildDirForCommonWorkflowScript)"
       Destination="$(DeploymentDirForApp)"
       Files="*.*" />
 

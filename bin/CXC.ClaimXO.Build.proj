@@ -296,14 +296,14 @@
       Source="$(SourceDirForMetaChangeScript)"
       Destination="$(BuildDirForMetaSqlScript)"
       Files="*.*"
-      Options="/MIR" />
+      Options="/E /XO" />
 
 
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
       Source="$(SourceDirForDataChangeScript)"
       Destination="$(BuildDirForDataSqlScript)"
       Files="*.*"
-      Options="/MIR" />
+      Options="/E /XO" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -360,7 +360,8 @@
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
       Source="$(SourceDirForWorkflowFile)"
       Destination="$(BuildDirForWorkflowScript)"
-      Files="*.*" />
+      Files="*.*"
+      Options="/E /XO"/>
 
 
 
@@ -651,7 +652,7 @@
       Source="$(BuildDirForApp)"
       Destination="$(DeploymentDirForApp)"
       Files="*.*"
-      Options="/E" />
+      Options="/E /XO" />
 
     <Message Text = "Completed copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
@@ -704,7 +705,8 @@
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
       Source="$(BuildDirForWorkflowScript)"
       Destination="$(DeploymentDirForApp)"
-      Files="*.*" />
+      Files="*.*"
+      Options="/E /XO"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -724,7 +726,8 @@
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
       Source="$(BuildDirForCommonWorkflowScript)"
       Destination="$(DeploymentDirForApp)"
-      Files="*.*" />
+      Files="*.*"
+      Options="/E /XO" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 

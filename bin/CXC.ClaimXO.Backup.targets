@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   
-  <Target Name="DatabaseBackupPreBuild" Condition="$(DatabaseBackup) == 'true' ">
+  <Target Name="BackupPreBuildDatabase" Condition="$(DatabaseBackup) == 'true' ">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DatabaseBackupPreBuild'">DatabaseBackupPreBuild</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupPreBuildDatabase'">BackupPreBuildDatabase</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -103,10 +103,10 @@
   </Target>
 
 
-  <Target Name="SourceBackupPreBuild" Condition="$(SourceCodeBackup) == 'true'">
+  <Target Name="BackupPreBuildSource" Condition="$(SourceCodeBackup) == 'true'">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SourceBackupPreBuild'">SourceBackupPreBuild</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupPreBuildSource'">BackupPreBuildSource</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -125,10 +125,10 @@
   </Target>
 
 
-  <Target Name="DeploymentBackupPostBuild">
+  <Target Name="BackupPostBuildDeployment">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DeploymentBackupPostBuild'">DeploymentBackupPostBuild</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupPostBuildDeployment'">BackupPostBuildDeployment</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="Target DatabaseBackupCompiledAssembliesBackup has been started." />
@@ -144,10 +144,10 @@
   </Target>
 
   
-  <Target Name="DestinationBackupPreBuild">
+  <Target Name="BackupPreBuildDestination">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DestinationBackupPreBuild'">DestinationBackupPreBuild</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupPreBuildDestination'">BackupPreBuildDestination</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />

@@ -98,10 +98,10 @@
   </Target>
 
 
-  <Target Name="DownloadSourceFromSVNPreBuild" Condition="$(DownloadSourceCodeFromSVN) == 'true' ">
+  <Target Name="DownloadPreBuildSourceFromSVN" Condition="$(DownloadSourceCodeFromSVN) == 'true' ">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DownloadSourceFromSVNPreBuild'">DownloadSourceFromSVNPreBuild</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DownloadPreBuildSourceFromSVN'">DownloadPreBuildSourceFromSVN</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -343,10 +343,10 @@
   </Target>
 
 
-  <Target Name="CopyCommandAndSqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreCommandAndSqlFilesToBuildDir">
+  <Target Name="CopyWorkFlowScriptToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreCommandAndSqlFilesToBuildDir">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToBuildDir'">CopyCommandAndSqlFilesToBuildDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyWorkFlowScriptToBuildDir'">CopyWorkFlowScriptToBuildDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -690,10 +690,10 @@
   </Target>
 
 
-  <Target Name="CopyCommandAndSqlFilesToDeploymentDir" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommonCommandAndSqlFilesToDeploymentDir">
+  <Target Name="CopyWorkflowScriptsToDeploymentDir" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommonWorkflowScriptsToDeploymentDir">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToDeploymentDir'">CopyCommandAndSqlFilesToDeploymentDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyWorkflowScriptsToDeploymentDir'">CopyWorkflowScriptsToDeploymentDir</CurrentTargetName>
       <BuildDirForCommandAndSqlFiles>%(SolutionName.BuildDirForCommandAndSqlFiles)</BuildDirForCommandAndSqlFiles>
       <!--<CommandAndSqlFilesDeploymentDir>%(SolutionName.CommandAndSqlFilesDeploymentDir)</CommandAndSqlFilesDeploymentDir>-->
     </PropertyGroup>
@@ -712,10 +712,10 @@
   </Target>
 
 
-  <Target Name="CopyCommonCommandAndSqlFilesToDeploymentDir">
+  <Target Name="CopyCommonWorkflowScriptsToDeploymentDir">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandAndSqlFilesToDeploymentDir'">CopyCommandAndSqlFilesToDeploymentDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommonWorkflowScriptsToDeploymentDir'">CopyCommonWorkflowScriptsToDeploymentDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -866,37 +866,43 @@
     
   </Target>
 
-  <Target Name="Build">
-    
-    <CallTarget Targets="Init"></CallTarget>
 
-    <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeToDestination) != 'true' " />
+  <Target Name="BackupPreBuild">
 
-    <CallTarget Targets="DatabaseBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-    <CallTarget Targets="DestinationBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="BackupPreBuildDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="BackupPreBuildDestination" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="DownloadSourceFromSVNPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-    <CallTarget Targets="SourceBackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+  </Target>
+
+  <Target Name="BuildingSolutions">
 
     <CallTarget Targets="GetNewAssemblyVersionNumber" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-
+    
     <CallTarget Targets="BuildSolutions" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
     <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
     <CallTarget Targets="CopySqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-    <CallTarget Targets="CopyCommandAndSqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="CopyWorkFlowScriptToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
     <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' " />
     <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' " />
     <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
+    <CallTarget Targets="CreateSVNLabelOnSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    
+  </Target>
+
+  <Target Name="PostBuild">
+
     <CallTarget Targets="CopyBuildFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
     <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-    <CallTarget Targets="CopyCommandAndSqlFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="CopyWorkflowScriptsToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="DeploymentBackupPostBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-
-    <CallTarget Targets="CreateSVNLabelOnSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+    <CallTarget Targets="BackupPostBuildDeployment" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    
+  </Target>
+  
+  <Target Name="DeployBuildToDestination">
 
     <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition=" $(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '' " />
 
@@ -904,7 +910,28 @@
 
     <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '') " />
 
+
+  </Target>
+          
+  
+
+  <Target Name="Build">
     
+    <CallTarget Targets="Init"></CallTarget>
+
+    <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeToDestination) != 'true' " />
+    <CallTarget Targets="BackupPreBuild"></CallTarget>
+    
+    <CallTarget Targets="DownloadPreBuildSourceFromSVN" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    
+    <CallTarget Targets="BackupPreBuildSource" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+
+    <CallTarget Targets="BuildingSolutions"></CallTarget>
+
+    <CallTarget Targets="PostBuild"></CallTarget>
+
+    <CallTarget Targets="DeployBuildToDestination"></CallTarget>
+
   </Target>
   
 

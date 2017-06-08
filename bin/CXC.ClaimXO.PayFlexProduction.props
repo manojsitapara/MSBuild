@@ -3,21 +3,21 @@
 
   <PropertyGroup>
 
+    <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
+    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
+
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
-    <RootDir>G:\MSBuildTesting\PayFlexProduction</RootDir>
+    <RootDir>G:\MSBuildTesting\QA</RootDir>
+
     <!-- Specify the path to copy build code on server -->
-    <DestinationDir>$(RootDir)\Destination</DestinationDir>
+    <DestinationDir>H:\PayFlexProductionServer</DestinationDir>
 
     <!-- Source code SVN settings -->
 
     <!-- To download source code from SVN, set value to true else false -->
     <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
-
-
-    <!--Solution settings -->
-
     <!-- To build CXC Engine solution, set value to true -->
     <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
@@ -26,6 +26,20 @@
     <BuildPrimePay>false</BuildPrimePay>
     <!-- To build PayFlex solution, set value to true -->
     <BuildPayFlex>true</BuildPayFlex>
+    <!--Set value true to take database backup else false -->
+    <DatabaseBackup>false</DatabaseBackup>
+    <!--Set value true to take source code backup else false -->
+    <SourceCodeBackup>false</SourceCodeBackup>
+    <!--Set value true to overwrite source code if any changes else false -->
+    <ForceSourceOverwrite>false</ForceSourceOverwrite>
+    <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
+    <AllowEmailNotification>true</AllowEmailNotification>
+    <!-- Set UpdateBuildVersion value true to update build version number else set false -->
+    <UpdateBuildVersion>true</UpdateBuildVersion>
+    <!--Set value true to check in change assembly comment back to SVN else set false -->
+    <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
+    <!--Set value true to create svn lable under svn tag branch-->
+    <CreateSVNLabel>false</CreateSVNLabel>
 
 
     <!-- Build code settings-->
@@ -42,7 +56,7 @@
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
     <SqlServerVersion>2012</SqlServerVersion>
     <!--Specify Sql server name-->
-    <SqlServerName>(local)</SqlServerName>
+    <SqlServerName>LAPTOP-4857HARD\PAYFLEXPROD</SqlServerName>
 
     <!--Specify sql user name, if IsSqlWindowsAuthentication flag value is false -->
     <SqlServerUserName>sa</SqlServerUserName>
@@ -52,8 +66,7 @@
     <!--specify database name -->
     <DatabaseName>MsbuildCXC</DatabaseName>
 
-    <!--Set value true to take database backup else false -->
-    <DatabaseBackup>false</DatabaseBackup>
+
 
 
     <!--DbDeploy Settings -->
@@ -65,43 +78,11 @@
 
 
 
-    <!--Source code Settings -->
-
-    <!--Set value true to take source code backup else false -->
-    <SourceCodeBackup>false</SourceCodeBackup>
-    <!--Set value true to overwrite source code if any changes else false -->
-    <ForceSourceOverwrite>false</ForceSourceOverwrite>
-
-
-
-
-
-    <!--Error Email Notification Settings -->
-
     <!--Specify TO email address to send error email notification -->
     <ErrorNotificationToAddress>manojs@cxcnetwork.com</ErrorNotificationToAddress>
-    <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
-    <AllowEmailNotification>true</AllowEmailNotification>
 
-
-
-
-
-    <!--Assembly Settings -->
-
-    <!-- Set UpdateBuildVersion value true to update build version number else set false -->
-    <UpdateBuildVersion>true</UpdateBuildVersion>
-    <!--Set value true to check in change assembly comment back to SVN else set false -->
-    <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2016.01.01.0</AssemblyBuildNumber>
-
-
-
-    <!--Set value true to create svn lable under svn tag branch-->
-    <CreateSVNLabel>false</CreateSVNLabel>
-
-
+    <AssemblyBuildNumber></AssemblyBuildNumber>
 
   </PropertyGroup>
 

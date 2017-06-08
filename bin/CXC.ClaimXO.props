@@ -24,7 +24,7 @@
     <DbDeployScriptInputFolderName>$(DbDeployScriptFolderName)\Input</DbDeployScriptInputFolderName>
     <DbDeployScriptOutputFolderName>$(DbDeployScriptFolderName)\Output</DbDeployScriptOutputFolderName>
     <AppFolderName>App</AppFolderName>
-    <CommandAndSqlFilesFolderName>Workflow</CommandAndSqlFilesFolderName>
+    <WorkflowFolderName>Workflow</WorkflowFolderName>
 
     <CurrentTargetName></CurrentTargetName>
 
@@ -63,7 +63,7 @@
     <TempDbDeployFile>$(TempDir)\dbDeployFileName.txt</TempDbDeployFile>
 
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
-    <BuildDirForCommandAndSqlFiles>$(BuildDir)\$(CommandAndSqlFilesFolderName)</BuildDirForCommandAndSqlFiles>
+    <BuildDirForWorkflowFiles>$(BuildDir)\$(WorkflowFolderName)</BuildDirForWorkflowFiles>
     <BuildDirForCommonCommandAndSqlFiles>$(BuildDirForCommandAndSqlFiles)\Common</BuildDirForCommonCommandAndSqlFiles>
     <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptInputFolderName)</BuildDirForDbDeploy>
     <BuildDirForDbDeployOutput>$(BuildDir)\$(DbDeployScriptOutputFolderName)</BuildDirForDbDeployOutput>

@@ -61,7 +61,7 @@
 
 
     <!-- Need to reomve this command once we have seperate script folder for each TPA -->
-    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\Common" Condition="!Exists('$(BuildDirForDbDeploy)\Common')" />
+    <MakeDir Directories="$(BuildDirForWorkflowScript)\Common" Condition="!Exists('$(BuildDirForWorkflowScript)\Common')" />
 
 
 
@@ -91,7 +91,7 @@
 
 
     <!-- Below two commands creates folder structure in build directory for each TPA  -->
-    <MakeDir Directories="$(BuildDirForCommandAndSqlFiles)\$(TPAName)" Condition="!Exists('$(BuildDirForCommandAndSqlFiles)\$(TPAName')"/>
+    <MakeDir Directories="$(BuildDirForWorkflowScript)\$(TPAName)" Condition="!Exists('$(BuildDirForWorkflowScript)\$(TPAName')"/>
 
 
 
@@ -343,7 +343,7 @@
   </Target>
 
 
-  <Target Name="CopyWorkFlowScriptToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreCommandAndSqlFilesToBuildDir">
+  <Target Name="CopyWorkFlowScriptToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommandWorkflowScriptToBuildDir">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyWorkFlowScriptToBuildDir'">CopyWorkFlowScriptToBuildDir</CurrentTargetName>
@@ -352,14 +352,14 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <PropertyGroup>
-      <SourceDirForCommandAndSqlFile>%(SolutionName.SourceDirForCommandAndSqlFiles)</SourceDirForCommandAndSqlFile>
-      <BuildDirForCommandAndSqlFiles>%(SolutionName.BuildDirForCommandAndSqlFiles)</BuildDirForCommandAndSqlFiles>
+      <SourceDirForWorkflowFile>%(SolutionName.SourceDirForWorkflowScript)</SourceDirForWorkflowFile>
+      <BuildDirForWorkflowScript>%(SolutionName.BuildDirForWorkflowScript)</BuildDirForWorkflowScript>
     </PropertyGroup>
 
 
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(SourceDirForCommandAndSqlFile)"
-      Destination="$(BuildDirForCommandAndSqlFiles)"
+      Source="$(SourceDirForWorkflowFile)"
+      Destination="$(BuildDirForWorkflowScript)"
       Files="*.*" />
 
 
@@ -370,10 +370,10 @@
   </Target>
 
 
-  <Target Name="CopyCXCCoreCommandAndSqlFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
+  <Target Name="CopyCommandWorkflowScriptToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreCommandAndSqlFilesToBuildDir'">CopyCXCCoreCommandAndSqlFilesToBuildDir</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandWorkflowScriptToBuildDir'">CopyCommandWorkflowScriptToBuildDir</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -694,7 +694,7 @@
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyWorkflowScriptsToDeploymentDir'">CopyWorkflowScriptsToDeploymentDir</CurrentTargetName>
-      <BuildDirForCommandAndSqlFiles>%(SolutionName.BuildDirForCommandAndSqlFiles)</BuildDirForCommandAndSqlFiles>
+      <BuildDirForWorkflowScript>%(SolutionName.BuildDirForWorkflowScript)</BuildDirForWorkflowScript>
       <!--<CommandAndSqlFilesDeploymentDir>%(SolutionName.CommandAndSqlFilesDeploymentDir)</CommandAndSqlFilesDeploymentDir>-->
     </PropertyGroup>
 
@@ -702,7 +702,7 @@
 
 
     <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(BuildDirForCommandAndSqlFiles)"
+      Source="$(BuildDirForWorkflowScript)"
       Destination="$(DeploymentDirForApp)"
       Files="*.*" />
 

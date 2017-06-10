@@ -23,6 +23,19 @@
 
   <ItemGroup>
     <CXCEngineSolutionFile Include="$(SourceDir)\CXC\CXCEngine.sln"></CXCEngineSolutionFile>
+
+    <GDISolutionFile Include="$(SourceDir)\TPA\GDI\CXCGDI.sln"></GDISolutionFile>
+    <PrimePaySolution Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay.sln"></PrimePaySolution>
+    <PayFlexSolution Include="$(SourceDir)\TPA\PayFlex\CXCPayFlex.sln"></PayFlexSolution>
+
+    <GDICSharpFiles Include="$(SourceDir)\TPA\GDI\GDI\**\*.cs"></GDICSharpFiles>
+    <PrimePayCSharpFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\**\*.cs"></PrimePayCSharpFiles>
+    <PayFlexCSharpFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\**\*.cs"></PayFlexCSharpFiles>
+
+    <GDIAssemblyFile Include="$(SourceDir)\TPA\GDI\GDI\Bin\Release\CXCGDI.dll"></GDIAssemblyFile>
+    <PrimePayAssemblyFile Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Bin\Release\CXCPrimePay.dll"></PrimePayAssemblyFile>
+    <PayFlexAssemblyFileName Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Bin\Release\CXCPrimePay.dll"></PayFlexAssemblyFileName>
+    
     <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
   </ItemGroup>
 
@@ -218,16 +231,17 @@
   </Target>
 
 
-  <Target Name="BuildSolutions" DependsOnTargets="BuildCXCEngineSolution">
+  <Target Name="BuildSolution" DependsOnTargets="BuildCXCEngineSolution">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildSolutions'">BuildSolutions</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildSolution'">BuildSolution</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <MSBuild Projects="@(SolutionName)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
+    <CallTarget Targets="BuildGDISolution"></CallTarget>
+    <CallTarget Targets="BuildPrimePaySolution"></CallTarget>
+    <CallTarget Targets="BuildPayFlexSolution"></CallTarget>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -257,6 +271,60 @@
 
   </Target>
 
+
+  <Target Name="BuildGDISolution" Inputs="@(GDICSharpFiles)" Outputs="@(GDIAssemblyFile)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildGDISolution'">BuildGDISolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(GDISolutionFile)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildPrimePaySolution" Inputs="@(PrimePayCSharpFiles)" Outputs="@(PrimePayAssemblyFile)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPrimePaySolution'">BuildPrimePaySolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(PrimePaySolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildPayFlexSolution" Inputs="@(PayFlexCSharpFiles)" Outputs="@(PayFlexAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPayFlexSolution'">BuildPayFlexSolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(PayFlexSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+  
 
   <Target Name="CopyBuildFilesToBuildDir">
 
@@ -395,7 +463,7 @@
   </Target>
 
 
-
+  
   <Target Name="ConfigTransformation">
 
     <PropertyGroup>
@@ -877,11 +945,11 @@
 
   </Target>
 
-  <Target Name="BuildingSolutions">
+  <Target Name="BuildSolutions">
 
     <CallTarget Targets="GetNewAssemblyVersionNumber" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
     
-    <CallTarget Targets="BuildSolutions" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="BuildSolution" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
     <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
     <CallTarget Targets="CopySqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
@@ -916,10 +984,10 @@
 
   </Target>
           
-  
 
+  
   <Target Name="Build">
-    
+
     <CallTarget Targets="Init"></CallTarget>
 
     <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeToDestination) != 'true' " />
@@ -929,7 +997,7 @@
     
     <CallTarget Targets="BackupPreBuildSource" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="BuildingSolutions"></CallTarget>
+    <CallTarget Targets="BuildSolutions"></CallTarget>
 
     <CallTarget Targets="PostBuild"></CallTarget>
 
@@ -943,9 +1011,9 @@
     <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /fl1 /fl2 /flp1:logfile=$(LogFileName) /flp2:logfile=$(ErrorLogFileName);errorsonly "/>
     
     <CallTarget Targets="CleanTempFiles" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '') " />
-    
+
     
   </Target>
 
-
+  
 </Project>

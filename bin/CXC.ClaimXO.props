@@ -133,7 +133,7 @@
       <BuildDirForWorkflowScript>$(BuildDirForWorkflowScript)\PrimePay</BuildDirForWorkflowScript>
 
       <BuildDirForStateParamXmlFile>$(BuildDirForApp)\PrimePay\config\StateParams.xml</BuildDirForStateParamXmlFile>
-
+      
     </SolutionName>
 
     <SolutionName Include="$(SourceDir)\TPA\PayFlex\CXCPayFlex.sln"  Condition="$(BuildPayFlex)=='true' " >
@@ -153,7 +153,7 @@
     </SolutionName>
 
   </ItemGroup>
-
+ 
 
   <ItemGroup>
     <CommandFileName Include="$(BuildDirForWorkflowScript)\PayFlex\PayFlex_SetEnv.cmd"  Condition="$(BuildPayFlex)=='true' " />

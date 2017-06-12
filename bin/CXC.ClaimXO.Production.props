@@ -18,8 +18,12 @@
 
     <!-- To download source code from SVN, set value to true else false -->
     <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
+    <!--Set value true to take source code backup else false -->
+    <SourceCodeBackup>false</SourceCodeBackup>
+    <!--Set value true to overwrite source code if any changes else false -->
+    <ForceSourceOverwrite>false</ForceSourceOverwrite>
     <!-- To build CXC Engine solution, set value to true -->
-    <BuildCXCEngine>true</BuildCXCEngine>
+    <BuildCXCEngine>false</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
     <BuildGDI>true</BuildGDI>
     <!-- To build PrimePay solution, set value to true -->
@@ -28,18 +32,15 @@
     <BuildPayFlex>false</BuildPayFlex>
     <!--Set value true to take database backup else false -->
     <DatabaseBackup>false</DatabaseBackup>
-    <!--Set value true to take source code backup else false -->
-    <SourceCodeBackup>false</SourceCodeBackup>
-    <!--Set value true to overwrite source code if any changes else false -->
-    <ForceSourceOverwrite>false</ForceSourceOverwrite>
-    <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
-    <AllowEmailNotification>true</AllowEmailNotification>
     <!-- Set UpdateBuildVersion value true to update build version number else set false -->
     <UpdateBuildVersion>true</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Set value true to create svn lable under svn tag branch-->
     <CreateSVNLabel>false</CreateSVNLabel>
+    <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
+    <AllowEmailNotification>true</AllowEmailNotification>
+
 
 
     <!-- Build code settings-->

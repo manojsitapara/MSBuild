@@ -12,9 +12,7 @@
     <RootDir>G:\MSBuildTesting\QA</RootDir>
     
     <!-- Specify the path to copy build code on server -->
-    <DestinationDir>H:\QAServer</DestinationDir>
-
-    <!-- Source code SVN settings -->
+    <DestinationDir>G:\MSBuildTesting\QA\QAServer</DestinationDir>
 
     <!-- To download source code from SVN, set value to true else false -->
     <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
@@ -83,7 +81,7 @@
     <ErrorNotificationToAddress>manojs@cxcnetwork.com</ErrorNotificationToAddress>
 
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2017.02.02.0</AssemblyBuildNumber>
+    <AssemblyBuildNumber>2017.02.03.0</AssemblyBuildNumber>
 
   </PropertyGroup>
 

@@ -25,8 +25,45 @@
     <CXCEngineSolutionFile Include="$(SourceDir)\CXC\CXCEngine.sln"></CXCEngineSolutionFile>
     <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
   </ItemGroup>
+  
+  
+  <Target Name="Init">
+
+    <Error Text="PayFlex cannot build together with other TPAs, Please check your property file values." Condition=" $(BuildGDI) == 'true' AND $(BuildPrimePay) == 'true' AND $(BuildPayFlex) == 'true' "></Error>
+    <CallTarget Targets="CheckChangeLogTableExist"></CallTarget>
+
+  </Target>
+
+  <Target Name="CheckChangeLogTableExist">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">CheckChangeLogTableExist</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute
+      TaskAction="ExecuteScalar"
+      UseTransaction="true"
+      Sql="select case when exists((select * from information_schema.tables where table_name = '$(DatabaseChangeLogTableName)')) then 1 else 0 end"
+      ConnectionString="$(DatabaseConnectionString)">
+      <Output PropertyName="IsTableExist" TaskParameter="ScalarResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+    <Message Text="Table status: $(IsTableExist)"></Message>
+
+    <!--Raise an error if changelog table is not exist into dbDeploy database-->
+    <Error Text="Please specify assembly version number in property file for this release." Condition=" '$(IsTableExist)' == '0' AND $(AssemblyBuildNumber) == '' "/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+  
+  
+  
+  
   <Target Name="CreateFolderStructure">
 
     <PropertyGroup>
@@ -77,7 +114,6 @@
 
   </Target>
 
-
   <Target Name="CreateTPASpecificFolderStructure" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
@@ -97,7 +133,9 @@
 
   </Target>
 
-
+  
+  
+  
   <Target Name="DownloadPreBuildSourceFromSVN" Condition="$(DownloadSourceCodeFromSVN) == 'true' ">
 
     <PropertyGroup>
@@ -121,6 +159,37 @@
 
   </Target>
 
+  
+  
+  
+  <Target Name="BackupPreBuild">
+
+    <CallTarget Targets="BackupPreBuildDatabase" />
+    <CallTarget Targets="BackupPreBuildDestination" />
+    <CallTarget Targets="BackupPreBuildSource" />
+    
+  </Target>
+
+  
+  
+
+  <Target Name="BuildSolutions" Condition=" $(PushCodeToDestination) != 'true' ">
+
+    <CallTarget Targets="GetNewAssemblyVersionNumber" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
+
+    <CallTarget Targets="BuildSolution" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
+
+    <CallTarget Targets="CopyBuildFilesToBuildDir" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
+    <CallTarget Targets="CopySqlFilesToBuildDir" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
+    <CallTarget Targets="CopyWorkFlowScriptToBuildDir" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
+
+    <CallTarget Targets="ConfigTransformation" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
+    <CallTarget Targets="CommandFileTransaformation" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
+    <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
+
+    <CallTarget Targets="CreateSVNLabelOnSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
+
+  </Target>
 
   <Target Name="GetNewAssemblyVersionNumber" Condition="$(UpdateBuildVersion)=='true' ">
 
@@ -134,35 +203,6 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-
-
-  <Target Name="CheckChangeLogTableExist">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">CheckChangeLogTableExist</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-
-    <MSBuild.ExtensionPack.SqlServer.SqlExecute
-      TaskAction="ExecuteScalar"
-      UseTransaction="true"
-      Sql="select case when exists((select * from information_schema.tables where table_name = '$(DatabaseChangeLogTableName)')) then 1 else 0 end"
-      ConnectionString="$(DatabaseConnectionString)">
-      <Output PropertyName="IsTableExist" TaskParameter="ScalarResult"/>
-    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
-    <Message Text="Table status: $(IsTableExist)"></Message>
-
-    <!--Raise an error if changelog table is not exist into dbDeploy database-->
-    <Error Text="Please specify assembly version number in property file for this release." Condition=" '$(IsTableExist)' == '0' AND $(AssemblyBuildNumber) == '' "/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
-
 
   <Target Name="GetNewAssemblyVersionNumberFromDatabase">
 
@@ -197,8 +237,7 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
-
+  
   <Target Name="GetNewAssemblyVersionNumberFromPropertyFile">
 
     <PropertyGroup>
@@ -216,8 +255,11 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
-
+  
+  
+  
+  
+  
   <Target Name="BuildSolution" DependsOnTargets="BuildCXCEngineSolution">
 
     <PropertyGroup>
@@ -234,7 +276,6 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
 
   <Target Name="BuildCXCEngineSolution" Condition="$(BuildCXCEngine) == 'true' ">
 
@@ -256,8 +297,7 @@
 
 
   </Target>
-
-
+  
   <Target Name="CopyBuildFilesToBuildDir">
 
     <PropertyGroup>
@@ -279,7 +319,6 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-
 
   <Target Name="CopySqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreSqlFilesToBuildDir">
 
@@ -309,7 +348,6 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-
 
   <Target Name="CopyCXCCoreSqlFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
 
@@ -341,8 +379,7 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-
-
+  
   <Target Name="CopyWorkFlowScriptToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommandWorkflowScriptToBuildDir">
 
     <PropertyGroup>
@@ -370,7 +407,6 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
-
   <Target Name="CopyCommandWorkflowScriptToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
 
     <PropertyGroup>
@@ -393,9 +429,7 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-
-
-
+  
   <Target Name="ConfigTransformation">
 
     <PropertyGroup>
@@ -415,7 +449,6 @@
 
 
   </Target>
-
 
   <Target Name="ConfigTranformationForCXCCore" Condition="$(BuildCXCEngine) == 'true' ">
 
@@ -502,7 +535,6 @@
 
   </Target>
 
-
   <Target Name="ConfigTranformationForTPA" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
 
     <PropertyGroup>
@@ -527,7 +559,6 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
 
   <Target Name="ConfigTranformationForDbDeploy">
 
@@ -564,8 +595,7 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
-
+  
   <Target Name="CommandFileTransaformation">
 
     <PropertyGroup>
@@ -583,7 +613,6 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
 
   <Target Name="CommonCommandFileTransform" Condition="$(BuildCXCEngine) == 'true' ">
 
@@ -608,7 +637,6 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
 
   <Target Name="TPASpecificCommandFileTransform" Inputs="%(CommandFileName.Identity)" Outputs="%(CommandFileName.Identity)\Ignore_this">
 
@@ -636,7 +664,46 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
+  
+  <Target Name="CreateSVNLabelOnSVN" Condition="$(CreateSVNLabel) == 'True'">
 
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CreateSVNLabelOnSVN'">CreateSVNLabelOnSVN</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
+      <Output TaskParameter="Lines" PropertyName="VersionNumber" />
+    </ReadLinesFromFile>
+
+    <PropertyGroup>
+      <SvnDestinationPath Condition="'$(VersionNumber)' != '' ">$(SVNTagURL)/$(Environment)_$(CurrentDateTime)_$(VersionNumber)</SvnDestinationPath>
+      <SvnDestinationPath Condition="'$(VersionNumber)' == '' ">$(SVNTagURL)/$(Environment)_$(CurrentDateTime)</SvnDestinationPath>
+    </PropertyGroup>
+
+    <SvnCopy SourcePath="$(SVNSourceURL)"
+      DestinationPath="$(SvnDestinationPath)"
+      Message="$(CurrentDate)_@(VersionNumber)"
+      Username="$(SvnUsername)" password="$(SvnPassword)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+
+
+  <Target Name="PostBuild" Condition=" $(PushCodeToDestination) != 'true' ">
+
+    <CallTarget Targets="CopyBuildFilesToDeploymentDir"  Condition="$(MSBuildLastTaskResult) == 'True' "/>
+    <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' "/>
+    <CallTarget Targets="CopyWorkflowScriptsToDeploymentDir"  Condition="$(MSBuildLastTaskResult) == 'True' "/>
+    <CallTarget Targets="BackupPostBuildDeployment"  Condition="$(MSBuildLastTaskResult) == 'True' "/>
+
+  </Target>
 
   <Target Name="CopyBuildFilesToDeploymentDir">
 
@@ -660,7 +727,6 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-
 
   <Target Name="CopyDbDeployOutputFilesToDeploymentDir">
 
@@ -690,7 +756,6 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
-
   <Target Name="CopyWorkflowScriptsToDeploymentDir" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommonWorkflowScriptsToDeploymentDir">
 
     <PropertyGroup>
@@ -713,7 +778,6 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
-
   <Target Name="CopyCommonWorkflowScriptsToDeploymentDir">
 
     <PropertyGroup>
@@ -734,6 +798,16 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
 
+  <Target Name="DeployBuildToDestination" Condition=" $(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '' " >
+
+    <CallTarget Targets="CopyBuildFilesToDestinationDir"  />
+
+    <CallTarget Targets="UpdateDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' " />
+
+    <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' " />
+
+
+  </Target>
 
   <Target Name="CopyBuildFilesToDestinationDir">
 
@@ -762,36 +836,6 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-
-
-  <Target Name="CreateSVNLabelOnSVN" Condition="$(CreateSVNLabel) == 'True'">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CreateSVNLabelOnSVN'">CreateSVNLabelOnSVN</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
-      <Output TaskParameter="Lines" PropertyName="VersionNumber" />
-    </ReadLinesFromFile>
-
-    <PropertyGroup>
-      <SvnDestinationPath Condition="'$(VersionNumber)' != '' ">$(SVNTagURL)/$(Environment)_$(CurrentDateTime)_$(VersionNumber)</SvnDestinationPath>
-      <SvnDestinationPath Condition="'$(VersionNumber)' == '' ">$(SVNTagURL)/$(Environment)_$(CurrentDateTime)</SvnDestinationPath>
-    </PropertyGroup>
-
-    <SvnCopy SourcePath="$(SVNSourceURL)"
-      DestinationPath="$(SvnDestinationPath)"
-      Message="$(CurrentDate)_@(VersionNumber)"
-      Username="$(SvnUsername)" password="$(SvnPassword)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
-
-  </Target>
-
 
   <Target Name="SaveAssemblyVersionInDestinationDatabase" Condition="Exists(@(GeneratedAssemblyFileName))">
 
@@ -847,7 +891,7 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-
+  
 
   <Target Name="CleanTempFiles">
 
@@ -862,72 +906,16 @@
 
   </Target>
 
-  <Target Name="Init">
-
-    <Error Text="PayFlex cannot build together with other TPAs, Please check your property file values." Condition=" $(BuildGDI) == 'true' AND $(BuildPrimePay) == 'true' AND $(BuildPayFlex) == 'true' "></Error>
-    <CallTarget Targets="CheckChangeLogTableExist"></CallTarget>
-
-  </Target>
-
-
-  <Target Name="BackupPreBuild">
-
-    <CallTarget Targets="BackupPreBuildDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-    <CallTarget Targets="BackupPreBuildDestination" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-
-  </Target>
-
-  <Target Name="BuildSolutions">
-
-    <CallTarget Targets="GetNewAssemblyVersionNumber" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-
-    <CallTarget Targets="BuildSolution" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-
-    <CallTarget Targets="CopyBuildFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-    <CallTarget Targets="CopySqlFilesToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-    <CallTarget Targets="CopyWorkFlowScriptToBuildDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-
-    <CallTarget Targets="ConfigTransformation" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' " />
-    <CallTarget Targets="CommandFileTransaformation" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' " />
-    <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-
-    <CallTarget Targets="CreateSVNLabelOnSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
-
-  </Target>
-
-  <Target Name="PostBuild">
-
-    <CallTarget Targets="CopyBuildFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-    <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-    <CallTarget Targets="CopyWorkflowScriptsToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-
-    <CallTarget Targets="BackupPostBuildDeployment" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
-
-  </Target>
-
-  <Target Name="DeployBuildToDestination">
-
-    <CallTarget Targets="CopyBuildFilesToDestinationDir"  Condition=" $(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '' " />
-
-    <CallTarget Targets="UpdateDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '') " />
-
-    <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '') " />
-
-
-  </Target>
-
-
-
+  
   <Target Name="Build">
 
     <CallTarget Targets="Init"></CallTarget>
 
     <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeToDestination) != 'true' " />
-    <CallTarget Targets="BackupPreBuild"></CallTarget>
 
     <CallTarget Targets="DownloadPreBuildSourceFromSVN" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
 
-    <CallTarget Targets="BackupPreBuildSource" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="BackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "></CallTarget>
 
     <CallTarget Targets="BuildSolutions"></CallTarget>
 

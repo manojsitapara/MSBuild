@@ -2,11 +2,11 @@
 
   <Target Name="SendEmailNotification">
 
-    <Copy SourceFiles="$(ErrorLogFileName)" DestinationFiles="$(TempDirForLog)\Email_CXC.ClaimXO.MSBuild.Error_$(CurrentDateTime).log" />
+    <!--<Copy SourceFiles="$(ErrorLogFileName)" DestinationFiles="$(TempDirForLog)\Email_CXC.ClaimXO.MSBuild.Error_$(CurrentDateTime).log" />-->
     
-    <ItemGroup>
+    <!--<ItemGroup>
       <File Include="$(TempDirForLog)\Email_CXC.ClaimXO.MSBuild.Error_$(CurrentDateTime).log" />
-    </ItemGroup>
+    </ItemGroup>-->
 
     <ReadLinesFromFile File="@(File)">
       <Output TaskParameter="Lines" ItemName="FileContents" />

@@ -116,10 +116,10 @@
       <BuildDirForWorkflowScript>$(BuildDirForWorkflowScript)\GDI</BuildDirForWorkflowScript>
 
       <BuildDirForStateParamXmlFile>$(BuildDirForApp)\GDI\config\StateParams.xml</BuildDirForStateParamXmlFile>
-
+      
     </SolutionName>
 
-
+    
     <SolutionName Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay.sln"  Condition="$(BuildPrimePay)=='true' ">
       
       <TPAName>PrimePay</TPAName>

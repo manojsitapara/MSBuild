@@ -29,8 +29,20 @@
 
   <Target Name="Init">
 
+    <PropertyGroup>
+      <CurrentTargetName>Init</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+    
+    
     <Error Text="PayFlex cannot build together with other TPAs, Please check your property file values." Condition=" $(BuildGDI) == 'true' AND $(BuildPrimePay) == 'true' AND $(BuildPayFlex) == 'true' "></Error>
     <CallTarget Targets="CheckChangeLogTableExist"></CallTarget>
+    
+    
+     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -305,6 +317,7 @@
 
   <Target Name="GetNewAssemblyVersionNumberFromPropertyFile">
 
+    <!--NOTE: This target will get assembly version number from  environment specific props file and write it on tempAssemblyFile for next step use. -->
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">GetNewAssemblyVersionNumberFromPropertyFile</CurrentTargetName>
     </PropertyGroup>
@@ -1235,9 +1248,9 @@
 
   <Target Name="Run">
 
-    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /fl1 /fl2 /flp1:logfile=$(LogFileName) /flp2:logfile=$(ErrorLogFileName);errorsonly "/>
+    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /fl1 /fl2 /flp1:logfile=$(LogFileName) /flp2:logfile=$(ErrorLogFileName);errorsonly;warningsonly "/>
 
-    <CallTarget Targets="CleanTempFiles" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '') " />
+    <!--<CallTarget Targets="CleanTempFiles" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '') " />-->
 
 
   </Target>

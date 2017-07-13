@@ -67,16 +67,6 @@
 
 
 
-
-    <!--DbDeploy Settings -->
-
-    <!--Specify the dbDeploy Database name-->
-    <dbDeployDBName>MsBuildDbDeploy</dbDeployDBName>
-    <!-- Specify table name for dbDeploy -->
-    <DatabaseChangeLogTableName>Changelog</DatabaseChangeLogTableName>
-
-
-
     <!--Specify TO email address to send error email notification -->
     <ErrorNotificationToAddress>manojs@cxcnetwork.com</ErrorNotificationToAddress>
 

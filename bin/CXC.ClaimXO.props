@@ -68,6 +68,9 @@
     <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptInputFolderName)</BuildDirForDbDeploy>
     <BuildDirForDbDeployOutput>$(BuildDir)\$(DbDeployScriptOutputFolderName)</BuildDirForDbDeployOutput>
 
+
+    <dbDeployDBName>MsBuildDbDeploy</dbDeployDBName>
+    <DatabaseChangeLogTableName>Changelog</DatabaseChangeLogTableName>
     <DeploymentDirForApp>$(DeploymentDir)\$(AppFolderName)</DeploymentDirForApp>
     <DeploymentDirForDbDeploy>$(DeploymentDir)\$(DbDeployScriptFolderName)</DeploymentDirForDbDeploy>
     
@@ -77,7 +80,6 @@
     <BuildDirForCXCCoreMetaChangesSql>$(BuildDirForDbDeploy)\CXCCore\2.CXCCore_Meta</BuildDirForCXCCoreMetaChangesSql>
 
 
-    <!--TODO: Make group of related property together-->
     <XmlPreprocessorCleanFile>true</XmlPreprocessorCleanFile>
     <XmlPreprocessorValidateFile>true</XmlPreprocessorValidateFile>
 

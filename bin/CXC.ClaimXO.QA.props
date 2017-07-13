@@ -2,25 +2,25 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
 
   <PropertyGroup>
-   
-   <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
-   <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
-    
+
+    <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
+    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
+
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
     <RootDir>G:\MSBuildTesting\QA</RootDir>
-    
+
     <!-- Specify the path to copy build code on server -->
     <DestinationDir>G:\MSBuildTesting\QA\QAServer</DestinationDir>
 
     <!-- To download source code from SVN, set value to true else false -->
     <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
     <!--Set value true to take source code backup else false -->
-    <SourceCodeBackup>false</SourceCodeBackup>
+    <BackupSourceCode>false</BackupSourceCode>
     <!--Set value true to overwrite source code if any changes else false -->
     <ForceSourceOverwrite>false</ForceSourceOverwrite>
-     <!-- To build CXC Engine solution, set value to true -->
+    <!-- To build CXC Engine solution, set value to true -->
     <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
     <BuildGDI>true</BuildGDI>
@@ -29,8 +29,8 @@
     <!-- To build PayFlex solution, set value to true -->
     <BuildPayFlex>false</BuildPayFlex>
     <!--Set value true to take database backup else false -->
-     <DatabaseBackup>false</DatabaseBackup>
-     <!-- Set UpdateBuildVersion value true to update build version number else set false -->
+    <BackupDatabase>false</BackupDatabase>
+    <!-- Set UpdateBuildVersion value true to update build version number else set false -->
     <UpdateBuildVersion>true</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
@@ -38,8 +38,8 @@
     <CreateSVNLabel>false</CreateSVNLabel>
     <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
     <AllowEmailNotification>true</AllowEmailNotification>
-   
-    
+
+
 
     <!-- Build code settings-->
     <!--Set value to true to push build code on destination-->
@@ -65,7 +65,7 @@
     <!--specify database name -->
     <DatabaseName>MsbuildCXC</DatabaseName>
 
-     
+
 
 
     <!--DbDeploy Settings -->

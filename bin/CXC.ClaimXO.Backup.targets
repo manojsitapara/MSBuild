@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   
-  <Target Name="BackupPreBuildDatabase" Condition="$(DatabaseBackup) == 'true' ">
+  <Target Name="BackupPreBuildDatabase" Condition="$(BackupDatabase) == 'true' ">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupPreBuildDatabase'">BackupPreBuildDatabase</CurrentTargetName>
@@ -103,7 +103,7 @@
   </Target>
 
 
-  <Target Name="BackupPreBuildSource" Condition="$(SourceCodeBackup) == 'true'">
+  <Target Name="BackupPreBuildSource" Condition="$(BackupSourceCode) == 'true'">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupPreBuildSource'">BackupPreBuildSource</CurrentTargetName>

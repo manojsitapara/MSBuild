@@ -25,8 +25,8 @@
     <CXCEngineSolutionFile Include="$(SourceDir)\CXC\CXCEngine.sln"></CXCEngineSolutionFile>
     <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
   </ItemGroup>
-  
-  
+
+
   <Target Name="Init">
 
     <Error Text="PayFlex cannot build together with other TPAs, Please check your property file values." Condition=" $(BuildGDI) == 'true' AND $(BuildPrimePay) == 'true' AND $(BuildPayFlex) == 'true' "></Error>
@@ -60,10 +60,9 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-  
-  
-  
-  
+
+
+
   <Target Name="CreateFolderStructure">
 
     <PropertyGroup>
@@ -133,9 +132,6 @@
 
   </Target>
 
-  
-  
-  
   <Target Name="DownloadPreBuildSourceFromSVN" Condition="$(DownloadSourceCodeFromSVN) == 'true' ">
 
     <PropertyGroup>
@@ -159,21 +155,90 @@
 
   </Target>
 
-  
-  
-  
+  <Target Name="InitilizeItemGroup">
+
+    <ItemGroup>
+
+      <CXCSecuritySolution Include="$(SourceDir)\CXC\ClassLibrary1\CXCSecurity.csproj"></CXCSecuritySolution>
+      <CXCSecurityCSharpFiles Include="$(SourceDir)\CXC\ClassLibrary1\**\*.cs"></CXCSecurityCSharpFiles>
+      <CXCSecurityAssemblyFileName Include="$(SourceDir)\CXC\ClassLibrary1\Bin\Release\CXCSecurity.dll"></CXCSecurityAssemblyFileName>
+
+
+      <CXCDataAccessSolution Include="$(SourceDir)\CXC\CXCDataAccess\CXCDataAccess.csproj"></CXCDataAccessSolution>
+      <CXCDataAccessCSharpFiles Include="$(SourceDir)\CXC\CXCDataAccess\**\*.cs"></CXCDataAccessCSharpFiles>
+      <CXCDataAccessAssemblyFileName Include="$(SourceDir)\CXC\CXCDataAccess\Bin\Release\CXCDataAccess.dll"></CXCDataAccessAssemblyFileName>
+
+
+      <CXCNotifierSolution Include="$(SourceDir)\CXC\CXCNotifier\CXCNotifier.csproj"></CXCNotifierSolution>
+      <CXCNotifierCSharpFiles Include="$(SourceDir)\CXC\CXCNotifier\**\*.cs"></CXCNotifierCSharpFiles>
+      <CXCNotifierAssemblyFileName Include="$(SourceDir)\CXC\CXCNotifier\Bin\Release\CXCNotifier.dll"></CXCNotifierAssemblyFileName>
+
+
+      <CXCFileWriterSolution Include="$(SourceDir)\CXC\CXCFileWriter\CXCFileWriter.csproj"></CXCFileWriterSolution>
+      <CXCFileWriterCSharpFiles Include="$(SourceDir)\CXC\CXCFileWriter\**\*.cs"></CXCFileWriterCSharpFiles>
+      <CXCFileWriterAssemblyFileName Include="$(SourceDir)\CXC\CXCFileWriter\Bin\Release\CXCFileWriter.dll"></CXCFileWriterAssemblyFileName>
+
+
+      <CXCFileReaderSolution Include="$(SourceDir)\CXC\CXCFileReader\CXCFileReader.csproj"></CXCFileReaderSolution>
+      <CXCFileReaderCSharpFiles Include="$(SourceDir)\CXC\CXCFileReader\**\*.cs"></CXCFileReaderCSharpFiles>
+      <CXCFileReaderAssemblyFileName Include="$(SourceDir)\CXC\CXCFileReader\Bin\Release\CXCFileReader.dll"></CXCFileReaderAssemblyFileName>
+
+      <CXCFaxerSolution Include="$(SourceDir)\CXC\CXCFaxer\CXCFaxer.csproj"></CXCFaxerSolution>
+      <CXCFaxerCSharpFiles Include="$(SourceDir)\CXC\CXCFaxer\**\*.cs"></CXCFaxerCSharpFiles>
+      <CXCFaxerAssemblyFileName Include="$(SourceDir)\CXC\CXCFaxer\bin\Release\CXFaxer.dll"></CXCFaxerAssemblyFileName>
+
+
+      <CXCArchiverSolution Include="$(SourceDir)\CXC\CXCArchiver\CXCArchiver.csproj"></CXCArchiverSolution>
+      <CXCArchiverCSharpFiles Include="$(SourceDir)\CXC\CXCArchiver\**\*.cs"></CXCArchiverCSharpFiles>
+      <CXCArchiverAssemblyFileName Include="$(SourceDir)\CXC\CXCArchiver\Bin\Release\CXCArchiver.dll"></CXCArchiverAssemblyFileName>
+
+
+      <CXCSchedulerSolution Include="$(SourceDir)\CXC\CXCScheduler\CXCScheduler.csproj"></CXCSchedulerSolution>
+      <CXCSchedulerCSharpFiles Include="$(SourceDir)\CXC\CXCScheduler\**\*.cs"></CXCSchedulerCSharpFiles>
+      <CXCSchedulerAssemblyFileName Include="$(SourceDir)\CXC\CXCScheduler\Bin\Release\CXCScheduler.dll"></CXCSchedulerAssemblyFileName>
+
+
+      <CXCCoreSolution Include="$(SourceDir)\CXC\CXCCore\CXCCore.csproj"></CXCCoreSolution>
+      <CXCCoreCSharpFiles Include="$(SourceDir)\CXC\CXCCore\**\*.cs"></CXCCoreCSharpFiles>
+      <CXCCoreAssemblyFileName Include="$(SourceDir)\CXC\CXCCore\Bin\Release\CXCCore.dll"></CXCCoreAssemblyFileName>
+
+
+      <CXCEngineSolution Include="$(SourceDir)\CXC\CXCEngine\CXCEngine.csproj"></CXCEngineSolution>
+      <CXCEngineCSharpFiles Include="$(SourceDir)\CXC\CXCEngine\**\*.cs"></CXCEngineCSharpFiles>
+      <CXCEngineAssemblyFileName Include="$(SourceDir)\CXC\CXCEngine\Bin\Release\CXCEngine.exe"></CXCEngineAssemblyFileName>
+
+
+
+
+      <GDISolutionFile Include="$(SourceDir)\TPA\GDI\CXCGDI.sln"></GDISolutionFile>
+      <GDICSharpFiles Include="$(SourceDir)\TPA\GDI\GDI\**\*.cs"></GDICSharpFiles>
+      <GDIAssemblyFile Include="$(SourceDir)\TPA\GDI\GDI\Bin\Release\CXCGDI.dll"></GDIAssemblyFile>
+
+      <PrimePaySolution Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay.sln"></PrimePaySolution>
+      <PrimePayCSharpFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\**\*.cs"></PrimePayCSharpFiles>
+      <PrimePayAssemblyFile Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Bin\Release\CXCPrimePay.dll"></PrimePayAssemblyFile>
+
+
+      <PayFlexSolution Include="$(SourceDir)\TPA\PayFlex\CXCPayFlex.sln"></PayFlexSolution>
+      <PayFlexCSharpFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\**\*.cs"></PayFlexCSharpFiles>
+      <PayFlexAssemblyFileName Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Bin\Release\CXCPrimePay.dll"></PayFlexAssemblyFileName>
+    </ItemGroup>
+
+  </Target>
+
+
+
   <Target Name="BackupPreBuild">
 
     <CallTarget Targets="BackupPreBuildDatabase" />
     <CallTarget Targets="BackupPreBuildDestination" />
     <CallTarget Targets="BackupPreBuildSource" />
-    
+
   </Target>
 
-  
-  
-
   <Target Name="BuildSolutions" Condition=" $(PushCodeToDestination) != 'true' ">
+
+    <CallTarget Targets="InitilizeItemGroup"></CallTarget>
 
     <CallTarget Targets="GetNewAssemblyVersionNumber" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
 
@@ -237,7 +302,7 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-  
+
   <Target Name="GetNewAssemblyVersionNumberFromPropertyFile">
 
     <PropertyGroup>
@@ -255,12 +320,10 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-  
-  
-  
-  
-  
-  <Target Name="BuildSolution" DependsOnTargets="BuildCXCEngineSolution">
+
+
+
+  <Target Name="BuildSolution" DependsOnTargets="BuildCXCEngine">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildSolution'">BuildSolution</CurrentTargetName>
@@ -268,8 +331,9 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <MSBuild Projects="@(SolutionName)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
+    <CallTarget Targets="BuildGDISolution"></CallTarget>
+    <CallTarget Targets="BuildPrimePaySolution"></CallTarget>
+    <CallTarget Targets="BuildPayFlexSolution"></CallTarget>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -277,17 +341,209 @@
 
   </Target>
 
-  <Target Name="BuildCXCEngineSolution" Condition="$(BuildCXCEngine) == 'true' ">
+
+  <Target Name="BuildCXCSecuritySolution" Inputs="@(CXCSecurityCSharpFiles)" Outputs="@(CXCSecurityAssemblyFileName)">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCEngineSolution'">BuildCXCEngineSolution</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildGDISolution'">BuildGDISolution</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <MSBuild Projects="@(CXCEngineSolutionFile)"
+    <MSBuild Projects="@(CXCSecuritySolution)"
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildCXCDataAccessSolution" Inputs="@(CXCDataAccessCSharpFiles)" Outputs="@(CXCDataAccessAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCDataAccessSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildCXCNotifierSolution" Inputs="@(CXCNotifierCSharpFiles)" Outputs="@(CXCNotifierAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCNotifierSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildCXCFileWriterSolution" Inputs="@(CXCFileWriterCSharpFiles)" Outputs="@(CXCFileWriterAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCFileWriterSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildCXCFileReaderSolution" Inputs="@(CXCFileReaderCSharpFiles)" Outputs="@(CXCFileReaderAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCFileReaderSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildCXCFaxerSolution" Inputs="@(CXCFaxerCSharpFiles)" Outputs="@(CXCFaxerAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCFaxerSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildCXCArchiverSolution" Inputs="@(CXCArchiverCSharpFiles)" Outputs="@(CXCArchiverAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCArchiverSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildCXCSchedulerSolution" Inputs="@(CXCSchedulerCSharpFiles)" Outputs="@(CXCSchedulerAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCSchedulerSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildCXCCoreSolution" Inputs="@(CXCCoreCSharpFiles)" Outputs="@(CXCCoreAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCCoreSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+  <Target Name="BuildCXCEngineSolution" Inputs="@(CXCEngineCSharpFiles)" Outputs="@(CXCEngineAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(CXCEngineSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+
+
+
+  <Target Name="BuildCXCEngine">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCEngine'">BuildCXCEngine</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <CallTarget Targets="BuildCXCSecuritySolution"></CallTarget>
+    <CallTarget Targets="BuildCXCDataAccessSolution"></CallTarget>
+    <CallTarget Targets="BuildCXCNotifierSolution"></CallTarget>
+    <CallTarget Targets="BuildCXCFileWriterSolution"></CallTarget>
+    <CallTarget Targets="BuildCXCFileReaderSolution"></CallTarget>
+    
+    <CallTarget Targets="BuildCXCFaxerSolution"></CallTarget>
+    <CallTarget Targets="BuildCXCArchiverSolution"></CallTarget>
+    <CallTarget Targets="BuildCXCSchedulerSolution"></CallTarget>
+    <CallTarget Targets="BuildCXCCoreSolution"></CallTarget>
+    <CallTarget Targets="BuildCXCEngineSolution"></CallTarget>
+    
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -297,7 +553,58 @@
 
 
   </Target>
-  
+
+  <Target Name="BuildGDISolution" Inputs="@(GDICSharpFiles)" Outputs="@(GDIAssemblyFile)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildGDISolution'">BuildGDISolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(GDISolutionFile)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+  <Target Name="BuildPrimePaySolution" Inputs="@(PrimePayCSharpFiles)" Outputs="@(PrimePayAssemblyFile)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPrimePaySolution'">BuildPrimePaySolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(PrimePaySolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
+  <Target Name="BuildPayFlexSolution" Inputs="@(PayFlexCSharpFiles)" Outputs="@(PayFlexAssemblyFileName)">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPayFlexSolution'">BuildPayFlexSolution</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild Projects="@(PayFlexSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+
+  </Target>
+
   <Target Name="CopyBuildFilesToBuildDir">
 
     <PropertyGroup>
@@ -379,7 +686,7 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-  
+
   <Target Name="CopyWorkFlowScriptToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommandWorkflowScriptToBuildDir">
 
     <PropertyGroup>
@@ -429,7 +736,7 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-  
+
   <Target Name="ConfigTransformation">
 
     <PropertyGroup>
@@ -595,7 +902,7 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-  
+
   <Target Name="CommandFileTransaformation">
 
     <PropertyGroup>
@@ -664,7 +971,7 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
 
   </Target>
-  
+
   <Target Name="CreateSVNLabelOnSVN" Condition="$(CreateSVNLabel) == 'True'">
 
     <PropertyGroup>
@@ -891,7 +1198,7 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
   </Target>
-  
+
 
   <Target Name="CleanTempFiles">
 
@@ -906,7 +1213,7 @@
 
   </Target>
 
-  
+
   <Target Name="Build">
 
     <CallTarget Targets="Init"></CallTarget>

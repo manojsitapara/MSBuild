@@ -34,13 +34,13 @@
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-    
-    
+
+
     <Error Text="PayFlex cannot build together with other TPAs, Please check your property file values." Condition=" $(BuildGDI) == 'true' AND $(BuildPrimePay) == 'true' AND $(BuildPayFlex) == 'true' "></Error>
     <CallTarget Targets="CheckChangeLogTableExist"></CallTarget>
-    
-    
-     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
@@ -550,13 +550,13 @@
     <CallTarget Targets="BuildCXCNotifierSolution"></CallTarget>
     <CallTarget Targets="BuildCXCFileWriterSolution"></CallTarget>
     <CallTarget Targets="BuildCXCFileReaderSolution"></CallTarget>
-    
+
     <CallTarget Targets="BuildCXCFaxerSolution"></CallTarget>
     <CallTarget Targets="BuildCXCArchiverSolution"></CallTarget>
     <CallTarget Targets="BuildCXCSchedulerSolution"></CallTarget>
     <CallTarget Targets="BuildCXCCoreSolution"></CallTarget>
     <CallTarget Targets="BuildCXCEngineSolution"></CallTarget>
-    
+
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 

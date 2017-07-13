@@ -45,7 +45,7 @@
 
     <!-- Build code settings-->
     <!--Set value to true to push build code on destination-->
-    <!--Set value to false to just build code on deployment -->
+    <!--Set value to false to only build code on deployment -->
     <!--Set value to empty to execute normal msbuild workflow -->
     <PushCodeToDestination></PushCodeToDestination>
 

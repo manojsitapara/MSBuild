@@ -60,7 +60,6 @@
 
     <TempDir>$(BuildDir)\temp</TempDir>
     <TempAssemblyFile>$(TempDir)\AssemblyVersionNumber.txt</TempAssemblyFile>
-    <TempDbDeployFile>$(TempDir)\dbDeployFileName.txt</TempDbDeployFile>
 
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
     <BuildDirForWorkflowFiles>$(BuildDir)\$(WorkflowScriptFolderName)</BuildDirForWorkflowFiles>

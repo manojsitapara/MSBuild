@@ -34,7 +34,6 @@
             forceUpdate="true"  />
 
 
-    <WriteLinesToFile File="$(TempDbDeployFile)" Lines="$(DbDeployOutputFileName)" Overwrite="true" Condition="$(PushCodeToDestination) == 'false' "/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -45,23 +44,20 @@
   <Target Name="UpdateDestinationDatabase">
 
 
-    <ItemGroup Condition="$(PushCodeToDestination) == 'true' ">
-      <dbDeployFileName Include="$(TempDir)\dbDeployFileName.txt"/>
+    <ItemGroup>
+       <dbDeployFileName Include="$(BuildDirForDbDeployOutput)\**\*_output_*" />
     </ItemGroup>
-
-    <ReadLinesFromFile File="@(dbDeployFileName)" Condition="$(PushCodeToDestination) == 'true' ">
-      <Output TaskParameter="Lines" ItemName="dbDeployOutputFilePath" />
-    </ReadLinesFromFile>
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='UpdateDestinationDatabase'">UpdateDestinationDatabase</CurrentTargetName>
-      <SqlCmdInputFile>$(DbDeployOutputFileName)</SqlCmdInputFile>
-      <SqlCmdInputFile Condition="$(PushCodeToDestination) == 'true' ">@(dbDeployOutputFilePath)</SqlCmdInputFile>
+      <SqlCmdInputFile>@(dbDeployFileName)</SqlCmdInputFile>
+      <SqlCmdInputFile Condition="$(PushCodeToDestination) == 'true' ">@(dbDeployFileName)</SqlCmdInputFile>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <Message Text="Executing change script ($(GenerateOutputSqlFileName)) on $(dbDeployDBName) ..."/>
+    <Message Text="@(dbDeployFileName)"></Message>
+    <Message Text="Executing change script ($(SqlCmdInputFile)) on $(dbDeployDBName) ..."/>
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd
       TaskAction="Execute"

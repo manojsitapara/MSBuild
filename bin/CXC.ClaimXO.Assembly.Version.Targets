@@ -2,7 +2,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Import Project="CXC.ClaimXO.props" />
-  <Import Project="CXC.ClaimXO.ExternalLibraryLocation.props" />
   <Import Project="$(MSBuildCommunityTaskstargets)"/>
   <Import Project="$(MSBuildExtensionPacktargets)" Condition="Exists('$(MSBuildExtensionPacktargets)')"/>
 

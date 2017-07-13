@@ -23,7 +23,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
    
   </Target>
 
@@ -47,7 +47,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
     
     
   </Target>
@@ -72,7 +72,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
 
   </Target>
@@ -97,7 +97,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
 
   </Target>
@@ -120,7 +120,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
     
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -139,7 +139,7 @@
       ZipFileName="$(DeploymentBackupFile)"/>
     <Message Text="Build backup has been sucessfully completed at this location: $(DeploymentBackupFile)"></Message>
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -162,7 +162,7 @@
     
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
     
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
 </Project>

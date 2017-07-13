@@ -57,7 +57,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -109,7 +109,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -151,7 +151,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -266,7 +266,7 @@
     <CallTarget Targets="GetNewAssemblyVersionNumberFromDatabase" Condition="$(AssemblyBuildNumber)== '' "></CallTarget>
     <CallTarget Targets="GetNewAssemblyVersionNumberFromPropertyFile" Condition="$(AssemblyBuildNumber) != '' " ></CallTarget>
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="GetNewAssemblyVersionNumberFromDatabase">
@@ -299,7 +299,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -317,7 +317,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -337,7 +337,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -355,7 +355,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -373,7 +373,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -391,7 +391,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -409,7 +409,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -427,7 +427,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -445,7 +445,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -463,7 +463,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -481,7 +481,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -499,7 +499,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -517,7 +517,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -548,7 +548,7 @@
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
 
 
@@ -567,7 +567,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -584,7 +584,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -601,7 +601,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -624,7 +624,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopySqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreSqlFilesToBuildDir">
@@ -653,7 +653,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyCXCCoreSqlFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
@@ -684,7 +684,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyWorkFlowScriptToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommandWorkflowScriptToBuildDir">
@@ -711,7 +711,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyCommandWorkflowScriptToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
@@ -734,7 +734,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="ConfigTransformation">
@@ -752,7 +752,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
 
   </Target>
@@ -838,7 +838,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -863,7 +863,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -899,7 +899,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -917,7 +917,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -941,7 +941,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -968,7 +968,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -996,7 +996,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -1032,7 +1032,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyDbDeployOutputFilesToDeploymentDir">
@@ -1060,7 +1060,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyWorkflowScriptsToDeploymentDir" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommonWorkflowScriptsToDeploymentDir">
@@ -1082,7 +1082,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyCommonWorkflowScriptsToDeploymentDir">
@@ -1102,7 +1102,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="DeployBuildToDestination" Condition=" $(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '' " >
@@ -1140,7 +1140,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -1196,7 +1196,7 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(AllowEmailNotification)=='true'"  />
+    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
 

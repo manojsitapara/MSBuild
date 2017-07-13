@@ -37,7 +37,7 @@
     <!--Set value true to create svn lable under svn tag branch-->
     <CreateSVNLabel>false</CreateSVNLabel>
     <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
-    <AllowEmailNotification>true</AllowEmailNotification>
+    <SendEmailNotification>true</SendEmailNotification>
 
 
 

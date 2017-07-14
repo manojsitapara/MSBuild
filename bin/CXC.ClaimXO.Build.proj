@@ -5,7 +5,10 @@
   <!--msbuild CXC.ClaimXO.Build.proj /l:XMLFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.xml-->
   <!--msbuild CXC.ClaimXO.Build.proj /l:SqlLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;BID=123;BN=2016;DS=.;IC=MSBuildLogs;SP=msbep_SqlLogger-->
   <!--msbuild CXC.ClaimXO.Build.proj /l:SecureFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.txt-->
-
+  
+  <!-- For list down all properties -->
+  <!--msbuild CXC.ClaimXO.Build.proj /filelogger /fileLoggerParameters:Verbosity=diag-->
+  
   <!--Microsoft logger-->
   <!--msbuild CXC.ClaimXO.Build.proj /fileLogger /fileLoggerParameters:LogFile=MyLog.log;-->
   <!--msbuild CXC.ClaimXO.Build.proj /fl1 /fl2 /fl3 /flp2:logfile=JustErrors.log;errorsonly /flp3:logfile=JustWarnings.log;warningsonly-->

@@ -17,9 +17,9 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <CallTarget Targets="SqlServer2008DatabaseBackup" Condition="$(SqlServerVersion) == '2008' "/>
-    <CallTarget Targets="SqlServer2012DatabaseBackup" Condition="$(SqlServerVersion) == '2012' "/>
-    <CallTarget Targets="SqlServer2014DatabaseBackup" Condition="$(SqlServerVersion) == '2014' "/>
+    <CallTarget Targets="BackupPreBuildDatabaseForSqlServer2008Version" Condition="$(SqlServerVersion) == '2008' "/>
+    <CallTarget Targets="BackupPreBuildDatabaseForSqlServer2012Version" Condition="$(SqlServerVersion) == '2012' "/>
+    <CallTarget Targets="BackupPreBuildDatabaseForSqlServer2014Version" Condition="$(SqlServerVersion) == '2014' "/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -28,10 +28,10 @@
   </Target>
 
 
-  <Target Name="SqlServer2008DatabaseBackup">
+  <Target Name="BackupPreBuildDatabaseForSqlServer2008Version">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SqlServer2008DatabaseBackup'">SqlServer2008DatabaseBackup</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupPreBuildDatabaseForSqlServer2008Version'">BackupPreBuildDatabaseForSqlServer2008Version</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -53,10 +53,10 @@
   </Target>
 
   
-  <Target Name="SqlServer2012DatabaseBackup">
+  <Target Name="BackupPreBuildDatabaseForSqlServer2012Version">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SqlServer2012DatabaseBackup'">SqlServer2012DatabaseBackup</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupPreBuildDatabaseForSqlServer2012Version'">BackupPreBuildDatabaseForSqlServer2012Version</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -78,10 +78,10 @@
   </Target>
 
   
-  <Target Name="SqlServer2014DatabaseBackup">
+  <Target Name="BackupPreBuildDatabaseForSqlServer2014Version">
 
     <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='SqlServer2014DatabaseBackup'">SqlServer2014DatabaseBackup</CurrentTargetName>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupPreBuildDatabaseForSqlServer2014Version'">BackupPreBuildDatabaseForSqlServer2014Version</CurrentTargetName>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />

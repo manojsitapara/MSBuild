@@ -3,8 +3,8 @@
 
   <PropertyGroup>
 
-    <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
-    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
+    <SVNSourceURL>https://LAPTOP-UUPSHFQB:8443/svn/ClaimXO/</SVNSourceURL>
+    <SVNTagURL>https://LAPTOP-UUPSHFQB:8443/svn/ClaimXO/tags</SVNTagURL>
 
     <!-- MSBuild script folder structure settings -->
 

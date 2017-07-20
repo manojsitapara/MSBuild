@@ -654,10 +654,19 @@
     </PropertyGroup>
 
 
-     <Exec Command="xcopy.exe  $(SourceDirForMetaChangeScript) $(BuildDirForMetaSqlScript) /s /d /Y" />
+     
+     <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(SourceDirForMetaChangeScript)"
+      Destination="$(BuildDirForMetaSqlScript)"
+      Files="*.*"
+      Options="/E /XO" />
 
 
-    <Exec Command="xcopy.exe  $(SourceDirForDataChangeScript) $(BuildDirForDataSqlScript) /s /d /Y" />
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(SourceDirForDataChangeScript)"
+      Destination="$(BuildDirForDataSqlScript)"
+      Files="*.*"
+      Options="/E /XO" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -709,9 +718,12 @@
     </PropertyGroup>
 
 
-    <Exec Command="xcopy.exe  $(SourceDirForWorkflowFile) $(BuildDirForWorkflowScript) /s /d /Y" />
-
-
+    
+      <MSBuild.ExtensionPack.FileSystem.RoboCopy 
+        Source="$(SourceDirForWorkflowFile)"
+        Destination="$(BuildDirForWorkflowScript)"
+        Files="*.*"
+        Options="/E /XO"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -727,12 +739,12 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <ItemGroup>
-      <SourceDirForCommandWorkflowScript Include="$(SourceDir)\CXC\Scripts\**\*.*" />
+      <SourceDirForCommandWorkflowScript Include="$(SourceDir)\CXC\Scripts\*.*" />
     </ItemGroup>
 
 
     <Copy SourceFiles="@(SourceDirForCommandWorkflowScript)"
-          DestinationFolder="$(BuildDirForCommonWorkflowScript)\%(RecursiveDir)"
+          DestinationFolder="$(BuildDirForCommonWorkflowScript)"
           SkipUnchangedFiles="true" />
 
 
@@ -1026,7 +1038,11 @@
 
     <Message Text = "Start copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
-    <Exec Command="xcopy.exe  $(BuildDirForApp) $(DeploymentDirForApp) /s /d /Y" />
+     <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(BuildDirForApp)"
+      Destination="$(DeploymentDirForApp)"
+      Files="*.*"
+      Options="/E /XO" />
 
     <Message Text = "Completed copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
@@ -1074,7 +1090,11 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-    <Exec Command="xcopy.exe  $(BuildDirForWorkflowScript) $(DeploymentDirForApp) /s /d /Y" />
+     <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(BuildDirForWorkflowScript)"
+      Destination="$(DeploymentDirForApp)"
+      Files="*.*"
+      Options="/E /XO"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -1090,7 +1110,11 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-    <Exec Command="xcopy.exe  $(BuildDirForCommonWorkflowScript) $(DeploymentDirForApp) /s /d /Y" />
+     <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(BuildDirForCommonWorkflowScript)"
+      Destination="$(DeploymentDirForApp)"
+      Files="*.*"
+      Options="/XO" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 

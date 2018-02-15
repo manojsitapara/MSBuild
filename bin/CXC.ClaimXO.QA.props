@@ -3,16 +3,16 @@
 
   <PropertyGroup>
 
-    <SVNSourceURL>https://LAPTOP-UUPSHFQB:8443/svn/ClaimXO/</SVNSourceURL>
-    <SVNTagURL>https://LAPTOP-UUPSHFQB:8443/svn/ClaimXO/tags</SVNTagURL>
+    <SVNSourceURL>https://laptop-l6j610l5:4443/svn/ClaimXO1/trunk/</SVNSourceURL>
+    <SVNTagURL>https://laptop-l6j610l5:4443/svn/ClaimXO1/tags</SVNTagURL>
 
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
-    <RootDir>G:\MSBuildTesting\QA</RootDir>
+    <RootDir>E:\MyMSBuildTesting\QA</RootDir>
 
     <!-- Specify the path to copy build code on server -->
-    <DestinationDir>G:\MSBuildTesting\QA\QAServer</DestinationDir>
+    <DestinationDir>E:\MyMSBuildTesting\QA\QAServer</DestinationDir>
 
     <!-- To download source code from SVN, set value to true else false -->
     <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
@@ -55,7 +55,7 @@
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
     <SqlServerVersion>2012</SqlServerVersion>
     <!--Specify Sql server name-->
-    <SqlServerName>LAPTOP-UUPSHFQB\QA</SqlServerName>
+    <SqlServerName>.</SqlServerName>
 
     <!--Specify sql user name, if IsSqlWindowsAuthentication flag value is false -->
     <SqlServerUserName>sa</SqlServerUserName>

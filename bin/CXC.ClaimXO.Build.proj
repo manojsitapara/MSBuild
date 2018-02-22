@@ -251,7 +251,7 @@
 
   </Target>
 
-  <Target Name="BuildSolutions" Condition=" $(PushCodeToDestination) != 'true' ">
+  <Target Name="BuildSolutions" Condition=" $(OnlyBuildOrOnlyPush) != 'onlypush' ">
 
     <CallTarget Targets="InitilizeItemGroup"></CallTarget>
 
@@ -1019,7 +1019,7 @@
 
 
 
-  <Target Name="PostBuild" Condition=" $(PushCodeToDestination) != 'true' ">
+  <Target Name="PostBuild" Condition=" $(OnlyBuildOrOnlyPush) != 'onlypush' ">
 
     <CallTarget Targets="CopyBuildFilesToDeploymentDir"  Condition="$(MSBuildLastTaskResult) == 'True' "/>
     <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' "/>
@@ -1121,7 +1121,7 @@
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
-  <Target Name="DeployBuildToDestination" Condition=" $(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '' " >
+  <Target Name="DeployBuildToDestination" Condition=" $(OnlyBuildOrOnlyPush) == 'onlypush' or $(OnlyBuildOrOnlyPush) == '' " >
 
     <CallTarget Targets="CopyBuildFilesToDestinationDir"  />
 
@@ -1234,11 +1234,11 @@
 
     <CallTarget Targets="Init"></CallTarget>
 
-    <CallTarget Targets="CreateFolderStructure" Condition="$(PushCodeToDestination) != 'true' " />
+    <CallTarget Targets="CreateFolderStructure" Condition="$(OnlyBuildOrOnlyPush) != 'onlypush' " />
 
-    <CallTarget Targets="DownloadPreBuildSourceFromSVN" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "/>
+    <CallTarget Targets="DownloadPreBuildSourceFromSVN" Condition="$(MSBuildLastTaskResult) == 'True' and $(OnlyBuildOrOnlyPush) != 'onlypush' "/>
 
-    <CallTarget Targets="BackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(PushCodeToDestination) != 'true' "></CallTarget>
+    <CallTarget Targets="BackupPreBuild" Condition="$(MSBuildLastTaskResult) == 'True' and $(OnlyBuildOrOnlyPush) != 'onlypush' "></CallTarget>
 
     <CallTarget Targets="BuildSolutions"></CallTarget>
 
@@ -1253,7 +1253,7 @@
 
     <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /fl1 /fl2 /flp1:logfile=$(LogFileName) /flp2:logfile=$(ErrorLogFileName);errorsonly;warningsonly "/>
 
-    <CallTarget Targets="CleanTempFiles" Condition="$(MSBuildLastTaskResult) == 'True' and ($(PushCodeToDestination) == 'true' or $(PushCodeToDestination) == '') " />
+    <CallTarget Targets="CleanTempFiles" Condition="$(MSBuildLastTaskResult) == 'True' and ($(OnlyBuildOrOnlyPush) == 'onlypush' or $(OnlyBuildOrOnlyPush) == '') " />
 
 
   </Target>

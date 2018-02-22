@@ -31,7 +31,7 @@
     <!--Set value true to take database backup else false -->
     <BackupDatabase>false</BackupDatabase>
     <!-- Set UpdateBuildVersion value true to update build version number else set false -->
-    <UpdateBuildVersion>true</UpdateBuildVersion>
+    <UpdateBuildVersion>false</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Set value true to create svn lable under svn tag branch-->
@@ -42,10 +42,10 @@
 
 
     <!-- Build code settings-->
-    <!--Set value to true to push build code on destination-->
-    <!--Set value to false to just build code on deployment -->
-    <!--Set value to empty to execute normal msbuild workflow -->
-    <PushCodeToDestination></PushCodeToDestination>
+    <!--Set value to onlypush to push build  on destination-->
+    <!--Set value to onlybuild to just build  on deployment -->
+    <!--Set value to empty to execute normal msbuild workflow, Build & Push -->
+    <OnlyBuildOrOnlyPush>onlypush</OnlyBuildOrOnlyPush>
 
 
     <!--Sql server settings -->

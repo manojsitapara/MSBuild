@@ -51,7 +51,7 @@
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='UpdateDestinationDatabase'">UpdateDestinationDatabase</CurrentTargetName>
       <SqlCmdInputFile>@(dbDeployFileName)</SqlCmdInputFile>
-      <SqlCmdInputFile Condition="$(PushCodeToDestination) == 'true' ">@(dbDeployFileName)</SqlCmdInputFile>
+      <SqlCmdInputFile Condition="$(OnlyBuildOrOnlyPush) == 'onlypush' ">@(dbDeployFileName)</SqlCmdInputFile>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />

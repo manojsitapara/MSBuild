@@ -3,16 +3,18 @@
 
   <PropertyGroup>
 
-    <SVNSourceURL>https://laptop-l6j610l5:4443/svn/ClaimXO1/trunk/</SVNSourceURL>
-    <SVNTagURL>https://laptop-l6j610l5:4443/svn/ClaimXO1/tags</SVNTagURL>
+    <SVNSourceURL>https://LAPTOP-L6J610L5:4443/svn/ClaimXO/trunk/</SVNSourceURL>
+    <SVNTagURL>https://LAPTOP-L6J610L5:4443/svn/ClaimXO/tags</SVNTagURL>
+     <!--<SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
+    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>-->
 
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
-    <RootDir>E:\MyMSBuildTesting\QA</RootDir>
+    <RootDir>E:\MSBuildTesting\ClaimXO\QA</RootDir>
 
     <!-- Specify the path to copy build code on server -->
-    <DestinationDir>E:\MyMSBuildTesting\QA\QAServer</DestinationDir>
+    <DestinationDir>E:\MSBuildTesting\ClaimXO\QA\QAServer</DestinationDir>
 
     <!-- To download source code from SVN, set value to true else false -->
     <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
@@ -34,6 +36,8 @@
     <UpdateBuildVersion>false</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
+    <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
+    <AssemblyBuildNumber>2017.02.03.0</AssemblyBuildNumber>
     <!--Set value true to create svn lable under svn tag branch-->
     <CreateSVNLabel>false</CreateSVNLabel>
     <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
@@ -45,7 +49,7 @@
     <!--Set value to onlypush to push build  on destination-->
     <!--Set value to onlybuild to just build  on deployment -->
     <!--Set value to empty to execute normal msbuild workflow, Build & Push -->
-    <OnlyBuildOrOnlyPush>onlypush</OnlyBuildOrOnlyPush>
+    <OnlyBuildOrOnlyPush></OnlyBuildOrOnlyPush>
 
 
     <!--Sql server settings -->
@@ -57,9 +61,9 @@
     <!--Specify Sql server name-->
     <SqlServerName>.</SqlServerName>
 
-    <!--Specify sql user name, if IsSqlWindowsAuthentication flag value is false -->
+    <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false, else keep empty  -->
     <SqlServerUserName>sa</SqlServerUserName>
-    <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false  -->
+    <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false, else keep empty  -->
     <SqlServerPassword>sa123</SqlServerPassword>
 
     <!--specify database name -->
@@ -70,8 +74,7 @@
     <!--Specify TO email address to send error email notification -->
     <ErrorNotificationToAddress>manojs@cxcnetwork.com</ErrorNotificationToAddress>
 
-    <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2017.02.03.0</AssemblyBuildNumber>
+    
 
   </PropertyGroup>
 

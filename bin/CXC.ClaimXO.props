@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
 
   <PropertyGroup>
-    <Environment>QA</Environment>
+    <Environment>PayFlexQA</Environment>
  
     <SvnUsername></SvnUsername>
     <SvnPassword></SvnPassword>
@@ -34,6 +34,8 @@
 
     <!-- Specify the path of source code -->
     <SourceDir>$(RootDir)\Source</SourceDir>
+    <!--Root directory property has been created because in case of source code is in sub directory-->
+    <RootDirForSurceCode>$(SourceDir)</RootDirForSurceCode>
     <!-- Specify the path to save build code -->
     <BuildDir>$(RootDir)\Build</BuildDir>
    
@@ -63,7 +65,7 @@
 
     <BuildDirForApp>$(BuildDir)\$(AppFolderName)</BuildDirForApp>
     <BuildDirForWorkflowFiles>$(BuildDir)\$(WorkflowScriptFolderName)</BuildDirForWorkflowFiles>
-    <BuildDirForCommonWorkflowScript>$(BuildDirForWorkflowScript)\Common</BuildDirForCommonWorkflowScript>
+    <BuildDirForCommonWorkflowScript>$(BuildDirForWorkflowFiles)\Common</BuildDirForCommonWorkflowScript>
     <BuildDirForDbDeploy>$(BuildDir)\$(DbDeployScriptInputFolderName)</BuildDirForDbDeploy>
     <BuildDirForDbDeployOutput>$(BuildDir)\$(DbDeployScriptOutputFolderName)</BuildDirForDbDeployOutput>
 
@@ -119,50 +121,50 @@
 
   <ItemGroup>
 
-    <SolutionName Include="$(SourceDir)\TPA\GDI\CXCGDI.sln"  Condition="$(BuildGDI)=='true' ">
+    <SolutionName Include="$(RootDirForSurceCode)\TPA\GDI\CXCGDI.sln"  Condition="$(BuildGDI)=='true' ">
       
       <TPAName>GDI</TPAName>
 
-      <SourceDirForMetaChangeScript>$(SourceDir)\TPA\GDI\GDI\Build\MetaChanges</SourceDirForMetaChangeScript>
-      <SourceDirForDataChangeScript>$(SourceDir)\TPA\GDI\GDI\Build\DataChanges</SourceDirForDataChangeScript>
-      <SourceDirForWorkflowScript>$(SourceDir)\TPA\GDI\GDI\Scripts</SourceDirForWorkflowScript>
+      <SourceDirForMetaChangeScript>$(RootDirForSurceCode)\TPA\GDI\GDI\Build\MetaChanges</SourceDirForMetaChangeScript>
+      <SourceDirForDataChangeScript>$(RootDirForSurceCode)\TPA\GDI\GDI\Build\DataChanges</SourceDirForDataChangeScript>
+      <SourceDirForWorkflowScript>$(RootDirForSurceCode)\TPA\GDI\GDI\Scripts</SourceDirForWorkflowScript>
       
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\1.GDI_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\2.GDI_DataChanges</BuildDirForDataSqlScript>
-      <BuildDirForWorkflowScript>$(BuildDirForWorkflowScript)\GDI</BuildDirForWorkflowScript>
+      <BuildDirForWorkflowScript>$(BuildDirForWorkflowFiles)\GDI</BuildDirForWorkflowScript>
 
       <BuildDirForStateParamXmlFile>$(BuildDirForApp)\GDI\config\StateParams.xml</BuildDirForStateParamXmlFile>
       
     </SolutionName>
 
     
-    <SolutionName Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay.sln"  Condition="$(BuildPrimePay)=='true' ">
+    <SolutionName Include="$(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay.sln"  Condition="$(BuildPrimePay)=='true' ">
       
       <TPAName>PrimePay</TPAName>
 
-      <SourceDirForMetaChangeScript>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges</SourceDirForMetaChangeScript>
-      <SourceDirForDataChangeScript>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Build\DataChanges</SourceDirForDataChangeScript>
-      <SourceDirForWorkflowScript>$(SourceDir)\TPA\PrimePay\CXCPrimePay\Scripts</SourceDirForWorkflowScript>
+      <SourceDirForMetaChangeScript>$(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges</SourceDirForMetaChangeScript>
+      <SourceDirForDataChangeScript>$(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Build\DataChanges</SourceDirForDataChangeScript>
+      <SourceDirForWorkflowScript>$(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Scripts</SourceDirForWorkflowScript>
 
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\1.PrimePay_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\2.PrimePay_DataChanges</BuildDirForDataSqlScript>
-      <BuildDirForWorkflowScript>$(BuildDirForWorkflowScript)\PrimePay</BuildDirForWorkflowScript>
+      <BuildDirForWorkflowScript>$(BuildDirForWorkflowFiles)\PrimePay</BuildDirForWorkflowScript>
 
       <BuildDirForStateParamXmlFile>$(BuildDirForApp)\PrimePay\config\StateParams.xml</BuildDirForStateParamXmlFile>
       
     </SolutionName>
 
-    <SolutionName Include="$(SourceDir)\TPA\PayFlex\CXCPayFlex.sln"  Condition="$(BuildPayFlex)=='true' " >
+    <SolutionName Include="$(RootDirForSurceCode)\TPA\PayFlex\CXCPayFlex.sln"  Condition="$(BuildPayFlex)=='true' " >
      
       <TPAName>PayFlex</TPAName>
 
-      <SourceDirForMetaChangeScript>$(SourceDir)\TPA\PayFlex\PayFlex\Build\MetaChanges</SourceDirForMetaChangeScript>
-      <SourceDirForDataChangeScript>$(SourceDir)\TPA\PayFlex\PayFlex\Build\DataChanges</SourceDirForDataChangeScript>
-      <SourceDirForWorkflowScript>$(SourceDir)\TPA\PayFlex\PayFlex\Scripts</SourceDirForWorkflowScript>
+      <SourceDirForMetaChangeScript>$(RootDirForSurceCode)\TPA\PayFlex\PayFlex\Build\MetaChanges</SourceDirForMetaChangeScript>
+      <SourceDirForDataChangeScript>$(RootDirForSurceCode)\TPA\PayFlex\PayFlex\Build\DataChanges</SourceDirForDataChangeScript>
+      <SourceDirForWorkflowScript>$(RootDirForSurceCode)\TPA\PayFlex\PayFlex\Scripts</SourceDirForWorkflowScript>
      
       <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PayFlex\1.PayFlex_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PayFlex\2.PayFlex_DataChanges</BuildDirForDataSqlScript>
-      <BuildDirForWorkflowScript>$(BuildDirForWorkflowScript)\PayFlex</BuildDirForWorkflowScript>
+      <BuildDirForWorkflowScript>$(BuildDirForWorkflowFiles)\PayFlex</BuildDirForWorkflowScript>
 
       <BuildDirForStateParamXmlFile>$(BuildDirForApp)\PayFlex\config\StateParams.xml</BuildDirForStateParamXmlFile>
       
@@ -172,8 +174,8 @@
  
 
   <ItemGroup>
-    <CommandFileName Include="$(BuildDirForWorkflowScript)\PayFlex\PayFlex_SetEnv.cmd"  Condition="$(BuildPayFlex)=='true' " />
-    <CommandFileName Include="$(BuildDirForWorkflowScript)\PayFlex\PayFlexFTP_SetEnv.cmd"  Condition="$(BuildPayFlex)=='true' " />
+    <CommandFileName Include="$(BuildDirForWorkflowFiles)\PayFlex\PayFlex_SetEnv.cmd"  Condition="$(BuildPayFlex)=='true' " />
+    <CommandFileName Include="$(BuildDirForWorkflowFiles)\PayFlex\PayFlexFTP_SetEnv.cmd"  Condition="$(BuildPayFlex)=='true' " />
   </ItemGroup>
 
 

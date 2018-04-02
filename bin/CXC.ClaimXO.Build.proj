@@ -25,7 +25,7 @@
 
 
   <ItemGroup>
-    <CXCEngineSolutionFile Include="$(SourceDir)\CXC\CXCEngine.sln"></CXCEngineSolutionFile>
+    <CXCEngineSolutionFile Include="$(RootDirForSurceCode)\CXC\CXCEngine.sln"></CXCEngineSolutionFile>
     <UpdateAssemblyVersionTarget Include="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileDirectory)\CXC.ClaimXO.Assembly.Version.Targets;Configuration=Release"></UpdateAssemblyVersionTarget>
   </ItemGroup>
 
@@ -86,10 +86,10 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <RemoveDir Directories="$(SourceDir)" Condition="$(ForceSourceOverwrite)== 'true'"/>
+    <RemoveDir Directories="$(RootDirForSurceCode)" Condition="$(ForceSourceOverwrite)== 'true'"/>
 
     <MakeDir Directories="$(RootDir)" Condition="!Exists('$(RootDir)')"/>
-    <MakeDir Directories="$(SourceDir)" Condition="!Exists('$(SourceDir)')"/>
+    <MakeDir Directories="$(RootDirForSurceCode)" Condition="!Exists('$(RootDirForSurceCode)')"/>
     <MakeDir Directories="$(BackupDirForSource)" Condition="!Exists('$(BackupDirForSource)')"/>
 
     <MakeDir Directories="$(BuildDir)" Condition="!Exists('$(BuildDir)')"/>
@@ -112,7 +112,7 @@
 
 
     <!-- Need to reomve this command once we have seperate script folder for each TPA -->
-    <MakeDir Directories="$(BuildDirForWorkflowScript)\Common" Condition="!Exists('$(BuildDirForWorkflowScript)\Common')" />
+    <MakeDir Directories="$(BuildDirForWorkflowFiles)\Common" Condition="!Exists('$(BuildDirForWorkflowFiles)\Common')" />
 
 
 
@@ -141,8 +141,8 @@
 
 
     <!-- Below two commands creates folder structure in build directory for each TPA  -->
-    <MakeDir Directories="$(BuildDirForWorkflowScript)\$(TPAName)" Condition="!Exists('$(BuildDirForWorkflowScript)\$(TPAName')"/>
-
+    <MakeDir Directories="$(BuildDirForWorkflowFiles)\$(TPAName)" Condition="!Exists('$(BuildDirForWorkflowFiles)\$(TPAName')"/>
+    
 
 
   </Target>
@@ -156,7 +156,7 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <SvnCheckout  RepositoryPath="$(SVNSourceURL)"
-			            LocalPath="$(SourceDir)"
+			            LocalPath="$(RootDirForSurceCode)"
 			            UserName="$(SvnUsername)"
 			            Password="$(SvnPassword)">
       <Output TaskParameter="Revision" PropertyName="Revision" />
@@ -174,69 +174,69 @@
 
     <ItemGroup>
 
-      <CXCSecuritySolution Include="$(SourceDir)\CXC\ClassLibrary1\CXCSecurity.csproj"></CXCSecuritySolution>
-      <CXCSecurityCSharpFiles Include="$(SourceDir)\CXC\ClassLibrary1\**\*.cs"></CXCSecurityCSharpFiles>
-      <CXCSecurityAssemblyFileName Include="$(SourceDir)\CXC\ClassLibrary1\Bin\Release\CXCSecurity.dll"></CXCSecurityAssemblyFileName>
+      <CXCSecuritySolution Include="$(RootDirForSurceCode)\CXC\ClassLibrary1\CXCSecurity.csproj"></CXCSecuritySolution>
+      <CXCSecurityCSharpFiles Include="$(RootDirForSurceCode)\CXC\ClassLibrary1\**\*.cs"></CXCSecurityCSharpFiles>
+      <CXCSecurityAssemblyFileName Include="$(RootDirForSurceCode)\CXC\ClassLibrary1\Bin\Release\CXCSecurity.dll"></CXCSecurityAssemblyFileName>
 
 
-      <CXCDataAccessSolution Include="$(SourceDir)\CXC\CXCDataAccess\CXCDataAccess.csproj"></CXCDataAccessSolution>
-      <CXCDataAccessCSharpFiles Include="$(SourceDir)\CXC\CXCDataAccess\**\*.cs"></CXCDataAccessCSharpFiles>
-      <CXCDataAccessAssemblyFileName Include="$(SourceDir)\CXC\CXCDataAccess\Bin\Release\CXCDataAccess.dll"></CXCDataAccessAssemblyFileName>
+      <CXCDataAccessSolution Include="$(RootDirForSurceCode)\CXC\CXCDataAccess\CXCDataAccess.csproj"></CXCDataAccessSolution>
+      <CXCDataAccessCSharpFiles Include="$(RootDirForSurceCode)\CXC\CXCDataAccess\**\*.cs"></CXCDataAccessCSharpFiles>
+      <CXCDataAccessAssemblyFileName Include="$(RootDirForSurceCode)\CXC\CXCDataAccess\Bin\Release\CXCDataAccess.dll"></CXCDataAccessAssemblyFileName>
 
 
-      <CXCNotifierSolution Include="$(SourceDir)\CXC\CXCNotifier\CXCNotifier.csproj"></CXCNotifierSolution>
-      <CXCNotifierCSharpFiles Include="$(SourceDir)\CXC\CXCNotifier\**\*.cs"></CXCNotifierCSharpFiles>
-      <CXCNotifierAssemblyFileName Include="$(SourceDir)\CXC\CXCNotifier\Bin\Release\CXCNotifier.dll"></CXCNotifierAssemblyFileName>
+      <CXCNotifierSolution Include="$(RootDirForSurceCode)\CXC\CXCNotifier\CXCNotifier.csproj"></CXCNotifierSolution>
+      <CXCNotifierCSharpFiles Include="$(RootDirForSurceCode)\CXC\CXCNotifier\**\*.cs"></CXCNotifierCSharpFiles>
+      <CXCNotifierAssemblyFileName Include="$(RootDirForSurceCode)\CXC\CXCNotifier\Bin\Release\CXCNotifier.dll"></CXCNotifierAssemblyFileName>
 
 
-      <CXCFileWriterSolution Include="$(SourceDir)\CXC\CXCFileWriter\CXCFileWriter.csproj"></CXCFileWriterSolution>
-      <CXCFileWriterCSharpFiles Include="$(SourceDir)\CXC\CXCFileWriter\**\*.cs"></CXCFileWriterCSharpFiles>
-      <CXCFileWriterAssemblyFileName Include="$(SourceDir)\CXC\CXCFileWriter\Bin\Release\CXCFileWriter.dll"></CXCFileWriterAssemblyFileName>
+      <CXCFileWriterSolution Include="$(RootDirForSurceCode)\CXC\CXCFileWriter\CXCFileWriter.csproj"></CXCFileWriterSolution>
+      <CXCFileWriterCSharpFiles Include="$(RootDirForSurceCode)\CXC\CXCFileWriter\**\*.cs"></CXCFileWriterCSharpFiles>
+      <CXCFileWriterAssemblyFileName Include="$(RootDirForSurceCode)\CXC\CXCFileWriter\Bin\Release\CXCFileWriter.dll"></CXCFileWriterAssemblyFileName>
 
 
-      <CXCFileReaderSolution Include="$(SourceDir)\CXC\CXCFileReader\CXCFileReader.csproj"></CXCFileReaderSolution>
-      <CXCFileReaderCSharpFiles Include="$(SourceDir)\CXC\CXCFileReader\**\*.cs"></CXCFileReaderCSharpFiles>
-      <CXCFileReaderAssemblyFileName Include="$(SourceDir)\CXC\CXCFileReader\Bin\Release\CXCFileReader.dll"></CXCFileReaderAssemblyFileName>
+      <CXCFileReaderSolution Include="$(RootDirForSurceCode)\CXC\CXCFileReader\CXCFileReader.csproj"></CXCFileReaderSolution>
+      <CXCFileReaderCSharpFiles Include="$(RootDirForSurceCode)\CXC\CXCFileReader\**\*.cs"></CXCFileReaderCSharpFiles>
+      <CXCFileReaderAssemblyFileName Include="$(RootDirForSurceCode)\CXC\CXCFileReader\Bin\Release\CXCFileReader.dll"></CXCFileReaderAssemblyFileName>
 
-      <CXCFaxerSolution Include="$(SourceDir)\CXC\CXCFaxer\CXCFaxer.csproj"></CXCFaxerSolution>
-      <CXCFaxerCSharpFiles Include="$(SourceDir)\CXC\CXCFaxer\**\*.cs"></CXCFaxerCSharpFiles>
-      <CXCFaxerAssemblyFileName Include="$(SourceDir)\CXC\CXCFaxer\bin\Release\CXFaxer.dll"></CXCFaxerAssemblyFileName>
-
-
-      <CXCArchiverSolution Include="$(SourceDir)\CXC\CXCArchiver\CXCArchiver.csproj"></CXCArchiverSolution>
-      <CXCArchiverCSharpFiles Include="$(SourceDir)\CXC\CXCArchiver\**\*.cs"></CXCArchiverCSharpFiles>
-      <CXCArchiverAssemblyFileName Include="$(SourceDir)\CXC\CXCArchiver\Bin\Release\CXCArchiver.dll"></CXCArchiverAssemblyFileName>
+      <CXCFaxerSolution Include="$(RootDirForSurceCode)\CXC\CXCFaxer\CXCFaxer.csproj"></CXCFaxerSolution>
+      <CXCFaxerCSharpFiles Include="$(RootDirForSurceCode)\CXC\CXCFaxer\**\*.cs"></CXCFaxerCSharpFiles>
+      <CXCFaxerAssemblyFileName Include="$(RootDirForSurceCode)\CXC\CXCFaxer\bin\Release\CXFaxer.dll"></CXCFaxerAssemblyFileName>
 
 
-      <CXCSchedulerSolution Include="$(SourceDir)\CXC\CXCScheduler\CXCScheduler.csproj"></CXCSchedulerSolution>
-      <CXCSchedulerCSharpFiles Include="$(SourceDir)\CXC\CXCScheduler\**\*.cs"></CXCSchedulerCSharpFiles>
-      <CXCSchedulerAssemblyFileName Include="$(SourceDir)\CXC\CXCScheduler\Bin\Release\CXCScheduler.dll"></CXCSchedulerAssemblyFileName>
+      <CXCArchiverSolution Include="$(RootDirForSurceCode)\CXC\CXCArchiver\CXCArchiver.csproj"></CXCArchiverSolution>
+      <CXCArchiverCSharpFiles Include="$(RootDirForSurceCode)\CXC\CXCArchiver\**\*.cs"></CXCArchiverCSharpFiles>
+      <CXCArchiverAssemblyFileName Include="$(RootDirForSurceCode)\CXC\CXCArchiver\Bin\Release\CXCArchiver.dll"></CXCArchiverAssemblyFileName>
 
 
-      <CXCCoreSolution Include="$(SourceDir)\CXC\CXCCore\CXCCore.csproj"></CXCCoreSolution>
-      <CXCCoreCSharpFiles Include="$(SourceDir)\CXC\CXCCore\**\*.cs"></CXCCoreCSharpFiles>
-      <CXCCoreAssemblyFileName Include="$(SourceDir)\CXC\CXCCore\Bin\Release\CXCCore.dll"></CXCCoreAssemblyFileName>
+      <CXCSchedulerSolution Include="$(RootDirForSurceCode)\CXC\CXCScheduler\CXCScheduler.csproj"></CXCSchedulerSolution>
+      <CXCSchedulerCSharpFiles Include="$(RootDirForSurceCode)\CXC\CXCScheduler\**\*.cs"></CXCSchedulerCSharpFiles>
+      <CXCSchedulerAssemblyFileName Include="$(RootDirForSurceCode)\CXC\CXCScheduler\Bin\Release\CXCScheduler.dll"></CXCSchedulerAssemblyFileName>
 
 
-      <CXCEngineSolution Include="$(SourceDir)\CXC\CXCEngine\CXCEngine.csproj"></CXCEngineSolution>
-      <CXCEngineCSharpFiles Include="$(SourceDir)\CXC\CXCEngine\**\*.cs"></CXCEngineCSharpFiles>
-      <CXCEngineAssemblyFileName Include="$(SourceDir)\CXC\CXCEngine\Bin\Release\CXCEngine.exe"></CXCEngineAssemblyFileName>
+      <CXCCoreSolution Include="$(RootDirForSurceCode)\CXC\CXCCore\CXCCore.csproj"></CXCCoreSolution>
+      <CXCCoreCSharpFiles Include="$(RootDirForSurceCode)\CXC\CXCCore\**\*.cs"></CXCCoreCSharpFiles>
+      <CXCCoreAssemblyFileName Include="$(RootDirForSurceCode)\CXC\CXCCore\Bin\Release\CXCCore.dll"></CXCCoreAssemblyFileName>
+
+
+      <CXCEngineSolution Include="$(RootDirForSurceCode)\CXC\CXCEngine\CXCEngine.csproj"></CXCEngineSolution>
+      <CXCEngineCSharpFiles Include="$(RootDirForSurceCode)\CXC\CXCEngine\**\*.cs"></CXCEngineCSharpFiles>
+      <CXCEngineAssemblyFileName Include="$(RootDirForSurceCode)\CXC\CXCEngine\Bin\Release\CXCEngine.exe"></CXCEngineAssemblyFileName>
 
 
 
 
-      <GDISolutionFile Include="$(SourceDir)\TPA\GDI\CXCGDI.sln"></GDISolutionFile>
-      <GDICSharpFiles Include="$(SourceDir)\TPA\GDI\GDI\**\*.cs"></GDICSharpFiles>
-      <GDIAssemblyFile Include="$(SourceDir)\TPA\GDI\GDI\Bin\Release\CXCGDI.dll"></GDIAssemblyFile>
+      <GDISolutionFile Include="$(RootDirForSurceCode)\TPA\GDI\CXCGDI.sln"></GDISolutionFile>
+      <GDICSharpFiles Include="$(RootDirForSurceCode)\TPA\GDI\GDI\**\*.cs"></GDICSharpFiles>
+      <GDIAssemblyFile Include="$(RootDirForSurceCode)\TPA\GDI\GDI\Bin\Release\CXCGDI.dll"></GDIAssemblyFile>
 
-      <PrimePaySolution Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay.sln"></PrimePaySolution>
-      <PrimePayCSharpFiles Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\**\*.cs"></PrimePayCSharpFiles>
-      <PrimePayAssemblyFile Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Bin\Release\CXCPrimePay.dll"></PrimePayAssemblyFile>
+      <PrimePaySolution Include="$(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay.sln"></PrimePaySolution>
+      <PrimePayCSharpFiles Include="$(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\**\*.cs"></PrimePayCSharpFiles>
+      <PrimePayAssemblyFile Include="$(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Bin\Release\CXCPrimePay.dll"></PrimePayAssemblyFile>
 
 
-      <PayFlexSolution Include="$(SourceDir)\TPA\PayFlex\CXCPayFlex.sln"></PayFlexSolution>
-      <PayFlexCSharpFiles Include="$(SourceDir)\TPA\PayFlex\PayFlex\**\*.cs"></PayFlexCSharpFiles>
-      <PayFlexAssemblyFileName Include="$(SourceDir)\TPA\PrimePay\CXCPrimePay\Bin\Release\CXCPrimePay.dll"></PayFlexAssemblyFileName>
+      <PayFlexSolution Include="$(RootDirForSurceCode)\TPA\PayFlex\CXCPayFlex.sln"></PayFlexSolution>
+      <PayFlexCSharpFiles Include="$(RootDirForSurceCode)\TPA\PayFlex\PayFlex\**\*.cs"></PayFlexCSharpFiles>
+      <PayFlexAssemblyFileName Include="$(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Bin\Release\CXCPrimePay.dll"></PayFlexAssemblyFileName>
     </ItemGroup>
 
   </Target>
@@ -265,6 +265,7 @@
 
     <CallTarget Targets="ConfigTransformation" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
     <CallTarget Targets="CommandFileTransaformation" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
+    
     <CallTarget Targets="GenerateSqlScriptFromDbDeploy" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
 
     <CallTarget Targets="CreateSVNLabelOnSVN" Condition="$(MSBuildLastTaskResult) == 'True'"/>
@@ -570,7 +571,7 @@
 
   </Target>
 
-  <Target Name="BuildGDISolution" Inputs="@(GDICSharpFiles)" Outputs="@(GDIAssemblyFile)">
+  <Target Name="BuildGDISolution" Inputs="@(GDICSharpFiles)" Outputs="@(GDIAssemblyFile)"  Condition="$(BuildGDI) == 'true'">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildGDISolution'">BuildGDISolution</CurrentTargetName>
@@ -587,7 +588,7 @@
 
   </Target>
 
-  <Target Name="BuildPrimePaySolution" Inputs="@(PrimePayCSharpFiles)" Outputs="@(PrimePayAssemblyFile)">
+  <Target Name="BuildPrimePaySolution" Inputs="@(PrimePayCSharpFiles)" Outputs="@(PrimePayAssemblyFile)" Condition="$(BuildPrimePay) == 'true'">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPrimePaySolution'">BuildPrimePaySolution</CurrentTargetName>
@@ -604,7 +605,7 @@
 
   </Target>
 
-  <Target Name="BuildPayFlexSolution" Inputs="@(PayFlexCSharpFiles)" Outputs="@(PayFlexAssemblyFileName)">
+  <Target Name="BuildPayFlexSolution" Inputs="@(PayFlexCSharpFiles)" Outputs="@(PayFlexAssemblyFileName)" Condition="$(BuildPayFlex) == 'true'">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPayFlexSolution'">BuildPayFlexSolution</CurrentTargetName>
@@ -630,7 +631,7 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <ItemGroup>
-      <BuildFiles Include="$(SourceDir)\CXC\CXCEngine\bin\Release\**\*.*" />
+      <BuildFiles Include="$(RootDirForSurceCode)\CXC\CXCEngine\bin\Release\**\*.*" />
     </ItemGroup>
 
     <Copy SourceFiles="@(BuildFiles)"
@@ -682,8 +683,8 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <ItemGroup>
-      <CXCCoreSchemaChangesFiles Include="$(SourceDir)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
-      <CXCCoreMetaFiles Include="$(SourceDir)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
+      <CXCCoreSchemaChangesFiles Include="$(RootDirForSurceCode)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
+      <CXCCoreMetaFiles Include="$(RootDirForSurceCode)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
     </ItemGroup>
 
 
@@ -739,7 +740,7 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <ItemGroup>
-      <SourceDirForCommandWorkflowScript Include="$(SourceDir)\CXC\Scripts\*.*" />
+      <SourceDirForCommandWorkflowScript Include="$(RootDirForSurceCode)\CXC\Scripts\*.*" />
     </ItemGroup>
 
 
@@ -763,7 +764,7 @@
 
     <CallTarget Targets="ConfigTranformationForCXCCore"></CallTarget>
     <CallTarget Targets="ConfigTranformationForTPA"></CallTarget>
-
+    
     <CallTarget Targets="ConfigTranformationForDbDeploy"></CallTarget>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />

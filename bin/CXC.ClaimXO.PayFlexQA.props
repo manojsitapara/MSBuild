@@ -3,16 +3,16 @@
 
   <PropertyGroup>
 
-    <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
-    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
+    <SVNSourceURL>https://LAPTOP-L6J610L5:4443/svn/ClaimXO/trunk/</SVNSourceURL>
+    <SVNTagURL>https://LAPTOP-L6J610L5:4443/svn/ClaimXO/tags</SVNTagURL>
 
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
-    <RootDir>G:\MSBuildTesting\QA</RootDir>
+    <RootDir>E:\MSBuildTesting\PayFlexQA</RootDir>
 
     <!-- Specify the path to copy build code on server -->
-    <DestinationDir>H:\PayFlexQAServer</DestinationDir>
+    <DestinationDir>E:\MSBuildTesting\PayFlexQA\PayFlexQAServer</DestinationDir>
 
     <!-- Source code SVN settings -->
 
@@ -36,6 +36,8 @@
     <UpdateBuildVersion>true</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
+    <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
+    <AssemblyBuildNumber>2017.02.03.0</AssemblyBuildNumber>
     <!--Set value true to create svn lable under svn tag branch-->
     <CreateSVNLabel>false</CreateSVNLabel>
     <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
@@ -57,11 +59,11 @@
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
     <SqlServerVersion>2012</SqlServerVersion>
     <!--Specify Sql server name-->
-    <SqlServerName>LAPTOP-4857HARD\PAYFLEXQA</SqlServerName>
+    <SqlServerName>.</SqlServerName>
 
-    <!--Specify sql user name, if IsSqlWindowsAuthentication flag value is false -->
+    <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false, else keep empty  -->
     <SqlServerUserName>sa</SqlServerUserName>
-    <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false  -->
+    <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false, else keep empty  -->
     <SqlServerPassword>sa123</SqlServerPassword>
 
     <!--specify database name -->

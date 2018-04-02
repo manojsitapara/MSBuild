@@ -114,7 +114,7 @@
     <!-- Create a zip file based on the FilesToZip collection -->
     <MSBuild.ExtensionPack.Compression.Zip
       TaskAction="Create"
-      CompressPath="$(SourceDir)"
+      CompressPath="$(RootDirForSurceCode)"
       ZipFileName="$(BackupPreBuildSourceFile)"/>
     <Message Text="Source code backup has been sucessfully completed at this location: $(BackupPreBuildSourceFile)"></Message>
 

@@ -5,10 +5,10 @@
   <!--msbuild CXC.ClaimXO.Build.proj /l:XMLFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.xml-->
   <!--msbuild CXC.ClaimXO.Build.proj /l:SqlLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;BID=123;BN=2016;DS=.;IC=MSBuildLogs;SP=msbep_SqlLogger-->
   <!--msbuild CXC.ClaimXO.Build.proj /l:SecureFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.txt-->
-  
+
   <!-- For list down all properties -->
   <!--msbuild CXC.ClaimXO.Build.proj /filelogger /fileLoggerParameters:Verbosity=diag-->
-  
+
   <!--Microsoft logger-->
   <!--msbuild CXC.ClaimXO.Build.proj /fileLogger /fileLoggerParameters:LogFile=MyLog.log;-->
   <!--msbuild CXC.ClaimXO.Build.proj /fl1 /fl2 /fl3 /flp2:logfile=JustErrors.log;errorsonly /flp3:logfile=JustWarnings.log;warningsonly-->
@@ -136,13 +136,13 @@
     <Message Text="$(MergeSolution)"></Message>
 
     <!-- Below two commands creates folder structure for each TPA  -->
-    <MakeDir Directories="$(BuildDirForDbDeploy)\$(TPAName)\1.$(TPAName)_MetaChanges" Condition="!Exists('$(BuildDirForDbDeploy)\$(TPAName)\1.$(TPAName)_MetaChanges')"/>
-    <MakeDir Directories="$(BuildDirForDbDeploy)\$(TPAName)\2.$(TPAName)_DataChanges" Condition="!Exists('$(BuildDirForDbDeploy)\$(TPAName)\2.$(TPAName)_DataChanges')"/>
+    <!--<MakeDir Directories="$(BuildDirForDbDeploy)\$(TPAName)\1.$(TPAName)_MetaChanges" Condition="!Exists('$(BuildDirForDbDeploy)\$(TPAName)\1.$(TPAName)_MetaChanges')"/>
+    <MakeDir Directories="$(BuildDirForDbDeploy)\$(TPAName)\2.$(TPAName)_DataChanges" Condition="!Exists('$(BuildDirForDbDeploy)\$(TPAName)\2.$(TPAName)_DataChanges')"/>-->
 
 
     <!-- Below two commands creates folder structure in build directory for each TPA  -->
     <MakeDir Directories="$(BuildDirForWorkflowFiles)\$(TPAName)" Condition="!Exists('$(BuildDirForWorkflowFiles)\$(TPAName')"/>
-    
+
 
 
   </Target>
@@ -349,8 +349,13 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <CallTarget Targets="BuildGDISolution"></CallTarget>
+    <CallTarget Targets="CopyGDIConfigAndLayoutFiles"></CallTarget>
+
     <CallTarget Targets="BuildPrimePaySolution"></CallTarget>
+    <CallTarget Targets="CopyPrimePayConfigAndLayoutFiles"></CallTarget>
+
     <CallTarget Targets="BuildPayFlexSolution"></CallTarget>
+    <CallTarget Targets="CopyPayFlexConfigAndLayoutFiles"></CallTarget>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -561,6 +566,9 @@
     <CallTarget Targets="BuildCXCCoreSolution"></CallTarget>
     <CallTarget Targets="BuildCXCEngineSolution"></CallTarget>
 
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCEngine\bin\Release\Config $(BuildDirForApp)\Config -c -u' />
+    <!--<Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCCore\Build\MetaChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\CXCCore\2.CXCCore_Meta -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCCore\Build\SchemaChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\CXCCore\1.CXCCore_SchemaChanges -c -u' />-->
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -579,6 +587,10 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
+
+    <!--<Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\GDI\GDI\Build\DataChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\3.GDI_DataChanges -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\GDI\GDI\Build\MetaChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\4.GDI_MetaChanges -c -u' />-->
+
     <MSBuild Projects="@(GDISolutionFile)"
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
@@ -586,6 +598,19 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
+  </Target>
+
+  <Target Name="CopyGDIConfigAndLayoutFiles" Condition="$(BuildGDI) == 'true'">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyGDIConfigAndLayoutFiles'">CopyGDIConfigAndLayoutFiles</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\GDI\GDI\Config $(BuildDirForApp)\GDI\Config -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\GDI\GDI\layout $(BuildDirForApp)\GDI\layout -c -u' />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
   </Target>
 
   <Target Name="BuildPrimePaySolution" Inputs="@(PrimePayCSharpFiles)" Outputs="@(PrimePayAssemblyFile)" Condition="$(BuildPrimePay) == 'true'">
@@ -596,6 +621,10 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
+
+    <!--<Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Build\DataChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\3.PrimePay_DataChanges -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\4.PrimePay_MetaChanges -c -u' />-->
+
     <MSBuild Projects="@(PrimePaySolution)"
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
@@ -603,6 +632,19 @@
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
+  </Target>
+
+  <Target Name="CopyPrimePayConfigAndLayoutFiles" Condition="$(BuildPrimePay) == 'true'">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyPrimePayConfigAndLayoutFiles'">CopyPrimePayConfigAndLayoutFiles</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Config $(BuildDirForApp)\PrimePay\Config -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\layout $(BuildDirForApp)\PrimePay\layout -c -u' />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
   </Target>
 
   <Target Name="BuildPayFlexSolution" Inputs="@(PayFlexCSharpFiles)" Outputs="@(PayFlexAssemblyFileName)" Condition="$(BuildPayFlex) == 'true'">
@@ -622,6 +664,20 @@
 
   </Target>
 
+  <Target Name="CopyPayFlexConfigAndLayoutFiles" Condition="$(BuildPayFlex) == 'true'">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyPayFlexConfigAndLayoutFiles'">CopyPayFlexConfigAndLayoutFiles</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\PayFlex\PayFlex\Config $(BuildDirForApp)\PayFlex\Config -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\PayFlex\PayFlex\layout $(BuildDirForApp)\PayFlex\layout -c -u' />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+  </Target>
+
   <Target Name="CopyBuildFilesToBuildDir">
 
     <PropertyGroup>
@@ -631,7 +687,9 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <ItemGroup>
-      <BuildFiles Include="$(RootDirForSurceCode)\CXC\CXCEngine\bin\Release\**\*.*" />
+      <BuildFiles Include="$(RootDirForSurceCode)\CXC\CXCEngine\bin\Release\*.dll"/>
+      <BuildFiles Include="$(RootDirForSurceCode)\CXC\CXCEngine\bin\Release\*.exe"/>
+      <BuildFiles Include="$(RootDirForSurceCode)\CXC\CXCEngine\bin\Release\*.exe.config"/>
     </ItemGroup>
 
     <Copy SourceFiles="@(BuildFiles)"
@@ -655,20 +713,26 @@
     </PropertyGroup>
 
 
-     
-     <MSBuild.ExtensionPack.FileSystem.RoboCopy
+
+    <!--<MSBuild.ExtensionPack.FileSystem.RoboCopy
       Source="$(SourceDirForMetaChangeScript)"
       Destination="$(BuildDirForMetaSqlScript)"
       Files="*.*"
-      Options="/E /XO" />
+      Options="/E /XO" />-->
 
+    <Message Text="Copying Meta Sql files for TPA:  %(SolutionName.TPAName)"></Message>
+    <Exec Command='$(LibDir)\ContentSync.exe $(SourceDirForMetaChangeScript) $(BuildDirForMetaSqlScript) -c -u' />
 
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+    <!--<MSBuild.ExtensionPack.FileSystem.RoboCopy
       Source="$(SourceDirForDataChangeScript)"
       Destination="$(BuildDirForDataSqlScript)"
       Files="*.*"
-      Options="/E /XO" />
+      Options="/E /XO" />-->
 
+    <Message Text="Copying Data Sql files for TPA:  %(SolutionName.TPAName)"></Message>
+    <Exec Command='$(LibDir)\ContentSync.exe $(SourceDirForDataChangeScript) $(BuildDirForDataSqlScript) -c -u' />
+    
+    
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
@@ -682,28 +746,42 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <ItemGroup>
-      <CXCCoreSchemaChangesFiles Include="$(RootDirForSurceCode)\CXC\CXCCore\Build\SchemaChanges\**\*.*" />
-      <CXCCoreMetaFiles Include="$(RootDirForSurceCode)\CXC\CXCCore\Build\MetaChanges\**\*.*" />
-    </ItemGroup>
-
-
-    <Copy SourceFiles="@(CXCCoreSchemaChangesFiles)"
-          DestinationFolder="$(BuildDirForCXCCoreSchemaChangesSql)\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
-
-
-    <Copy SourceFiles="@(CXCCoreMetaFiles)"
-          DestinationFolder="$(BuildDirForCXCCoreMetaChangesSql)\%(RecursiveDir)"
-          SkipUnchangedFiles="true"
-          Condition="$(BuildPayFlex) != 'true' "/>
-
-
+    <CallTarget Targets="CopyCXCCoreSchemaChangesFilesToBuildDir"></CallTarget>
+    <CallTarget Targets="CopyCXCCoreMetaChangesFilesToBuildDir" Condition="$(BuildPayFlex) != 'true' "></CallTarget>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
     <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
+
+  <Target Name="CopyCXCCoreSchemaChangesFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreSchemaChangesFilesToBuildDir'">CopyCXCCoreSchemaChangesFilesToBuildDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCCore\Build\SchemaChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\CXCCore\1.CXCCore_SchemaChanges -c -u' />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+  </Target>
+
+  <Target Name="CopyCXCCoreMetaChangesFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreMetaChangesFilesToBuildDir'">CopyCXCCoreMetaChangesFilesToBuildDir</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCCore\Build\MetaChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\CXCCore\2.CXCCore_Meta -c -u' />
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+  </Target>
+
 
   <Target Name="CopyWorkFlowScriptToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommandWorkflowScriptToBuildDir">
 
@@ -719,12 +797,12 @@
     </PropertyGroup>
 
 
-    
-      <MSBuild.ExtensionPack.FileSystem.RoboCopy 
-        Source="$(SourceDirForWorkflowFile)"
-        Destination="$(BuildDirForWorkflowScript)"
-        Files="*.*"
-        Options="/E /XO"/>
+
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+      Source="$(SourceDirForWorkflowFile)"
+      Destination="$(BuildDirForWorkflowScript)"
+      Files="*.*"
+      Options="/E /XO"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -744,9 +822,11 @@
     </ItemGroup>
 
 
-    <Copy SourceFiles="@(SourceDirForCommandWorkflowScript)"
+    <!--<Copy SourceFiles="@(SourceDirForCommandWorkflowScript)"
           DestinationFolder="$(BuildDirForCommonWorkflowScript)"
-          SkipUnchangedFiles="true" />
+          SkipUnchangedFiles="true" />-->
+
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\Scripts $(BuildDirForCommonWorkflowScript) -c -u' />
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -764,7 +844,7 @@
 
     <CallTarget Targets="ConfigTranformationForCXCCore"></CallTarget>
     <CallTarget Targets="ConfigTranformationForTPA"></CallTarget>
-    
+
     <CallTarget Targets="ConfigTranformationForDbDeploy"></CallTarget>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
@@ -868,6 +948,8 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
+    <Message Text="Config transformation for TPA: %(SolutionName.TPAName)"></Message>
+      
     <XmlPreprocess
       ToolPath="$(LibDir)"
       InputFiles="$(BuildDirForStateParamXmlFile)"
@@ -1039,11 +1121,14 @@
 
     <Message Text = "Start copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
-     <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(BuildDirForApp)"
-      Destination="$(DeploymentDirForApp)"
-      Files="*.*"
-      Options="/E /XO" />
+    <!--<MSBuild.ExtensionPack.FileSystem.RoboCopy
+     Source="$(BuildDirForApp)"
+     Destination="$(DeploymentDirForApp)"
+     Files="*.*"
+     Options="/E /XO" />-->
+    
+     <Exec Command='$(LibDir)\ContentSync.exe $(BuildDirForApp) $(DeploymentDirForApp) -c -u' />
+
 
     <Message Text = "Completed copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
@@ -1067,9 +1152,12 @@
 
     <Message Text = "Start copying files from $(BuildDirForDbDeployOutput) to $(DeploymentDirForDbDeploy)"></Message>
 
-    <Copy SourceFiles="@(DbDeployFiles)"
+    <!--<Copy SourceFiles="@(DbDeployFiles)"
 			  	DestinationFolder="$(DeploymentDirForDbDeploy)\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
+          SkipUnchangedFiles="true" />-->
+
+    <Exec Command='$(LibDir)\ContentSync.exe $(BuildDirForDbDeployOutput) $(DeploymentDirForDbDeploy) -c -u' />
+
 
     <Message Text = "Completed copying files from $(BuildDirForDbDeployOutput) to $(DeploymentDirForDbDeploy)"></Message>
 
@@ -1091,11 +1179,13 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-     <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(BuildDirForWorkflowScript)"
-      Destination="$(DeploymentDirForApp)"
-      Files="*.*"
-      Options="/E /XO"/>
+    <!--<MSBuild.ExtensionPack.FileSystem.RoboCopy
+     Source="$(BuildDirForWorkflowScript)"
+     Destination="$(DeploymentDirForApp)"
+     Files="*.*"
+     Options="/E /XO"/>-->
+    
+    <Exec Command='$(LibDir)\ContentSync.exe $(BuildDirForWorkflowScript) $(DeploymentDirForApp) -c -u' />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -1111,11 +1201,11 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-     <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(BuildDirForCommonWorkflowScript)"
-      Destination="$(DeploymentDirForApp)"
-      Files="*.*"
-      Options="/XO" />
+    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+     Source="$(BuildDirForCommonWorkflowScript)"
+     Destination="$(DeploymentDirForApp)"
+     Files="*.*"
+     Options="/XO" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -1128,7 +1218,7 @@
 
     <CallTarget Targets="UpdateDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' " />
 
-    <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" Condition="$(MSBuildLastTaskResult) == 'True' " />
+    <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" />
 
 
   </Target>
@@ -1143,13 +1233,16 @@
 
     <Message Text = "Start copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
 
-    <ItemGroup>
+    <!--<ItemGroup>
       <DeploymentAppDir Include="$(DeploymentDirForApp)\**\*.*" />
-    </ItemGroup>
+    </ItemGroup>-->
 
-    <Copy SourceFiles="@(DeploymentAppDir)"
+    <!--<Copy SourceFiles="@(DeploymentAppDir)"
 			  	DestinationFolder="$(DestinationDir)\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
+          SkipUnchangedFiles="true" />-->
+
+    <Exec Command='$(LibDir)\ContentSync.exe $(DeploymentDirForApp) $(DestinationDir) -c -u' />
+
 
 
 

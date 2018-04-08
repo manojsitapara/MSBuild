@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
 
   <PropertyGroup>
-    <Environment>PayFlexQA</Environment>
+    <Environment>QA</Environment>
  
     <SvnUsername></SvnUsername>
     <SvnPassword></SvnPassword>
@@ -129,8 +129,8 @@
       <SourceDirForDataChangeScript>$(RootDirForSurceCode)\TPA\GDI\GDI\Build\DataChanges</SourceDirForDataChangeScript>
       <SourceDirForWorkflowScript>$(RootDirForSurceCode)\TPA\GDI\GDI\Scripts</SourceDirForWorkflowScript>
       
-      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\1.GDI_MetaChanges</BuildDirForMetaSqlScript>
-      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\2.GDI_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\3.GDI_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\4.GDI_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForWorkflowScript>$(BuildDirForWorkflowFiles)\GDI</BuildDirForWorkflowScript>
 
       <BuildDirForStateParamXmlFile>$(BuildDirForApp)\GDI\config\StateParams.xml</BuildDirForStateParamXmlFile>
@@ -146,8 +146,8 @@
       <SourceDirForDataChangeScript>$(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Build\DataChanges</SourceDirForDataChangeScript>
       <SourceDirForWorkflowScript>$(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Scripts</SourceDirForWorkflowScript>
 
-      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\1.PrimePay_MetaChanges</BuildDirForMetaSqlScript>
-      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\2.PrimePay_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\3.PrimePay_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\4.PrimePay_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForWorkflowScript>$(BuildDirForWorkflowFiles)\PrimePay</BuildDirForWorkflowScript>
 
       <BuildDirForStateParamXmlFile>$(BuildDirForApp)\PrimePay\config\StateParams.xml</BuildDirForStateParamXmlFile>
@@ -161,9 +161,9 @@
       <SourceDirForMetaChangeScript>$(RootDirForSurceCode)\TPA\PayFlex\PayFlex\Build\MetaChanges</SourceDirForMetaChangeScript>
       <SourceDirForDataChangeScript>$(RootDirForSurceCode)\TPA\PayFlex\PayFlex\Build\DataChanges</SourceDirForDataChangeScript>
       <SourceDirForWorkflowScript>$(RootDirForSurceCode)\TPA\PayFlex\PayFlex\Scripts</SourceDirForWorkflowScript>
-     
-      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PayFlex\1.PayFlex_MetaChanges</BuildDirForMetaSqlScript>
-      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PayFlex\2.PayFlex_DataChanges</BuildDirForDataSqlScript>
+
+      <BuildDirForDataSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PayFlex\3.PayFlex_DataChanges</BuildDirForDataSqlScript>
+      <BuildDirForMetaSqlScript>$(BuildDir)\$(DbDeployScriptInputFolderName)\PayFlex\4.PayFlex_MetaChanges</BuildDirForMetaSqlScript>
       <BuildDirForWorkflowScript>$(BuildDirForWorkflowFiles)\PayFlex</BuildDirForWorkflowScript>
 
       <BuildDirForStateParamXmlFile>$(BuildDirForApp)\PayFlex\config\StateParams.xml</BuildDirForStateParamXmlFile>

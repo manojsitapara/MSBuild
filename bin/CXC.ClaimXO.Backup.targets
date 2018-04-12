@@ -2,7 +2,7 @@
   
   
   <PropertyGroup>
-    <BackupPreBuildDatabaseFile>$(BackupDirForDatabase)\$(DatabaseName)_PreBuild_$(CurrentDateTime).bak</BackupPreBuildDatabaseFile>
+    <BackupPreBuildDatabaseFile>$(BackupDirForDatabase)\$(DecryptSqlApplicationDatabaseName)_PreBuild_$(CurrentDateTime).bak</BackupPreBuildDatabaseFile>
     <BackupPreBuildSourceFile>$(BackupDirForSource)\ClaimXO_PreBuild_$(CurrentDateTime).zip</BackupPreBuildSourceFile>
     <BackupPostBuildDeploymentFile>$(BackupDirForDeployment)\ClaimXO_PostBuild_$(CurrentDateTime).zip</BackupPostBuildDeploymentFile>
     <BackupPreBuildDestinationFile>$(BackupDirForDestination)\ClaimXO_PreBuild_$(CurrentDateTime).zip</BackupPreBuildDestinationFile>
@@ -23,8 +23,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-   
   </Target>
 
 
@@ -38,18 +36,15 @@
 
     <MSBuild.ExtensionPack.Sql2008.Database
       TaskAction="Backup"
-      DatabaseItem="$(DatabaseName)"
-      MachineName="$(SqlServerName)"
-      UserName="$(SqlServerUserName)"
-      UserPassword="$(SqlServerPassword)"
+      DatabaseItem="$(DecryptSqlApplicationDatabaseName)"
+      MachineName="$(DecryptSqlServerName)"
+      UserName="$(DecryptSqlServerUserName)"
+      UserPassword="$(DecryptSqlServerPassword)"
       DataFilePath="$(BackupPreBuildDatabaseFile)" />
     <Message Text="Database backup has been sucessfully completed at this location: $(BackupDirForDatabase)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-    
-    
   </Target>
 
   
@@ -63,17 +58,14 @@
 
     <MSBuild.ExtensionPack.Sql2012.Database
       TaskAction="Backup"
-      DatabaseItem="$(DatabaseName)"
-      MachineName="$(SqlServerName)"
-      UserName="$(SqlServerUserName)"
-      UserPassword="$(SqlServerPassword)"
+      DatabaseItem="$(DecryptSqlApplicationDatabaseName)"
+      MachineName="$(DecryptSqlServerName)"
+      UserName="$(DecryptSqlServerUserName)"
+      UserPassword="$(DecryptSqlServerPassword)"
       DataFilePath="$(BackupPreBuildDatabaseFile)" />
     <Message Text="Database backup has been sucessfully completed at this location: $(BackupDirForDatabase)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
 
   </Target>
 
@@ -88,17 +80,14 @@
 
     <MSBuild.ExtensionPack.Sql2014.Database
       TaskAction="Backup"
-      DatabaseItem="$(DatabaseName)"
-      MachineName="$(SqlServerName)"
-      UserName="$(SqlServerUserName)"
-      UserPassword="$(SqlServerPassword)"
+      DatabaseItem="$(DecryptSqlApplicationDatabaseName)"
+      MachineName="$(DecryptSqlServerName)"
+      UserName="$(DecryptSqlServerUserName)"
+      UserPassword="$(DecryptSqlServerPassword)"
       DataFilePath="$(BackupPreBuildDatabaseFile)" />
     <Message Text="Database backup has been sucessfully completed at this location: $(BackupDirForDatabase)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
 
   </Target>
 
@@ -120,8 +109,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
     
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
 
@@ -138,8 +125,6 @@
       CompressPath="$(DeploymentDir)"
       ZipFileName="$(BackupPostBuildDeploymentFile)"/>
     <Message Text="Build backup has been sucessfully completed at this location: $(BackupPostBuildDeploymentFile)"></Message>
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -162,7 +147,6 @@
     
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
     
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
 </Project>

@@ -21,7 +21,6 @@
             TaskAction="RemoveContent"
             Path="$(BuildDirForDbDeployOutput)"/>
 
-
     <MSBuild.Dbdeploy.Task.Dbdeploy
             DbType="mssql"
             templatedir="$(DbDeployTemplateDir)"
@@ -29,7 +28,7 @@
             Dir="$(BuildDirForDbDeploy)"
             OutputFile="$(DbDeployOutputFileName)"
             UndoOutputFile="$(DbDeployUndoOutputFileName)"
-            TableName="$(DatabaseChangeLogTableName)"
+            TableName="$(DecryptDatabaseChangeLogTableName)"
             AutoCreateChangeLogTable="true"
             forceUpdate="true"  />
 
@@ -37,7 +36,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
 
@@ -56,22 +54,21 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <Message Text="@(dbDeployFileName)"></Message>
-    <Message Text="Executing change script ($(SqlCmdInputFile)) on $(dbDeployDBName) ..."/>
+    <Message Text="Executing change script ($(SqlCmdInputFile)) on $(DecryptDbDeployDatabaseName) ..."/>
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd
       TaskAction="Execute"
-      Server="$(SqlServerName)"
-      Database="$(dbDeployDBName)"
-      LogOn="$(SqlServerUserName)"
-      Password="$(SqlServerPassword)"
+      Server="$(DecryptSqlServerName)"
+      Database="$(DecryptDbDeployDatabaseName)"
+      LogOn="$(DecryptSqlServerUserName)"
+      Password="$(DecryptSqlServerPassword)"
       InputFiles="$(SqlCmdInputFile)"
       Condition="$(IsSqlWindowsAuthentication)=='false'"/>
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd
       TaskAction="Execute"
-      Server="$(SqlServerName)"
-      Database="$(dbDeployDBName)"
+      Server="$(DecryptSqlServerName)"
+      Database="$(DecryptDbDeployDatabaseName)"
       InputFiles="$(SqlCmdInputFile)"
       Condition="$(IsSqlWindowsAuthentication)=='true'"/>
 
@@ -79,7 +76,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
 

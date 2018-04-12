@@ -37,7 +37,7 @@
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber></AssemblyBuildNumber>
+    <AssemblyBuildNumber>2018.03.01.0</AssemblyBuildNumber>
     <!--Set value true to create svn lable under svn tag branch-->
     <CreateSVNLabel>false</CreateSVNLabel>
     <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
@@ -59,15 +59,17 @@
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
     <SqlServerVersion>2012</SqlServerVersion>
     <!--Specify Sql server name-->
-    <SqlServerName>.</SqlServerName>
+    <SqlServerName>C6yt9c6/EWmWT62MOcWSTQ==</SqlServerName>
 
+    <!--Specify sql user name, if IsSqlWindowsAuthentication flag value is false, else keep empty -->
+    <!--4cZZdPhKttntu1j59ka/qw==-->
+    <SqlServerUserName></SqlServerUserName>
     <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false, else keep empty  -->
-    <SqlServerUserName>sa</SqlServerUserName>
-    <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false, else keep empty  -->
-    <SqlServerPassword>sa123</SqlServerPassword>
+    <!--M9xUe6A9Al+OsrB3va5GOw==-->
+    <SqlServerPassword></SqlServerPassword>
 
     <!--specify database name -->
-    <DatabaseName>MsbuildCXC</DatabaseName>
+    <ApplicationDatabaseName>L6LeAvFJdKifJ38tG37VqQ==</ApplicationDatabaseName>
 
 
 

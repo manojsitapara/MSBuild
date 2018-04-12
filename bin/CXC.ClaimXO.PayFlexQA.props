@@ -67,7 +67,7 @@
     <SqlServerPassword>sa123</SqlServerPassword>
 
     <!--specify database name -->
-    <DatabaseName>MsbuildCXC</DatabaseName>
+    <ApplicationDatabaseName>MsbuildCXC</ApplicationDatabaseName>
 
 
 

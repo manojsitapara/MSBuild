@@ -3,9 +3,9 @@
 
   <PropertyGroup>
     <Environment>QA</Environment>
- 
-    <SvnUsername></SvnUsername>
-    <SvnPassword></SvnPassword>
+
+    <SvnUsername>mWDy4+hy5a+QwQ9N90SRXQ==</SvnUsername>
+    <SvnPassword>ILTltt0wGUTihZOjHu9rRw==</SvnPassword>
   </PropertyGroup>
 
 
@@ -70,8 +70,8 @@
     <BuildDirForDbDeployOutput>$(BuildDir)\$(DbDeployScriptOutputFolderName)</BuildDirForDbDeployOutput>
 
 
-    <dbDeployDBName>MsBuildDbDeploy</dbDeployDBName>
-    <DatabaseChangeLogTableName>Changelog</DatabaseChangeLogTableName>
+    <DbDeployDatabaseName>BtAP3+rnpGUbBZXg7uCgig==</DbDeployDatabaseName>
+    <DatabaseChangeLogTableName>04y6bpsoP3U36dO9SufEzA==</DatabaseChangeLogTableName>
     <DeploymentDirForApp>$(DeploymentDir)\$(AppFolderName)</DeploymentDirForApp>
     <DeploymentDirForDbDeploy>$(DeploymentDir)\$(DbDeployScriptFolderName)</DeploymentDirForDbDeploy>
     
@@ -88,9 +88,11 @@
     <PropertiesColumnInSettingSpreadsheet>Environment Name</PropertiesColumnInSettingSpreadsheet>
 
 
-    <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);Integrated Security=SSPI</DatabaseConnectionString>
-    <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(SqlServerName);Initial Catalog=$(dbDeployDBName);User Id=$(SqlServerUserName);Password=$(SqlServerPassword)</DatabaseConnectionString>
+    <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptDbDeployDatabaseName);Integrated Security=SSPI</DatabaseConnectionString>
+    <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptDbDeployDatabaseName);User Id=$(DecryptSqlServerUserName);Password=$(DecryptSqlServerPassword)</DatabaseConnectionString>
 
+    <ApplicationDatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptApplicationDatabaseName);Integrated Security=SSPI</ApplicationDatabaseConnectionString>
+    <ApplicationDatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptApplicationDatabaseName);User Id=$(DecryptSqlServerUserName);Password=$(DecryptSqlServerPassword)</ApplicationDatabaseConnectionString>
 
     <LogDir>..\Log</LogDir>
     <TempDirForLog>$(LogDir)\temp</TempDirForLog>

@@ -3,16 +3,18 @@
 
   <PropertyGroup>
 
-    <SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
-    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>
+    <SVNSourceURL>https://LAPTOP-L6J610L5:4443/svn/ClaimXO/trunk/</SVNSourceURL>
+    <SVNTagURL>https://LAPTOP-L6J610L5:4443/svn/ClaimXO/tags</SVNTagURL>
+    <!--<SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
+    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>-->
 
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
-    <RootDir>G:\MSBuildTesting\QA</RootDir>
+    <RootDir>E:\MSBuildTesting\ClaimXO\QA</RootDir>
 
     <!-- Specify the path to copy build code on server -->
-    <DestinationDir>H:\ProductionServer</DestinationDir>
+    <DestinationDir>E:\MSBuildTesting\ClaimXO\Production\ProductionServer</DestinationDir>
 
     <!-- Source code SVN settings -->
 
@@ -23,7 +25,7 @@
     <!--Set value true to overwrite source code if any changes else false -->
     <ForceSourceOverwrite>false</ForceSourceOverwrite>
     <!-- To build CXC Engine solution, set value to true -->
-    <BuildCXCEngine>false</BuildCXCEngine>
+    <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
     <BuildGDI>true</BuildGDI>
     <!-- To build PrimePay solution, set value to true -->
@@ -37,7 +39,7 @@
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2017.02.03.0</AssemblyBuildNumber>
+    <AssemblyBuildNumber>2018.05.05.0</AssemblyBuildNumber>
     <!--Set value true to create svn lable under svn tag branch-->
     <CreateSVNLabel>false</CreateSVNLabel>
     <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
@@ -59,15 +61,15 @@
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
     <SqlServerVersion>2012</SqlServerVersion>
     <!--Specify Sql server name-->
-    <SqlServerName>LAPTOP-4857HARD\PRODUCTION</SqlServerName>
+    <SqlServerName>dW6LgTcO96LBnB1Bx54QwFa4JUEoXrt0UL8cThuXClA=</SqlServerName>
 
     <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false, else keep empty  -->
-    <SqlServerUserName>sa</SqlServerUserName>
+    <SqlServerUserName></SqlServerUserName>
     <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false, else keep empty  -->
-    <SqlServerPassword>sa123</SqlServerPassword>
+    <SqlServerPassword></SqlServerPassword>
 
     <!--specify database name -->
-    <DatabaseName>MsbuildCXC</DatabaseName>
+    <ApplicationDatabaseName>L6LeAvFJdKifJ38tG37VqQ==</ApplicationDatabaseName>
 
 
 
@@ -76,7 +78,7 @@
     <ErrorNotificationToAddress>manojs@cxcnetwork.com</ErrorNotificationToAddress>
 
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber></AssemblyBuildNumber>
+    <AssemblyBuildNumber>2018.05.05.0</AssemblyBuildNumber>
 
   </PropertyGroup>
 

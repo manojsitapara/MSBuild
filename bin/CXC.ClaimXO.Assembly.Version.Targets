@@ -27,7 +27,6 @@
     <CallTarget Targets="SetNewAssemblyVersionNumber"></CallTarget>
     <CallTarget Targets="CommitAssemblyInfoFileInSVN" Condition="$(CheckInAssemblyInfo)=='true'"></CallTarget>
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
 
@@ -52,7 +51,6 @@
 
 
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
 
@@ -73,7 +71,6 @@
 
     <Message Text="@(AssemblyInfoFile) has been committed with revision id: $(Revision)"></Message>
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
 

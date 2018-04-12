@@ -4,7 +4,7 @@
   <!--Refer this task for db deploy.-->
   <UsingTask TaskName="MSBuild.Dbdeploy.Task.Dbdeploy" AssemblyFile="$(MSBuildDbdeployTaskDbdeploy)"/>
 
-  <UsingTask TaskName="SendEmail" AssemblyFile="$(EmailTaskLibrary)" />
+  
 
   <!--Refer this task for config changes-->
   <UsingTask TaskName="XmlPreprocess" AssemblyFile="$(XmlPreProcessorLibrary)"/>
@@ -67,18 +67,6 @@
       </Code>
     </Task>
   </UsingTask>
-
-
- 
-  <!--Send msbuild failed error email notification-->
-  <Target Name="SendEmailNotification">
-    <SendEmail
-      ToEmailAddress="$(ErrorNotificationToAddress)"
-      Subject="Build failed"
-      Message="Target name $(CurrentTargetName) has been failed to execute. " />
-  </Target>
-  
-  
 
 
 </Project>

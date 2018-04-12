@@ -1,25 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
 
-  <!--Msbuild command: msbuild CXC.ClaimXO.Build.proj /p:Environment="Production"-->
-  <!--msbuild CXC.ClaimXO.Build.proj /l:XMLFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.xml-->
-  <!--msbuild CXC.ClaimXO.Build.proj /l:SqlLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;BID=123;BN=2016;DS=.;IC=MSBuildLogs;SP=msbep_SqlLogger-->
-  <!--msbuild CXC.ClaimXO.Build.proj /l:SecureFileLogger,..\lib\MSBuild.Extension.Pack.1.8.0\tools\net40\MSBuild.ExtensionPack.Loggers.dll;logfile=CXC.ClaimXO.Log.txt-->
-
-  <!-- For list down all properties -->
-  <!--msbuild CXC.ClaimXO.Build.proj /filelogger /fileLoggerParameters:Verbosity=diag-->
-
-  <!--Microsoft logger-->
-  <!--msbuild CXC.ClaimXO.Build.proj /fileLogger /fileLoggerParameters:LogFile=MyLog.log;-->
-  <!--msbuild CXC.ClaimXO.Build.proj /fl1 /fl2 /fl3 /flp2:logfile=JustErrors.log;errorsonly /flp3:logfile=JustWarnings.log;warningsonly-->
-
   <!-- Region Import External target -->
 
   <Import Project="CXC.ClaimXO.BuildTasks.tasks" />
   <Import Project="CXC.ClaimXO.Assembly.Version.Targets"/>
   <Import Project="CXC.ClaimXO.DbDeploy.targets"/>
   <Import Project="CXC.ClaimXO.Backup.targets"/>
-  <Import Project="CXC.ClaimXO.EmailNotification.targets"/>
 
   <!-- EndRegion -->
 
@@ -45,14 +32,90 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
+  </Target>
+
+  <Target Name="DecryptSqlServerValue">
+
+    <PropertyGroup>
+      <CurrentTargetName>DecryptSqlServerValue</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(SqlServerName)')" ConnectionString="$(DatabaseConnectionString)">
+      <Output PropertyName="DecryptSqlServerName" TaskParameter="RawReaderResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(ApplicationDatabaseName)')" ConnectionString="$(DatabaseConnectionString)">
+      <Output PropertyName="DecryptSqlApplicationDatabaseName" TaskParameter="RawReaderResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(DbDeployDatabaseName)')" ConnectionString="$(DatabaseConnectionString)">
+      <Output PropertyName="DecryptDbDeployDatabaseName" TaskParameter="RawReaderResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(DatabaseChangeLogTableName)')" ConnectionString="$(DatabaseConnectionString)">
+      <Output PropertyName="DecryptDatabaseChangeLogTableName" TaskParameter="RawReaderResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(ApplicationDatabaseName)')" ConnectionString="$(DatabaseConnectionString)">
+      <Output PropertyName="DecryptApplicationDatabaseName" TaskParameter="RawReaderResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+
+    <!--Call this target when SqlServerUserName & SqlServerPassword property is empty, else it throws error  -->
+    <CallTarget Targets="DecryptSqlServerUserInfoValue" Condition="$(SqlServerUserName) != '' AND $(SqlServerPassword) != '' "></CallTarget>
+
+
+    <!-- Removing unnecessary new line and extra space, by default ExecuteRawReader return space and new line in output-->
+    <PropertyGroup>
+      <DecryptSqlServerName>$([System.Text.RegularExpressions.Regex]::Replace( $(DecryptSqlServerName), '\s+', '') )</DecryptSqlServerName>
+      <DecryptSqlApplicationDatabaseName>$([System.Text.RegularExpressions.Regex]::Replace( $(DecryptSqlApplicationDatabaseName), '\s+', '') )</DecryptSqlApplicationDatabaseName>
+      <DecryptDbDeployDatabaseName>$([System.Text.RegularExpressions.Regex]::Replace( $(DecryptDbDeployDatabaseName), '\s+', '') )</DecryptDbDeployDatabaseName>
+      <DecryptDatabaseChangeLogTableName>$([System.Text.RegularExpressions.Regex]::Replace( $(DecryptDatabaseChangeLogTableName), '\s+', '') )</DecryptDatabaseChangeLogTableName>
+      <DecryptApplicationDatabaseName>$([System.Text.RegularExpressions.Regex]::Replace( $(DecryptApplicationDatabaseName), '\s+', '') )</DecryptApplicationDatabaseName>
+      <DecryptSqlServerUserName>$([System.Text.RegularExpressions.Regex]::Replace( $(DecryptSqlServerUserName), '\s+', '') )</DecryptSqlServerUserName>
+      <DecryptSqlServerPassword>$([System.Text.RegularExpressions.Regex]::Replace( $(DecryptSqlServerPassword), '\s+', '') )</DecryptSqlServerPassword>
+    </PropertyGroup>
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+
 
   </Target>
 
-  <Target Name="CheckChangeLogTableExist">
+
+  <Target Name="DecryptSqlServerUserInfoValue">
+
+    <PropertyGroup>
+      <CurrentTargetName>DecryptSqlServerUserInfoValue</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(SqlServerUserName)')" ConnectionString="$(DatabaseConnectionString)">
+      <Output PropertyName="DecryptSqlServerUserName" TaskParameter="RawReaderResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(SqlServerPassword)')" ConnectionString="$(DatabaseConnectionString)">
+      <Output PropertyName="DecryptSqlServerPassword" TaskParameter="RawReaderResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+
+
+  </Target>
+  
+
+  <Target Name="CheckChangeLogTableExist" DependsOnTargets="DecryptSqlServerValue">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!=''">CheckChangeLogTableExist</CurrentTargetName>
+      <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptDbDeployDatabaseName);Integrated Security=SSPI</DatabaseConnectionString>
+      <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptDbDeployDatabaseName);User Id=$(DecryptSqlServerUserName);Password=$(DecryptSqlServerPassword)</DatabaseConnectionString>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
@@ -61,18 +124,16 @@
     <MSBuild.ExtensionPack.SqlServer.SqlExecute
       TaskAction="ExecuteScalar"
       UseTransaction="true"
-      Sql="select case when exists((select * from information_schema.tables where table_name = '$(DatabaseChangeLogTableName)')) then 1 else 0 end"
+      Sql="select case when exists((select * from information_schema.tables where table_name = '$(DecryptDatabaseChangeLogTableName)')) then 1 else 0 end"
       ConnectionString="$(DatabaseConnectionString)">
       <Output PropertyName="IsTableExist" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
-    <Message Text="Table status: $(IsTableExist)"></Message>
+    <Message Text="$(DecryptDatabaseChangeLogTableName) table is exist"></Message>
 
     <!--Raise an error if changelog table is not exist into dbDeploy database-->
     <Error Text="Please specify assembly version number in property file for this release." Condition=" '$(IsTableExist)' == '0' AND $(AssemblyBuildNumber) == '' "/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -124,8 +185,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
   <Target Name="CreateTPASpecificFolderStructure" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
@@ -133,12 +192,6 @@
     <PropertyGroup>
       <TPAName>%(SolutionName.TPAName)</TPAName>
     </PropertyGroup>
-    <Message Text="$(MergeSolution)"></Message>
-
-    <!-- Below two commands creates folder structure for each TPA  -->
-    <!--<MakeDir Directories="$(BuildDirForDbDeploy)\$(TPAName)\1.$(TPAName)_MetaChanges" Condition="!Exists('$(BuildDirForDbDeploy)\$(TPAName)\1.$(TPAName)_MetaChanges')"/>
-    <MakeDir Directories="$(BuildDirForDbDeploy)\$(TPAName)\2.$(TPAName)_DataChanges" Condition="!Exists('$(BuildDirForDbDeploy)\$(TPAName)\2.$(TPAName)_DataChanges')"/>-->
-
 
     <!-- Below two commands creates folder structure in build directory for each TPA  -->
     <MakeDir Directories="$(BuildDirForWorkflowFiles)\$(TPAName)" Condition="!Exists('$(BuildDirForWorkflowFiles)\$(TPAName')"/>
@@ -151,22 +204,39 @@
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='DownloadPreBuildSourceFromSVN'">DownloadPreBuildSourceFromSVN</CurrentTargetName>
+      <ApplicationDatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptApplicationDatabaseName);Integrated Security=SSPI</ApplicationDatabaseConnectionString>
+      <ApplicationDatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptApplicationDatabaseName);User Id=$(DecryptSqlServerUserName);Password=$(DecryptSqlServerPassword)</ApplicationDatabaseConnectionString>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(SvnUsername)')" ConnectionString="$(ApplicationDatabaseConnectionString)">
+      <Output PropertyName="DecryptSVNUserName" TaskParameter="RawReaderResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+
+
+    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(SvnPassword)')" ConnectionString="$(ApplicationDatabaseConnectionString)">
+      <Output PropertyName="DecryptSVNPassword" TaskParameter="RawReaderResult"/>
+    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
+
+    <!-- Removing unnecessary new line and extar space, by default ExecuteRawReader return space and new line in output-->
+    <PropertyGroup>
+      <DecryptSVNUserName>$([System.Text.RegularExpressions.Regex]::Replace( $(DecryptSVNUserName), '\s+', '') )</DecryptSVNUserName>
+      <DecryptSVNPassword>$([System.Text.RegularExpressions.Regex]::Replace( $(DecryptSVNPassword), '\s+', '') )</DecryptSVNPassword>
+    </PropertyGroup>
+
+
+
     <SvnCheckout  RepositoryPath="$(SVNSourceURL)"
 			            LocalPath="$(RootDirForSurceCode)"
-			            UserName="$(SvnUsername)"
-			            Password="$(SvnPassword)">
+			            UserName="$(DecryptSVNUserName)"
+			            Password="$(DecryptSVNPassword)">
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </SvnCheckout>
 
     <Message Text="Source code downloaded from svn till revision number: $(Revision)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -282,7 +352,6 @@
     <CallTarget Targets="GetNewAssemblyVersionNumberFromDatabase" Condition="$(AssemblyBuildNumber)== '' "></CallTarget>
     <CallTarget Targets="GetNewAssemblyVersionNumberFromPropertyFile" Condition="$(AssemblyBuildNumber) != '' " ></CallTarget>
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="GetNewAssemblyVersionNumberFromDatabase">
@@ -296,7 +365,7 @@
     <MSBuild.ExtensionPack.SqlServer.SqlExecute
       TaskAction="ExecuteScalar"
       UseTransaction="true"
-      Sql="select top 1  ScriptOutput from $(DatabaseChangeLogTableName) where ScriptOutput!=''  order by CompleteDate desc"
+      Sql="select top 1  ScriptOutput from $(DecryptDatabaseChangeLogTableName) where ScriptOutput!=''  order by CompleteDate desc"
       ConnectionString="$(DatabaseConnectionString)">
       <Output PropertyName="PreviousAssemblyVersionNumber" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
@@ -315,8 +384,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
   <Target Name="GetNewAssemblyVersionNumberFromPropertyFile">
@@ -334,8 +401,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
 
@@ -348,18 +413,18 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-    <CallTarget Targets="BuildGDISolution"></CallTarget>
     <CallTarget Targets="CopyGDIConfigAndLayoutFiles"></CallTarget>
+    <CallTarget Targets="BuildGDISolution"></CallTarget>
 
-    <CallTarget Targets="BuildPrimePaySolution"></CallTarget>
+
     <CallTarget Targets="CopyPrimePayConfigAndLayoutFiles"></CallTarget>
-
-    <CallTarget Targets="BuildPayFlexSolution"></CallTarget>
+    <CallTarget Targets="BuildPrimePaySolution"></CallTarget>
+    
     <CallTarget Targets="CopyPayFlexConfigAndLayoutFiles"></CallTarget>
+    <CallTarget Targets="BuildPayFlexSolution"></CallTarget>
+    
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -377,8 +442,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
 
@@ -394,8 +457,6 @@
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -413,8 +474,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
 
@@ -430,8 +489,6 @@
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -449,8 +506,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
 
@@ -466,8 +521,6 @@
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -485,8 +538,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
 
@@ -502,8 +553,6 @@
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -521,8 +570,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
 
@@ -539,8 +586,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
 
@@ -554,6 +599,13 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCCore\Config $(BuildDirForApp)\Config -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCArchiver\Config $(BuildDirForApp)\Config -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCNotifier\Config $(BuildDirForApp)\Config -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCDataAccess\Config $(BuildDirForApp)\Config -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\ClassLibrary1\Config $(BuildDirForApp)\Config -c -u' />
+    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\utils\DecryptStdOut\DecryptStdOut.exe $(BuildDirForApp) -c -u' />
+
     <CallTarget Targets="BuildCXCSecuritySolution"></CallTarget>
     <CallTarget Targets="BuildCXCDataAccessSolution"></CallTarget>
     <CallTarget Targets="BuildCXCNotifierSolution"></CallTarget>
@@ -566,16 +618,16 @@
     <CallTarget Targets="BuildCXCCoreSolution"></CallTarget>
     <CallTarget Targets="BuildCXCEngineSolution"></CallTarget>
 
-    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCEngine\bin\Release\Config $(BuildDirForApp)\Config -c -u' />
-    <!--<Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCCore\Build\MetaChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\CXCCore\2.CXCCore_Meta -c -u' />
-    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\CXCCore\Build\SchemaChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\CXCCore\1.CXCCore_SchemaChanges -c -u' />-->
+   
+
+    <!--Delete command added because few config folder contain xml and cs file both, but we need to keep only xml files.-->
+    <!--For example: CXCNotifier solution - CXCNotifier\Config folder contain .cs & xml files -->
+    <ItemGroup>
+      <FilesToDelete Include="$(BuildDirForApp)\Config\**\*"  Exclude="$(BuildDirForApp)\Config\**\*.xml" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
-
 
   </Target>
 
@@ -587,16 +639,10 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-
-    <!--<Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\GDI\GDI\Build\DataChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\3.GDI_DataChanges -c -u' />
-    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\GDI\GDI\Build\MetaChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\GDI\4.GDI_MetaChanges -c -u' />-->
-
     <MSBuild Projects="@(GDISolutionFile)"
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -621,16 +667,10 @@
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-
-    <!--<Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Build\DataChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\3.PrimePay_DataChanges -c -u' />
-    <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\TPA\PrimePay\CXCPrimePay\Build\MetaChanges $(BuildDir)\$(DbDeployScriptInputFolderName)\PrimePay\4.PrimePay_MetaChanges -c -u' />-->
-
     <MSBuild Projects="@(PrimePaySolution)"
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -659,8 +699,6 @@
              Properties="@(UpdateAssemblyVersionTarget)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -699,7 +737,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopySqlFilesToBuildDir"  Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCXCCoreSqlFilesToBuildDir">
@@ -712,22 +749,8 @@
       <BuildDirForDataSqlScript>%(SolutionName.BuildDirForDataSqlScript)</BuildDirForDataSqlScript>
     </PropertyGroup>
 
-
-
-    <!--<MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(SourceDirForMetaChangeScript)"
-      Destination="$(BuildDirForMetaSqlScript)"
-      Files="*.*"
-      Options="/E /XO" />-->
-
     <Message Text="Copying Meta Sql files for TPA:  %(SolutionName.TPAName)"></Message>
     <Exec Command='$(LibDir)\ContentSync.exe $(SourceDirForMetaChangeScript) $(BuildDirForMetaSqlScript) -c -u' />
-
-    <!--<MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(SourceDirForDataChangeScript)"
-      Destination="$(BuildDirForDataSqlScript)"
-      Files="*.*"
-      Options="/E /XO" />-->
 
     <Message Text="Copying Data Sql files for TPA:  %(SolutionName.TPAName)"></Message>
     <Exec Command='$(LibDir)\ContentSync.exe $(SourceDirForDataChangeScript) $(BuildDirForDataSqlScript) -c -u' />
@@ -735,7 +758,6 @@
     
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyCXCCoreSqlFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
@@ -751,7 +773,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyCXCCoreSchemaChangesFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
@@ -806,7 +827,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyCommandWorkflowScriptToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
@@ -821,17 +841,11 @@
       <SourceDirForCommandWorkflowScript Include="$(RootDirForSurceCode)\CXC\Scripts\*.*" />
     </ItemGroup>
 
-
-    <!--<Copy SourceFiles="@(SourceDirForCommandWorkflowScript)"
-          DestinationFolder="$(BuildDirForCommonWorkflowScript)"
-          SkipUnchangedFiles="true" />-->
-
     <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\Scripts $(BuildDirForCommonWorkflowScript) -c -u' />
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="ConfigTransformation">
@@ -848,9 +862,6 @@
     <CallTarget Targets="ConfigTranformationForDbDeploy"></CallTarget>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
 
   </Target>
 
@@ -935,8 +946,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
   <Target Name="ConfigTranformationForTPA" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this">
@@ -962,8 +971,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
   <Target Name="ConfigTranformationForDbDeploy">
@@ -982,23 +989,21 @@
     <FindAndReplace
                   Filename="$(LibDir)\Resources\mssql_apply.vm"
                   FindWord="USE #CLAIMXODATABASE#"
-                  ReplaceWithWord="USE [$(DatabaseName)]" />
+                  ReplaceWithWord="USE [$(DecryptSqlApplicationDatabaseName)]" />
 
 
     <FindAndReplace
                   Filename="$(LibDir)\Resources\mssql_apply.vm"
                   FindWord="USE #DBDEPLOYDATABASE#"
-                  ReplaceWithWord="USE [$(dbDeployDBName)]" />
+                  ReplaceWithWord="USE [$(DecryptDbDeployDatabaseName)]" />
 
 
     <FindAndReplace
                   Filename="$(LibDir)\Resources\mssql_undo.vm"
                   FindWord="USE #DBDEPLOYDATABASE#"
-                  ReplaceWithWord="USE [$(dbDeployDBName)]" />
+                  ReplaceWithWord="USE [$(DecryptDbDeployDatabaseName)]" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -1015,8 +1020,6 @@
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -1039,8 +1042,6 @@
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -1067,8 +1068,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
-
   </Target>
 
   <Target Name="CreateSVNLabelOnSVN" Condition="$(CreateSVNLabel) == 'True'">
@@ -1084,8 +1083,8 @@
     </ReadLinesFromFile>
 
     <PropertyGroup>
-      <SvnDestinationPath Condition="'$(VersionNumber)' != '' ">$(SVNTagURL)/$(Environment)_$(CurrentDateTime)_$(VersionNumber)</SvnDestinationPath>
-      <SvnDestinationPath Condition="'$(VersionNumber)' == '' ">$(SVNTagURL)/$(Environment)_$(CurrentDateTime)</SvnDestinationPath>
+      <SvnDestinationPath Condition="'$(VersionNumber)' != '' ">$(SVNTagURL)/Manoj_$(Environment)_$(CurrentDateTime)_$(VersionNumber)</SvnDestinationPath>
+      <SvnDestinationPath Condition="'$(VersionNumber)' == '' ">$(SVNTagURL)/Manoj_$(Environment)_$(CurrentDateTime)</SvnDestinationPath>
     </PropertyGroup>
 
     <SvnCopy SourcePath="$(SVNSourceURL)"
@@ -1094,8 +1093,6 @@
       Username="$(SvnUsername)" password="$(SvnPassword)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -1121,20 +1118,12 @@
 
     <Message Text = "Start copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
-    <!--<MSBuild.ExtensionPack.FileSystem.RoboCopy
-     Source="$(BuildDirForApp)"
-     Destination="$(DeploymentDirForApp)"
-     Files="*.*"
-     Options="/E /XO" />-->
-    
-     <Exec Command='$(LibDir)\ContentSync.exe $(BuildDirForApp) $(DeploymentDirForApp) -c -u' />
-
+    <Exec Command='$(LibDir)\ContentSync.exe $(BuildDirForApp) $(DeploymentDirForApp) -c -u' />
 
     <Message Text = "Completed copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyDbDeployOutputFilesToDeploymentDir">
@@ -1152,12 +1141,7 @@
 
     <Message Text = "Start copying files from $(BuildDirForDbDeployOutput) to $(DeploymentDirForDbDeploy)"></Message>
 
-    <!--<Copy SourceFiles="@(DbDeployFiles)"
-			  	DestinationFolder="$(DeploymentDirForDbDeploy)\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />-->
-
     <Exec Command='$(LibDir)\ContentSync.exe $(BuildDirForDbDeployOutput) $(DeploymentDirForDbDeploy) -c -u' />
-
 
     <Message Text = "Completed copying files from $(BuildDirForDbDeployOutput) to $(DeploymentDirForDbDeploy)"></Message>
 
@@ -1165,7 +1149,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyWorkflowScriptsToDeploymentDir" Inputs="%(SolutionName.Identity)" Outputs="%(SolutionName.Identity)\Ignore_this" DependsOnTargets="CopyCommonWorkflowScriptsToDeploymentDir">
@@ -1173,23 +1156,14 @@
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyWorkflowScriptsToDeploymentDir'">CopyWorkflowScriptsToDeploymentDir</CurrentTargetName>
       <BuildDirForWorkflowScript>%(SolutionName.BuildDirForWorkflowScript)</BuildDirForWorkflowScript>
-      <!--<CommandAndSqlFilesDeploymentDir>%(SolutionName.CommandAndSqlFilesDeploymentDir)</CommandAndSqlFilesDeploymentDir>-->
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
-
-    <!--<MSBuild.ExtensionPack.FileSystem.RoboCopy
-     Source="$(BuildDirForWorkflowScript)"
-     Destination="$(DeploymentDirForApp)"
-     Files="*.*"
-     Options="/E /XO"/>-->
-    
     <Exec Command='$(LibDir)\ContentSync.exe $(BuildDirForWorkflowScript) $(DeploymentDirForApp) -c -u' />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="CopyCommonWorkflowScriptsToDeploymentDir">
@@ -1209,7 +1183,6 @@
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
   <Target Name="DeployBuildToDestination" Condition=" $(OnlyBuildOrOnlyPush) == 'onlypush' or $(OnlyBuildOrOnlyPush) == '' " >
@@ -1233,24 +1206,11 @@
 
     <Message Text = "Start copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
 
-    <!--<ItemGroup>
-      <DeploymentAppDir Include="$(DeploymentDirForApp)\**\*.*" />
-    </ItemGroup>-->
-
-    <!--<Copy SourceFiles="@(DeploymentAppDir)"
-			  	DestinationFolder="$(DestinationDir)\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />-->
-
     <Exec Command='$(LibDir)\ContentSync.exe $(DeploymentDirForApp) $(DestinationDir) -c -u' />
-
-
-
 
     <Message Text = "Completed copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
 
   </Target>
 
@@ -1258,19 +1218,21 @@
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='SaveAssemblyVersionInDestinationDatabase'">SaveAssemblyVersionInDestinationDatabase</CurrentTargetName>
+      <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptDbDeployDatabaseName);Integrated Security=SSPI</DatabaseConnectionString>
+      <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptDbDeployDatabaseName);User Id=$(DecryptSqlServerUserName);Password=$(DecryptSqlServerPassword)</DatabaseConnectionString>
     </PropertyGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
+    <Message Text="DatabaseConnectionString: $(DatabaseConnectionString)"></Message>
 
     <MSBuild.ExtensionPack.SqlServer.SqlExecute
       TaskAction="ExecuteScalar"
       UseTransaction="false"
-      Sql="select max(ScriptNumber) from $(DatabaseChangeLogTableName) where Folder='Dummy' "
+      Sql="select max(ScriptNumber) from $(DecryptDatabaseChangeLogTableName) where Folder='Dummy' "
       ConnectionString="$(DatabaseConnectionString)">
       <Output PropertyName="MaxScriptNumberFromDbDeployDatabase" TaskParameter="ScalarResult"/>
     </MSBuild.ExtensionPack.SqlServer.SqlExecute>
-
 
     <MSBuild.ExtensionPack.Science.Maths TaskAction="Add" Numbers="$(MaxScriptNumberFromDbDeployDatabase);1">
       <Output PropertyName="NextScriptNumberForDbDeployDatabase" TaskParameter="Result"/>
@@ -1282,13 +1244,13 @@
     </ReadLinesFromFile>
 
     <PropertyGroup>
-      <CommandLineSqlForInsertNewAssemblyVersionNumber>Use $(dbDeployDBName) INSERT INTO $(DatabaseChangeLogTableName) VALUES('Dummy', $(NextScriptNumberForDbDeployDatabase), 'DummyScript', GETDATE(), GETDATE(),'dbo','1',  '$(AssemblyVersionNumber)' )</CommandLineSqlForInsertNewAssemblyVersionNumber>
+      <CommandLineSqlForInsertNewAssemblyVersionNumber>Use $(DecryptDbDeployDatabaseName) INSERT INTO $(DecryptDatabaseChangeLogTableName) VALUES('Dummy', $(NextScriptNumberForDbDeployDatabase), 'DummyScript', GETDATE(), GETDATE(),'dbo','1',  '$(AssemblyVersionNumber)' )</CommandLineSqlForInsertNewAssemblyVersionNumber>
     </PropertyGroup>
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd
       TaskAction="Execute"
-      Server="$(SqlServerName)"
-      Database="$(dbDeployDBName)"
+      Server="$(DecryptSqlServerName)"
+      Database="$(DecryptDbDeployDatabaseName)"
       CommandLineQuery="$(CommandLineSqlForInsertNewAssemblyVersionNumber)"
       Condition="$(IsSqlWindowsAuthentication)=='true'"/>
 
@@ -1296,17 +1258,16 @@
 
     <MSBuild.ExtensionPack.SqlServer.SqlCmd
       TaskAction="Execute"
-      Server="$(SqlServerName)"
-      Database="$(dbDeployDBName)"
-      LogOn="$(SqlServerUserName)"
-      Password="$(SqlServerPassword)"
+      Server="$(DecryptSqlServerName)"
+      Database="$(DecryptDbDeployDatabaseName)"
+      LogOn="$(DecryptSqlServerUserName)"
+      Password="$(DecryptSqlServerPassword)"
       CommandLineQuery="$(CommandLineSqlForInsertNewAssemblyVersionNumber)"
       Condition="$(IsSqlWindowsAuthentication)=='false'"/>
 
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
-    <OnError ExecuteTargets="SendEmailNotification" Condition="$(SendEmailNotification)=='true'"  />
   </Target>
 
 
@@ -1345,7 +1306,8 @@
 
   <Target Name="Run">
 
-    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /fl1 /fl2 /flp1:logfile=$(LogFileName) /flp2:logfile=$(ErrorLogFileName);errorsonly;warningsonly "/>
+    <!--<Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /fl1 /fl2 /flp1:logfile=$(LogFileName) /flp2:logfile=$(ErrorLogFileName);errorsonly;warningsonly "/>-->
+    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /logger:$(LibDir)\CXC.CustomLogger.dll;FromEmailAddress=alertsqa@cxcnetwork.com;ToEmailAddress=manojs@cxcnetwork.com;SendErrorEmail=$(SendEmailNotification)  /noconsolelogger "/>
 
     <CallTarget Targets="CleanTempFiles" Condition="$(MSBuildLastTaskResult) == 'True' and ($(OnlyBuildOrOnlyPush) == 'onlypush' or $(OnlyBuildOrOnlyPush) == '') " />
 

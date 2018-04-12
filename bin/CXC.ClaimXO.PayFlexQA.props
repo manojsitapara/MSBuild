@@ -24,10 +24,6 @@
     <ForceSourceOverwrite>false</ForceSourceOverwrite>
     <!-- To build CXC Engine solution, set value to true -->
     <BuildCXCEngine>true</BuildCXCEngine>
-    <!-- To build GDI solution, set value to true -->
-    <BuildGDI>false</BuildGDI>
-    <!-- To build PrimePay solution, set value to true -->
-    <BuildPrimePay>false</BuildPrimePay>
     <!-- To build PayFlex solution, set value to true -->
     <BuildPayFlex>true</BuildPayFlex>
     <!--Set value true to take database backup else false -->

@@ -23,13 +23,9 @@
     <!--Set value true to overwrite source code if any changes else false -->
     <ForceSourceOverwrite>false</ForceSourceOverwrite>
     <!-- To build CXC Engine solution, set value to true -->
-    <BuildCXCEngine>false</BuildCXCEngine>
-    <!-- To build GDI solution, set value to true -->
-    <BuildGDI>true</BuildGDI>
-    <!-- To build PrimePay solution, set value to true -->
-    <BuildPrimePay>true</BuildPrimePay>
+    <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build PayFlex solution, set value to true -->
-    <BuildPayFlex>false</BuildPayFlex>
+    <BuildPayFlex>true</BuildPayFlex>
     <!--Set value true to take database backup else false -->
     <BackupDatabase>false</BackupDatabase>
     <!-- Set UpdateBuildVersion value true to update build version number else set false -->

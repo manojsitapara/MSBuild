@@ -2,7 +2,7 @@
   
   
   <PropertyGroup>
-    <BackupPreBuildDatabaseFile>$(BackupDirForDatabase)\$(DecryptSqlApplicationDatabaseName)_PreBuild_$(CurrentDateTime).bak</BackupPreBuildDatabaseFile>
+    <BackupPreBuildDatabaseFile>$(BackupDirForDatabase)\ClaimXO_PreBuild_$(CurrentDateTime).bak</BackupPreBuildDatabaseFile>
     <BackupPreBuildSourceFile>$(BackupDirForSource)\ClaimXO_PreBuild_$(CurrentDateTime).zip</BackupPreBuildSourceFile>
     <BackupPostBuildDeploymentFile>$(BackupDirForDeployment)\ClaimXO_PostBuild_$(CurrentDateTime).zip</BackupPostBuildDeploymentFile>
     <BackupPreBuildDestinationFile>$(BackupDirForDestination)\ClaimXO_PreBuild_$(CurrentDateTime).zip</BackupPreBuildDestinationFile>

@@ -29,7 +29,7 @@
     <!-- To build PrimePay solution, set value to true -->
     <BuildPrimePay>true</BuildPrimePay>
     <!--Set value true to take database backup else false -->
-    <BackupDatabase>false</BackupDatabase>
+    <BackupDatabase>true</BackupDatabase>
     <!-- Set UpdateBuildVersion value true to update build version number else set false -->
     <UpdateBuildVersion>true</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
@@ -55,7 +55,7 @@
     <!--Set value to true, if windows authentication required-->
     <IsSqlWindowsAuthentication>true</IsSqlWindowsAuthentication>
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
-    <SqlServerVersion>2012</SqlServerVersion>
+    <SqlServerVersion>2014</SqlServerVersion>
     <!--Specify Sql server name-->
     <SqlServerName>C6yt9c6/EWmWT62MOcWSTQ==</SqlServerName>
 

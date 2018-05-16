@@ -106,19 +106,7 @@
       <Output TaskParameter="Lines" PropertyName="DecryptSqlServerPassword" />
     </ReadLinesFromFile>
     
-
-    <!--<MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(SqlServerUserName)')" ConnectionString="$(DatabaseConnectionString)">
-      <Output PropertyName="DecryptSqlServerUserName" TaskParameter="RawReaderResult"/>
-    </MSBuild.ExtensionPack.SqlServer.SqlExecute>
-
-    <MSBuild.ExtensionPack.SqlServer.SqlExecute TaskAction="ExecuteRawReader" UseTransaction="true" Sql="select dbo.DecryptValue('$(SqlServerPassword)')" ConnectionString="$(DatabaseConnectionString)">
-      <Output PropertyName="DecryptSqlServerPassword" TaskParameter="RawReaderResult"/>
-    </MSBuild.ExtensionPack.SqlServer.SqlExecute>-->
-
-
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-
 
   </Target>
   

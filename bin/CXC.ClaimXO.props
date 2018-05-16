@@ -91,8 +91,8 @@
     <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptDbDeployDatabaseName);Integrated Security=SSPI</DatabaseConnectionString>
     <DatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptDbDeployDatabaseName);User Id=$(DecryptSqlServerUserName);Password=$(DecryptSqlServerPassword)</DatabaseConnectionString>
 
-    <ApplicationDatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptApplicationDatabaseName);Integrated Security=SSPI</ApplicationDatabaseConnectionString>
-    <ApplicationDatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptApplicationDatabaseName);User Id=$(DecryptSqlServerUserName);Password=$(DecryptSqlServerPassword)</ApplicationDatabaseConnectionString>
+    <!--<ApplicationDatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='true'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptApplicationDatabaseName);Integrated Security=SSPI</ApplicationDatabaseConnectionString>
+    <ApplicationDatabaseConnectionString Condition="$(IsSqlWindowsAuthentication)=='false'">Server=$(DecryptSqlServerName);Initial Catalog=$(DecryptApplicationDatabaseName);User Id=$(DecryptSqlServerUserName);Password=$(DecryptSqlServerPassword)</ApplicationDatabaseConnectionString>-->
 
     <LogDir>..\Log</LogDir>
     <TempDirForLog>$(LogDir)\temp</TempDirForLog>

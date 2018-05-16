@@ -3,8 +3,8 @@
 
   <PropertyGroup>
 
-    <SVNSourceURL>https://LAPTOP-L6J610L5:4443/svn/ClaimXO/trunk/</SVNSourceURL>
-    <SVNTagURL>https://LAPTOP-L6J610L5:4443/svn/ClaimXO/tags</SVNTagURL>
+    <SVNSourceURL>https://DESKTOP-JQA6P9F:440/svn/ClaimXO/trunk</SVNSourceURL>
+    <SVNTagURL>https://DESKTOP-JQA6P9F:440/svn/ClaimXO/tags</SVNTagURL>
      <!--<SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
     <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>-->
 
@@ -67,7 +67,7 @@
     <SqlServerPassword></SqlServerPassword>
 
     <!--specify database name -->
-    <ApplicationDatabaseName>L6LeAvFJdKifJ38tG37VqQ==</ApplicationDatabaseName>
+    <ApplicationDatabaseName>hIOmnFBrLpibjuWjgykQXw==</ApplicationDatabaseName>
 
 
 

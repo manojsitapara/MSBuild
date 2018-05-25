@@ -593,7 +593,7 @@
   
   
   
-  <Target Name="BuildCXCEngine">
+  <Target Name="BuildCXCEngine" Condition="$(BuildCXCEngine) == 'true'">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCEngine'">BuildCXCEngine</CurrentTargetName>

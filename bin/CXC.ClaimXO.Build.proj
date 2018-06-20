@@ -762,7 +762,7 @@
 
   </Target>
 
-  <Target Name="CopyCXCCoreSqlFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
+  <Target Name="CopyCXCCoreSqlFilesToBuildDir" >
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreSqlFilesToBuildDir'">CopyCXCCoreSqlFilesToBuildDir</CurrentTargetName>
@@ -777,7 +777,7 @@
 
   </Target>
 
-  <Target Name="CopyCXCCoreSchemaChangesFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
+  <Target Name="CopyCXCCoreSchemaChangesFilesToBuildDir" >
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreSchemaChangesFilesToBuildDir'">CopyCXCCoreSchemaChangesFilesToBuildDir</CurrentTargetName>
@@ -791,7 +791,7 @@
 
   </Target>
 
-  <Target Name="CopyCXCCoreMetaChangesFilesToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
+  <Target Name="CopyCXCCoreMetaChangesFilesToBuildDir" >
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCXCCoreMetaChangesFilesToBuildDir'">CopyCXCCoreMetaChangesFilesToBuildDir</CurrentTargetName>
@@ -831,7 +831,7 @@
 
   </Target>
 
-  <Target Name="CopyCommandWorkflowScriptToBuildDir" Condition="$(BuildCXCEngine) == 'true' ">
+  <Target Name="CopyCommandWorkflowScriptToBuildDir">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyCommandWorkflowScriptToBuildDir'">CopyCommandWorkflowScriptToBuildDir</CurrentTargetName>
@@ -867,7 +867,7 @@
 
   </Target>
 
-  <Target Name="ConfigTranformationForCXCCore" Condition="$(BuildCXCEngine) == 'true' ">
+  <Target Name="ConfigTranformationForCXCCore" >
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='ConfigTranformationForCXCCore'">ConfigTranformationForCXCCore</CurrentTargetName>
@@ -1026,7 +1026,7 @@
 
   </Target>
 
-  <Target Name="CommonCommandFileTransform" Condition="$(BuildCXCEngine) == 'true' ">
+  <Target Name="CommonCommandFileTransform">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CommonCommandFileTransform'">CommonCommandFileTransform</CurrentTargetName>
@@ -1196,6 +1196,7 @@
 
     <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" />
 
+    <CallTarget Targets="CleanTempFiles"></CallTarget>
 
   </Target>
 
@@ -1217,7 +1218,7 @@
 
   </Target>
 
-  <Target Name="SaveAssemblyVersionInDestinationDatabase" Condition="Exists(@(GeneratedAssemblyFileName))">
+  <Target Name="SaveAssemblyVersionInDestinationDatabase" Condition="Exists(@(GeneratedAssemblyFileName)) AND $(UpdateBuildVersion) == 'true' ">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='SaveAssemblyVersionInDestinationDatabase'">SaveAssemblyVersionInDestinationDatabase</CurrentTargetName>
@@ -1309,12 +1310,7 @@
 
   <Target Name="Run">
 
-    <!--<Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /fl1 /fl2 /flp1:logfile=$(LogFileName) /flp2:logfile=$(ErrorLogFileName);errorsonly;warningsonly "/>-->
-    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /logger:$(LibDir)\CXC.CustomLogger.dll;FromEmailAddress=alertsqa@cxcnetwork.com;ToEmailAddress=manojs@cxcnetwork.com;SendErrorEmail=$(SendEmailNotification)   "/>
-
-    <!--<CallTarget Targets="CleanTempFiles" Condition="$(MSBuildLastTaskResult) == 'True' and ($(OnlyBuildOrOnlyPush) == 'onlypush' or $(OnlyBuildOrOnlyPush) == '') " />-->
-
-
+    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /logger:$(LibDir)\CXC.CustomLogger.dll;FromEmailAddress=$(EmailNotificationFromAddress);ToEmailAddress=$(ErrorNotificationToAddress);SendErrorEmail=$(SendEmailNotification)   "/>
 
   </Target>
 

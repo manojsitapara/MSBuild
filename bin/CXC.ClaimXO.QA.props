@@ -70,12 +70,12 @@
     <ApplicationDatabaseName>hIOmnFBrLpibjuWjgykQXw==</ApplicationDatabaseName>
 
 
-
+    
     <!--Specify TO email address to send error email notification -->
     <ErrorNotificationToAddress>manojs@cxcnetwork.com</ErrorNotificationToAddress>
 
-    
-
+  
+  
   </PropertyGroup>
 
 </Project>

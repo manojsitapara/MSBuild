@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
 
   <!-- Region Import External target -->
 
@@ -86,7 +86,7 @@
   </Target>
 
 
-  <Target Name="DecryptSqlServerUserInfoValue">
+  <Target Name="DecryptSqlServerUserInfoValue"  Condition=" '$(IsSqlWindowsAuthentication)' =='false'">>
 
     <PropertyGroup>
       <CurrentTargetName>DecryptSqlServerUserInfoValue</CurrentTargetName>
@@ -428,176 +428,16 @@
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
   </Target>
-
-
-  <Target Name="BuildCXCSecuritySolution" Inputs="@(CXCSecurityCSharpFiles)" Outputs="@(CXCSecurityAssemblyFileName)">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildGDISolution'">BuildGDISolution</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCSecuritySolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
-
-
-  <Target Name="BuildCXCDataAccessSolution" Inputs="@(CXCDataAccessCSharpFiles)" Outputs="@(CXCDataAccessAssemblyFileName)">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCDataAccessSolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
-
-
-  <Target Name="BuildCXCNotifierSolution" Inputs="@(CXCNotifierCSharpFiles)" Outputs="@(CXCNotifierAssemblyFileName)">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCNotifierSolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
-
-
-  <Target Name="BuildCXCFileWriterSolution" Inputs="@(CXCFileWriterCSharpFiles)" Outputs="@(CXCFileWriterAssemblyFileName)">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCFileWriterSolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
-
-
-  <Target Name="BuildCXCFileReaderSolution" Inputs="@(CXCFileReaderCSharpFiles)" Outputs="@(CXCFileReaderAssemblyFileName)">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCFileReaderSolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
-
-
-  <Target Name="BuildCXCFaxerSolution" Inputs="@(CXCFaxerCSharpFiles)" Outputs="@(CXCFaxerAssemblyFileName)">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCFaxerSolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
-
-
-  <Target Name="BuildCXCArchiverSolution" Inputs="@(CXCArchiverCSharpFiles)" Outputs="@(CXCArchiverAssemblyFileName)">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCArchiverSolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
-
-
-  <Target Name="BuildCXCSchedulerSolution" Inputs="@(CXCSchedulerCSharpFiles)" Outputs="@(CXCSchedulerAssemblyFileName)">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCSchedulerSolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
-
-
-  <Target Name="BuildCXCCoreSolution" Inputs="@(CXCCoreCSharpFiles)" Outputs="@(CXCCoreAssemblyFileName)">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCCoreSolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
-
-
-  <Target Name="BuildCXCEngineSolution" Inputs="@(CXCEngineCSharpFiles)" Outputs="@(CXCEngineAssemblyFileName)">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCDataAccess'">BuildCXCDataAccess</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(CXCEngineSolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
-
-
-  
-  
   
   <Target Name="BuildCXCEngine" Condition="$(BuildCXCEngine) == 'true'">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildCXCEngine'">BuildCXCEngine</CurrentTargetName>
     </PropertyGroup>
+
+    <ItemGroup>
+      <CXCEngineSolution Include="$(RootDirForSurceCode)\CXC\CXCEngine.sln"></CXCEngineSolution>
+    </ItemGroup>
 
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
@@ -608,17 +448,10 @@
     <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\CXC\ClassLibrary1\Config $(BuildDirForApp)\Config -c -u' />
     <Exec Command='$(LibDir)\ContentSync.exe $(RootDirForSurceCode)\utils\DecryptStdOut\DecryptStdOut.exe $(BuildDirForApp) -c -u' />
 
-    <CallTarget Targets="BuildCXCSecuritySolution"></CallTarget>
-    <CallTarget Targets="BuildCXCDataAccessSolution"></CallTarget>
-    <CallTarget Targets="BuildCXCNotifierSolution"></CallTarget>
-    <CallTarget Targets="BuildCXCFileWriterSolution"></CallTarget>
-    <CallTarget Targets="BuildCXCFileReaderSolution"></CallTarget>
+    <MSBuild Projects="@(CXCEngineSolution)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
 
-    <CallTarget Targets="BuildCXCFaxerSolution"></CallTarget>
-    <CallTarget Targets="BuildCXCArchiverSolution"></CallTarget>
-    <CallTarget Targets="BuildCXCSchedulerSolution"></CallTarget>
-    <CallTarget Targets="BuildCXCCoreSolution"></CallTarget>
-    <CallTarget Targets="BuildCXCEngineSolution"></CallTarget>
+
 
    
 
@@ -820,12 +653,7 @@
     </PropertyGroup>
 
 
-
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy
-      Source="$(SourceDirForWorkflowFile)"
-      Destination="$(BuildDirForWorkflowScript)"
-      Files="*.*"
-      Options="/E /XO"/>
+    <Exec Command='$(LibDir)\ContentSync.exe $(SourceDirForWorkflowFile) $(BuildDirForWorkflowScript) -c -u' />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -1086,14 +914,24 @@
     </ReadLinesFromFile>
 
     <PropertyGroup>
-      <SvnDestinationPath Condition="'$(VersionNumber)' != '' ">$(SVNTagURL)/Manoj_$(Environment)_$(CurrentDateTime)_$(VersionNumber)</SvnDestinationPath>
-      <SvnDestinationPath Condition="'$(VersionNumber)' == '' ">$(SVNTagURL)/Manoj_$(Environment)_$(CurrentDateTime)</SvnDestinationPath>
+      <SvnDestinationPath Condition="'$(VersionNumber)' != '' ">$(SVNTagURL)/$(Environment)_$(CurrentDateTime)_$(VersionNumber)</SvnDestinationPath>
+      <SvnDestinationPath Condition="'$(VersionNumber)' == '' ">$(SVNTagURL)/$(Environment)_$(CurrentDateTime)</SvnDestinationPath>
     </PropertyGroup>
 
+    <Exec Command='$(LibDir)\DecryptUtility\DecryptUtility.exe $(SvnUsername)' />
+    <ReadLinesFromFile File="@(OutputFileName)">
+      <Output TaskParameter="Lines" PropertyName="DecryptSVNUserName" />
+    </ReadLinesFromFile>
+
+    <Exec Command='$(LibDir)\DecryptUtility\DecryptUtility.exe $(SvnPassword)' />
+    <ReadLinesFromFile File="@(OutputFileName)">
+      <Output TaskParameter="Lines" PropertyName="DecryptSVNPassword" />
+    </ReadLinesFromFile>
+
     <SvnCopy SourcePath="$(SVNSourceURL)"
-      DestinationPath="$(SvnDestinationPath)"
-      Message="$(CurrentDate)_@(VersionNumber)"
-      Username="$(SvnUsername)" password="$(SvnPassword)"/>
+             DestinationPath="$(SvnDestinationPath)"
+             Message="Manoj_$(CurrentDate)_$(VersionNumber)"
+             Username="$(DecryptSVNUserName)" password="$(DecryptSVNPassword)"/>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -1178,11 +1016,13 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
 
-    <MSBuild.ExtensionPack.FileSystem.RoboCopy
+    <!--<MSBuild.ExtensionPack.FileSystem.RoboCopy
      Source="$(BuildDirForCommonWorkflowScript)"
      Destination="$(DeploymentDirForApp)"
      Files="*.*"
-     Options="/XO" />
+     Options="/XO" />-->
+    <Exec Command='$(LibDir)\ContentSync.exe $(BuildDirForCommonWorkflowScript) $(DeploymentDirForApp) -c -u' />
+    
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -1218,7 +1058,7 @@
 
   </Target>
 
-  <Target Name="SaveAssemblyVersionInDestinationDatabase" Condition="Exists(@(GeneratedAssemblyFileName)) AND $(UpdateBuildVersion) == 'true' ">
+  <Target Name="SaveAssemblyVersionInDestinationDatabase" Condition="Exists(@(GeneratedAssemblyFileName)) AND $(UpdateBuildVersion) == 'true'  AND $(UpdateBuildVersion) == 'true' ">
 
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='SaveAssemblyVersionInDestinationDatabase'">SaveAssemblyVersionInDestinationDatabase</CurrentTargetName>
@@ -1308,11 +1148,11 @@
   </Target>
 
 
-  <Target Name="Run">
+  <!--<Target Name="Run">
 
-    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /logger:$(LibDir)\CXC.CustomLogger.dll;FromEmailAddress=$(EmailNotificationFromAddress);ToEmailAddress=$(ErrorNotificationToAddress);SendErrorEmail=$(SendEmailNotification)   "/>
+    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /logger:$(LibDir)\CXC.CustomLogger.dll;FromEmailAddress=$(EmailNotificationFromAddress);ToEmailAddress=$(ErrorNotificationToAddress);ProjectName=ClaimXO;SendErrorEmail=$(SendEmailNotification)   "/>
 
-  </Target>
+  </Target>-->
 
 
 </Project>

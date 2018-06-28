@@ -10,9 +10,12 @@
 
     <!-- Specify the root directory to create msbuild script folder structure -->
     <RootDir>G:\MSBuildTesting\QA</RootDir>
-
+    <!--For local database backup use $(RootDir)\Backup\Database, for remote backup, specify the full path -->
+    <BackupDirForDatabase>$(RootDir)\Backup\Database</BackupDirForDatabase>
+    <!--For local database backup use $(RootDir)\Backup\Destination, for remote backup, specify the full path -->
+    <BackupDirForDestination>\\Laptop-6rnn5soj\e\MSBuildTesting\BackupServer</BackupDirForDestination>
     <!-- Specify the path to copy build code on server -->
-    <DestinationDir>H:\PayFlexProductionServer</DestinationDir>
+    <DestinationDir>\\Laptop-6rnn5soj\e\MSBuildTesting\ClaimXO\QAServer</DestinationDir>
 
     <!-- Source code SVN settings -->
 

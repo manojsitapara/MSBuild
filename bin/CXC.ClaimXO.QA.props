@@ -11,17 +11,20 @@
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
-    <RootDir>E:\MSBuildTesting\ClaimXO\QA</RootDir>
-
-    <!-- Specify the path to copy build code on server -->
-    <DestinationDir>E:\MSBuildTesting\ClaimXO\QA\QAServer</DestinationDir>
+    <RootDir>E:\MSBuildTesting\ClaimsXO\QA</RootDir>
+    <!--For local database backup use $(RootDir)\Backup\Database, for remote backup, specify the full path -->
+    <BackupDirForDatabase>$(RootDir)\Backup\Database</BackupDirForDatabase>
+    <!--For local database backup use $(RootDir)\Backup\Destination, for remote backup, specify the full path -->
+    <BackupDirForDestination>$(RootDir)\Backup\Destination</BackupDirForDestination>
+    <!-- Specify the path to push build on target server -->
+    <DestinationDir>$(RootDir)\QAServer</DestinationDir>
 
     <!-- To download source code from SVN, set value to true else false -->
     <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
     <!--Set value true to take source code backup else false -->
-    <BackupSourceCode>false</BackupSourceCode>
+    <BackupSourceCode>true</BackupSourceCode>
     <!--Set value true to overwrite source code if any changes else false -->
-    <ForceSourceOverwrite>false</ForceSourceOverwrite>
+    <ForceSourceOverwrite>true</ForceSourceOverwrite>
     <!-- To build CXC Engine solution, set value to true -->
     <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
@@ -33,11 +36,11 @@
     <!-- Set UpdateBuildVersion value true to update build version number else set false -->
     <UpdateBuildVersion>true</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
-    <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
+    <CheckInAssemblyInfo>true</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2018.03.01.0</AssemblyBuildNumber>
+    <AssemblyBuildNumber>2018.06.01.0</AssemblyBuildNumber>
     <!--Set value true to create svn lable under svn tag branch-->
-    <CreateSVNLabel>false</CreateSVNLabel>
+    <CreateSVNLabel>true</CreateSVNLabel>
     <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
     <SendEmailNotification>true</SendEmailNotification>
 

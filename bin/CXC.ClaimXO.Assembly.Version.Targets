@@ -64,8 +64,22 @@
       <Output TaskParameter="Lines" PropertyName="VersionNumber" />
     </ReadLinesFromFile>
 
+    <ItemGroup>
+      <OutputFileName Include="$(LibDir)\DecryptUtility\Output.txt"/>
+    </ItemGroup>
+
+    <Exec Command='$(LibDir)\DecryptUtility\DecryptUtility.exe $(SvnUsername)' />
+    <ReadLinesFromFile File="@(OutputFileName)">
+      <Output TaskParameter="Lines" PropertyName="SvnDecryptedUsername" />
+    </ReadLinesFromFile>
+
+    <Exec Command='$(LibDir)\DecryptUtility\DecryptUtility.exe $(SvnPassword)' />
+    <ReadLinesFromFile File="@(OutputFileName)">
+      <Output TaskParameter="Lines" PropertyName="SvnDecryptedPassword" />
+    </ReadLinesFromFile>
+
     <SvnCommit Targets="@(AssemblyInfoFile)" Message="Set assembly version number: $(VersionNumber)"
-     Username="$(SvnUsername)" Password="$(SvnPassword)">
+     Username="$(SvnDecryptedUsername)" Password="$(SvnDecryptedPassword)">
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </SvnCommit>
 

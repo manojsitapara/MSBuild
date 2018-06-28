@@ -3,16 +3,19 @@
 
   <PropertyGroup>
 
-    <SVNSourceURL>https://LAPTOP-L6J610L5:4443/svn/ClaimXO/trunk/</SVNSourceURL>
-    <SVNTagURL>https://LAPTOP-L6J610L5:4443/svn/ClaimXO/tags</SVNTagURL>
+    <SVNSourceURL>https://DESKTOP-JQA6P9F:440/svn/ClaimXO/trunk</SVNSourceURL>
+    <SVNTagURL>https://DESKTOP-JQA6P9F:440/svn/ClaimXO/tags</SVNTagURL>
 
     <!-- MSBuild script folder structure settings -->
 
     <!-- Specify the root directory to create msbuild script folder structure -->
     <RootDir>E:\MSBuildTesting\PayFlexQA</RootDir>
-
+    <!--For local database backup use $(RootDir)\Backup\Database, for remote backup, specify the full path -->
+    <BackupDirForDatabase>$(RootDir)\Backup\Database</BackupDirForDatabase>
+    <!--For local database backup use $(RootDir)\Backup\Destination, for remote backup, specify the full path -->
+    <BackupDirForDestination>\\Laptop-6rnn5soj\e\MSBuildTesting\BackupServer</BackupDirForDestination>
     <!-- Specify the path to copy build code on server -->
-    <DestinationDir>E:\MSBuildTesting\PayFlexQA\PayFlexQAServer</DestinationDir>
+    <DestinationDir>\\Laptop-6rnn5soj\e\MSBuildTesting\ClaimXO\QAServer</DestinationDir>
 
     <!-- Source code SVN settings -->
 
@@ -31,9 +34,9 @@
     <!-- Set UpdateBuildVersion value true to update build version number else set false -->
     <UpdateBuildVersion>true</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
-    <CheckInAssemblyInfo>false</CheckInAssemblyInfo>
+    <CheckInAssemblyInfo>true</CheckInAssemblyInfo>
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2017.02.03.0</AssemblyBuildNumber>
+    <AssemblyBuildNumber></AssemblyBuildNumber>
     <!--Set value true to create svn lable under svn tag branch-->
     <CreateSVNLabel>false</CreateSVNLabel>
     <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
@@ -53,17 +56,19 @@
     <!--Set value to true, if windows authentication required-->
     <IsSqlWindowsAuthentication>true</IsSqlWindowsAuthentication>
     <!--Specify Sql server Version e.g. 2008, 2012 or 2014 -->
-    <SqlServerVersion>2012</SqlServerVersion>
+    <SqlServerVersion>2014</SqlServerVersion>
     <!--Specify Sql server name-->
-    <SqlServerName>.</SqlServerName>
+    <SqlServerName>C6yt9c6/EWmWT62MOcWSTQ==</SqlServerName>
 
+    <!--Specify sql user name, if IsSqlWindowsAuthentication flag value is false, else keep empty -->
+    <!--4cZZdPhKttntu1j59ka/qw==-->
+    <SqlServerUserName></SqlServerUserName>
     <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false, else keep empty  -->
-    <SqlServerUserName>sa</SqlServerUserName>
-    <!--Specify sql password, if IsSqlWindowsAuthentication flag value is false, else keep empty  -->
-    <SqlServerPassword>sa123</SqlServerPassword>
+    <!--M9xUe6A9Al+OsrB3va5GOw==-->
+    <SqlServerPassword></SqlServerPassword>
 
     <!--specify database name -->
-    <ApplicationDatabaseName>MsbuildCXC</ApplicationDatabaseName>
+    <ApplicationDatabaseName>hIOmnFBrLpibjuWjgykQXw==</ApplicationDatabaseName>
 
 
 
@@ -72,7 +77,7 @@
     <ErrorNotificationToAddress>manojs@cxcnetwork.com</ErrorNotificationToAddress>
 
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2017.01.01.0</AssemblyBuildNumber>
+    <AssemblyBuildNumber></AssemblyBuildNumber>
 
   </PropertyGroup>
 

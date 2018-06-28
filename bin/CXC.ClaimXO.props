@@ -48,10 +48,10 @@
     <BackupDirForSource>$(BackupDir)\Source</BackupDirForSource>
     <!-- Specify the path to backup of deployment code -->
     <BackupDirForDeployment>$(BackupDir)\Deployment</BackupDirForDeployment>
-    <!-- Specify the path to backup of database -->
+    <!-- Specify the path to backup of database --><!--
     <BackupDirForDatabase>$(BackupDir)\Database</BackupDirForDatabase>
-    <!-- Specify the path to back up build code on server -->
-    <BackupDirForDestination>$(BackupDir)\Destination</BackupDirForDestination>
+    --><!-- Specify the path to back up build code on server --><!--
+    <BackupDirForDestination>$(BackupDir)\Destination</BackupDirForDestination>-->
 
 
     

@@ -37,13 +37,9 @@
     <UpdateBuildVersion>true</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>true</CheckInAssemblyInfo>
-    <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2018.06.01.0</AssemblyBuildNumber>
+    
     <!--Set value true to create svn lable under svn tag branch-->
     <CreateSVNLabel>true</CreateSVNLabel>
-    <!--Set value true to send error email notification (e.g. on failing build script etc.) -->
-    <SendEmailNotification>true</SendEmailNotification>
-
 
 
     <!-- Build code settings-->
@@ -72,12 +68,8 @@
     <!--specify database name -->
     <ApplicationDatabaseName>hIOmnFBrLpibjuWjgykQXw==</ApplicationDatabaseName>
 
-
-    
-    <!--Specify TO email address to send error email notification -->
-    <ErrorNotificationToAddress>manojs@cxcnetwork.com</ErrorNotificationToAddress>
-
-  
+    <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
+    <AssemblyBuildNumber>2018.06.01.0</AssemblyBuildNumber>
   
   </PropertyGroup>
 

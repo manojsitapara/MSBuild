@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
 
+  <!--msbuild CXC.ClaimXO.Build.proj  /logger:H:\Work\Source\Github\MSBuild\MSBuild\lib\CXC.CustomLogger.dll;FromEmailAddress=alertsqa@cxcnetwork.com;ToEmailAddress=manojs@cxcnetwork.com;ProjectName=ClaimsXO-->
   <!-- Region Import External target -->
 
   <Import Project="CXC.ClaimXO.BuildTasks.tasks" />
@@ -86,7 +87,7 @@
   </Target>
 
 
-  <Target Name="DecryptSqlServerUserInfoValue"  Condition=" '$(IsSqlWindowsAuthentication)' =='false'">>
+  <Target Name="DecryptSqlServerUserInfoValue"  Condition=" '$(IsSqlWindowsAuthentication)' =='false'">
 
     <PropertyGroup>
       <CurrentTargetName>DecryptSqlServerUserInfoValue</CurrentTargetName>
@@ -1148,11 +1149,6 @@
   </Target>
 
 
-  <!--<Target Name="Run">
-
-    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /logger:$(LibDir)\CXC.CustomLogger.dll;FromEmailAddress=$(EmailNotificationFromAddress);ToEmailAddress=$(ErrorNotificationToAddress);ProjectName=ClaimXO;SendErrorEmail=$(SendEmailNotification)   "/>
-
-  </Target>-->
 
 
 </Project>

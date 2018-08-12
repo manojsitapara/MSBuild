@@ -22,9 +22,9 @@
     <!-- To download source code from SVN, set value to true else false -->
     <DownloadSourceCodeFromSVN>true</DownloadSourceCodeFromSVN>
     <!--Set value true to take source code backup else false -->
-    <BackupSourceCode>true</BackupSourceCode>
+    <BackupSourceCode>false</BackupSourceCode>
     <!--Set value true to overwrite source code if any changes else false -->
-    <ForceSourceOverwrite>true</ForceSourceOverwrite>
+    <ForceSourceOverwrite>false</ForceSourceOverwrite>
     <!-- To build CXC Engine solution, set value to true -->
     <BuildCXCEngine>true</BuildCXCEngine>
     <!-- To build GDI solution, set value to true -->
@@ -32,7 +32,7 @@
     <!-- To build PrimePay solution, set value to true -->
     <BuildPrimePay>true</BuildPrimePay>
     <!--Set value true to take database backup else false -->
-    <BackupDatabase>true</BackupDatabase>
+    <BackupDatabase>false</BackupDatabase>
     <!-- Set UpdateBuildVersion value true to update build version number else set false -->
     <UpdateBuildVersion>true</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
@@ -69,7 +69,7 @@
     <ApplicationDatabaseName>hIOmnFBrLpibjuWjgykQXw==</ApplicationDatabaseName>
 
     <!--Specify assembly build number needs to set (e.g. 2016.10.01.0) -->
-    <AssemblyBuildNumber>2018.06.01.0</AssemblyBuildNumber>
+    <AssemblyBuildNumber></AssemblyBuildNumber>
   
   </PropertyGroup>
 

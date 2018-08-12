@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Run">
 
   <!--msbuild CXC.ClaimXO.Build.proj  /logger:H:\Work\Source\Github\MSBuild\MSBuild\lib\CXC.CustomLogger.dll;FromEmailAddress=alertsqa@cxcnetwork.com;ToEmailAddress=manojs@cxcnetwork.com;ProjectName=ClaimsXO-->
   <!-- Region Import External target -->
@@ -232,7 +232,8 @@
     <SvnCheckout  RepositoryPath="$(SVNSourceURL)"
 			            LocalPath="$(RootDirForSurceCode)"
 			            UserName="$(DecryptSVNUserName)"
-			            Password="$(DecryptSVNPassword)">
+			            Password="$(DecryptSVNPassword)"
+                  ToolPath="$(SVNToolkitPath)"  >
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </SvnCheckout>
 
@@ -945,7 +946,6 @@
 
     <CallTarget Targets="CopyBuildFilesToDeploymentDir"  Condition="$(MSBuildLastTaskResult) == 'True' "/>
     <CallTarget Targets="CopyDbDeployOutputFilesToDeploymentDir" Condition="$(MSBuildLastTaskResult) == 'True' "/>
-    <CallTarget Targets="CopyWorkflowScriptsToDeploymentDir"  Condition="$(MSBuildLastTaskResult) == 'True' "/>
     <CallTarget Targets="BackupPostBuildDeployment"  Condition="$(MSBuildLastTaskResult) == 'True' "/>
 
   </Target>
@@ -961,6 +961,8 @@
     <Message Text = "Start copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
     <Exec Command='$(LibDir)\ContentSync.exe $(BuildDirForApp) $(DeploymentDirForApp) -c -u' />
+
+    <CallTarget Targets="CopyWorkflowScriptsToDeploymentDir"  Condition="$(MSBuildLastTaskResult) == 'True' "/>
 
     <Message Text = "Completed copying files from $(BuildDirForApp) to $(DeploymentDirForApp)"></Message>
 
@@ -1037,6 +1039,7 @@
 
     <CallTarget Targets="SaveAssemblyVersionInDestinationDatabase" />
 
+    <!--DO NOT CHANGE THIS TARGET NAME, Custom Logger is using this target name-->
     <CallTarget Targets="CleanTempFiles"></CallTarget>
 
   </Target>
@@ -1120,12 +1123,7 @@
 
     <RemoveDir Directories="$(TempDir)" />
 
-    <ItemGroup>
-      <DeleteTempErrorLog Include="$(TempDirForLog)/**/*.*" Exclude="$(ErrorLogFileName)" />
-    </ItemGroup>
-
-    <Delete Files="@(DeleteTempErrorLog)" ContinueOnError="true" />
-
+   
 
   </Target>
 
@@ -1148,6 +1146,11 @@
 
   </Target>
 
+  <Target Name="Run">
+    <!--CustomLogger will throw error if LogFilePath is not exist-->
+    <MakeDir Directories="$(LogFilePath)" Condition="!Exists('$(LogFilePath)')"/>
+    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /logger:$(LibDir)\CXC.CustomLogger.dll;FromEmailAddress=$(EmailNotificationFromAddress);ToEmailAddress=$(EmailNotificationToAddress);ProjectName=$(ProjectName);LogFilePath=$(LogFilePath);EmailUtilityPath=$(EmailUtilityPath);EnvironmentName=$(Environment);SendErrorEmail=$(SendEmailNotification)"/>
+  </Target>
 
 
 

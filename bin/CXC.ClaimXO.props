@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <Environment>QA</Environment>
-
+    <ProjectName>ClaimsXO</ProjectName>
     <SvnUsername>mWDy4+hy5a+QwQ9N90SRXQ==</SvnUsername>
     <SvnPassword>ILTltt0wGUTihZOjHu9rRw==</SvnPassword>
   </PropertyGroup>
@@ -96,17 +96,18 @@
 
     <LogDir>..\Log</LogDir>
     <TempDirForLog>$(LogDir)\temp</TempDirForLog>
-    <ErrorLogFileName>$(TempDirForLog)\CXC.ClaimXO.MSBuild.Error_$(CurrentDateTime).log</ErrorLogFileName>
-    <LogFileName>$(LogDir)\CXC.ClaimXO.MSBuild_$(CurrentDateTime).log</LogFileName>
+    <LogFilePath>$(RootDir)\log</LogFilePath>
+    
 
     <EmailNotificationFromAddress>alertsqa@cxcnetwork.com</EmailNotificationFromAddress>
-    
-    
-    
+    <EmailNotificationToAddress>manojs@cxcnetwork.com</EmailNotificationToAddress>
+    <SendEmailNotification>true</SendEmailNotification>
+
+
     <MSBuildCommunityTaskstargets>..\lib\MSBuild.Community.Tasks.targets</MSBuildCommunityTaskstargets>
     <MSBuildExtensionPacktargets>..\lib\MSBuild.Extension.Pack.1.8.0\build\net40\MSBuild.Extension.Pack.targets</MSBuildExtensionPacktargets>
     <MSBuildDbdeployTaskDbdeploy>..\lib\MSBuild.Dbdeploy.Task.dll</MSBuildDbdeployTaskDbdeploy>
-    <EmailTaskLibrary>..\lib\EmailUtility.dll</EmailTaskLibrary>
+    
     <FindAndReplaceTaskLibrary>..\lib\ReplaceValueInFile.dll</FindAndReplaceTaskLibrary>
     <MicrosoftBuildTasks>..\lib\Microsoft.Build.Tasks.v4.0.dll</MicrosoftBuildTasks>
     <DbDeployTemplateDir>..\lib\Resources</DbDeployTemplateDir>
@@ -114,7 +115,8 @@
     <CommandFileTransformationLibrary>..\lib\CXC.CommandFileTransformation.dll</CommandFileTransformationLibrary>
     <XmlPreProcessorLibrary>..\lib\XmlPreprocess.MSBuildTasks.dll</XmlPreProcessorLibrary>
     <LibDir>$(MSBuildThisFileDirectory)..\lib</LibDir>
-
+    <SVNToolkitPath>C:\Program Files\TortoiseSVN\bin</SVNToolkitPath>
+    <EmailUtilityPath>..\lib\sendEmail.exe</EmailUtilityPath>
     
   </PropertyGroup>
 

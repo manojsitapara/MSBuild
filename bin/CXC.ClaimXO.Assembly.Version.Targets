@@ -11,12 +11,14 @@
     <GeneratedAssemblyFileName Include="$(TempAssemblyFile)"/>
   </ItemGroup>
 
-
-
-
-
+ 
+  
+  
+  
   <Target Name="BeforeCompile"
-          Inputs="@(Compile)"
+          Inputs="@(Compile);
+            @(ReferencePath);
+            $(MSBuildAllProjects);"
           Outputs="@(IntermediateAssembly)"
           Condition="$(UpdateBuildVersion)=='true'">
 
@@ -35,7 +37,7 @@
     <PropertyGroup>
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='SetNewAssemblyVersionNumber'">SetNewAssemblyVersionNumber</CurrentTargetName>
     </PropertyGroup>
-
+    
     <ReadLinesFromFile File="@(GeneratedAssemblyFileName)">
       <Output TaskParameter="Lines" PropertyName="VersionNumber" />
     </ReadLinesFromFile>

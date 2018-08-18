@@ -97,7 +97,8 @@
     <LogDir>..\Log</LogDir>
     <TempDirForLog>$(LogDir)\temp</TempDirForLog>
     <LogFilePath>$(RootDir)\log</LogFilePath>
-    
+    <ReadMeFileName>$(Environment)_ReadMe_$(CurrentDateTime).log</ReadMeFileName>
+    <LogFileName>$(Environment)_LogFileName_$(CurrentDateTime).log</LogFileName>
 
     <EmailNotificationFromAddress>alertsqa@cxcnetwork.com</EmailNotificationFromAddress>
     <EmailNotificationToAddress>manojs@cxcnetwork.com</EmailNotificationToAddress>
@@ -113,10 +114,20 @@
     <DbDeployTemplateDir>..\lib\Resources</DbDeployTemplateDir>
     <ConfigValuesSpreadsheetFileLocation>$(MSBuildThisFileDirectory)..\Config\Setting.xls</ConfigValuesSpreadsheetFileLocation>
     <CommandFileTransformationLibrary>..\lib\CXC.CommandFileTransformation.dll</CommandFileTransformationLibrary>
+    <FileReaderLayoutFile>..\lib\CommandSettingsLayout.xml</FileReaderLayoutFile>
     <XmlPreProcessorLibrary>..\lib\XmlPreprocess.MSBuildTasks.dll</XmlPreProcessorLibrary>
     <LibDir>$(MSBuildThisFileDirectory)..\lib</LibDir>
     <SVNToolkitPath>C:\Program Files\TortoiseSVN\bin</SVNToolkitPath>
     <EmailUtilityPath>..\lib\sendEmail.exe</EmailUtilityPath>
+
+
+    <DecryptSqlServerName></DecryptSqlServerName>
+    <DecryptSqlApplicationDatabaseName></DecryptSqlApplicationDatabaseName>
+    <DecryptDbDeployDatabaseName></DecryptDbDeployDatabaseName>
+    <DecryptDatabaseChangeLogTableName></DecryptDatabaseChangeLogTableName>
+    <DecryptSqlServerUserName></DecryptSqlServerUserName>
+    <DecryptSqlServerPassword></DecryptSqlServerPassword>
+    
     
   </PropertyGroup>
 

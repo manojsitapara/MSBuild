@@ -1,0 +1,10 @@
+<Table Name="CommandSettings" FileFormat="Excel" Delimiter="" HasHeaderRow="true" HasTrailerRow="false" >
+  <Field Name="Environment Name" DataType="String"/>
+  <Field Name="QA" DataType="String"/>
+  <Field Name="PayFlexQA" DataType="String"/>
+  <Field Name="Production" DataType="String"/>
+  <Field Name="Debug" DataType="String"/>
+  <Field Name="PayFlexProduction" DataType="String"/>
+</Table>
+
+

@@ -3,10 +3,8 @@
 
   <PropertyGroup>
 
-    <SVNSourceURL>https://DESKTOP-JQA6P9F:440/svn/ClaimXO/trunk</SVNSourceURL>
+    <SVNSourceURL>https://desktop-jqa6p9f:440/svn/ClaimXO/trunk/src</SVNSourceURL>
     <SVNTagURL>https://DESKTOP-JQA6P9F:440/svn/ClaimXO/tags</SVNTagURL>
-     <!--<SVNSourceURL>https://svn.cxcnetwork.com/svn/CXCcore/branches/TestBuild</SVNSourceURL>
-    <SVNTagURL>https://svn.cxcnetwork.com/svn/CXCcore/tags</SVNTagURL>-->
 
     <!-- MSBuild script folder structure settings -->
 
@@ -30,16 +28,18 @@
     <!-- To build GDI solution, set value to true -->
     <BuildGDI>true</BuildGDI>
     <!-- To build PrimePay solution, set value to true -->
-    <BuildPrimePay>true</BuildPrimePay>
+    <BuildPrimePay>false</BuildPrimePay>
     <!--Set value true to take database backup else false -->
     <BackupDatabase>false</BackupDatabase>
+    <!--Set value true to take dbDeploy database backup else false -->
+    <BackupDbDeployDatabase>false</BackupDbDeployDatabase>
     <!-- Set UpdateBuildVersion value true to update build version number else set false -->
     <UpdateBuildVersion>true</UpdateBuildVersion>
     <!--Set value true to check in change assembly comment back to SVN else set false -->
     <CheckInAssemblyInfo>true</CheckInAssemblyInfo>
     
     <!--Set value true to create svn lable under svn tag branch-->
-    <CreateSVNLabel>true</CreateSVNLabel>
+    <CreateSVNLabel>false</CreateSVNLabel>
 
 
     <!-- Build code settings-->

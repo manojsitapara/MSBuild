@@ -18,12 +18,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <DecryptSqlServerName></DecryptSqlServerName>
-    <DecryptSqlApplicationDatabaseName></DecryptSqlApplicationDatabaseName>
-    <DecryptDbDeployDatabaseName></DecryptDbDeployDatabaseName>
-    <DecryptDatabaseChangeLogTableName></DecryptDatabaseChangeLogTableName>
-    <DecryptSqlServerUserName></DecryptSqlServerUserName>
-    <DecryptSqlServerPassword></DecryptSqlServerPassword>
+    <ReadMeFile>$(ReadMeFileName)</ReadMeFile>
   </PropertyGroup>
 
   <Target Name="Init">
@@ -222,10 +217,6 @@
 
     
     <!-- Removing unnecessary new line and extar space, by default ExecuteRawReader return space and new line in output-->
-    <PropertyGroup>
-      <DecryptSVNUserName></DecryptSVNUserName>
-      <DecryptSVNPassword></DecryptSVNPassword>
-    </PropertyGroup>
 
 
 
@@ -243,7 +234,7 @@
 
   </Target>
 
-  <Target Name="InitilizeItemGroup">
+  <Target Name="InitializeItemGroup">
 
     <ItemGroup>
 
@@ -319,6 +310,7 @@
   <Target Name="BackupPreBuild">
 
     <CallTarget Targets="BackupPreBuildDatabase" />
+    <CallTarget Targets="BackupDbDeployDatabasePreBuild" />
     <CallTarget Targets="BackupPreBuildDestination" />
     <CallTarget Targets="BackupPreBuildSource" />
 
@@ -326,7 +318,7 @@
 
   <Target Name="BuildSolutions" Condition=" $(OnlyBuildOrOnlyPush) != 'onlypush' ">
 
-    <CallTarget Targets="InitilizeItemGroup"></CallTarget>
+    <CallTarget Targets="InitializeItemGroup"></CallTarget>
 
     <CallTarget Targets="GetNewAssemblyVersionNumber" Condition=" $(MSBuildLastTaskResult) == 'True'  " />
 
@@ -417,15 +409,16 @@
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <CallTarget Targets="CopyGDIConfigAndLayoutFiles"></CallTarget>
-    <CallTarget Targets="BuildGDISolution"></CallTarget>
+    
 
 
     <CallTarget Targets="CopyPrimePayConfigAndLayoutFiles"></CallTarget>
-    <CallTarget Targets="BuildPrimePaySolution"></CallTarget>
+    
     
     <CallTarget Targets="CopyPayFlexConfigAndLayoutFiles"></CallTarget>
-    <CallTarget Targets="BuildPayFlexSolution"></CallTarget>
     
+
+    <CallTarget Targets="BuildTPASolutions"></CallTarget>
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -468,20 +461,7 @@
 
   </Target>
 
-  <Target Name="BuildGDISolution" Inputs="@(GDICSharpFiles)" Outputs="@(GDIAssemblyFile)"  Condition="$(BuildGDI) == 'true'">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildGDISolution'">BuildGDISolution</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(GDISolutionFile)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
+  
 
   <Target Name="CopyGDIConfigAndLayoutFiles" Condition="$(BuildGDI) == 'true'">
 
@@ -496,20 +476,7 @@
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
   </Target>
 
-  <Target Name="BuildPrimePaySolution" Inputs="@(PrimePayCSharpFiles)" Outputs="@(PrimePayAssemblyFile)" Condition="$(BuildPrimePay) == 'true'">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPrimePaySolution'">BuildPrimePaySolution</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(PrimePaySolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
+  
 
   <Target Name="CopyPrimePayConfigAndLayoutFiles" Condition="$(BuildPrimePay) == 'true'">
 
@@ -524,20 +491,7 @@
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
   </Target>
 
-  <Target Name="BuildPayFlexSolution" Inputs="@(PayFlexCSharpFiles)" Outputs="@(PayFlexAssemblyFileName)" Condition="$(BuildPayFlex) == 'true'">
-
-    <PropertyGroup>
-      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BuildPayFlexSolution'">BuildPayFlexSolution</CurrentTargetName>
-    </PropertyGroup>
-
-    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
-
-    <MSBuild Projects="@(PayFlexSolution)"
-             Properties="@(UpdateAssemblyVersionTarget)"/>
-
-    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
-
-  </Target>
+  
 
   <Target Name="CopyPayFlexConfigAndLayoutFiles" Condition="$(BuildPayFlex) == 'true'">
 
@@ -553,6 +507,24 @@
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
   </Target>
 
+
+  <Target Name="BuildTPASolutions">
+
+    <Message Text="%(SolutionName.Identity)"></Message>
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='%(SolutionName.TPAName)'">%(SolutionName.TPAName)</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= Building $(CurrentTargetName) solution target has been started. ============= " />
+
+    <MSBuild Projects="%(SolutionName.Identity)"
+             Properties="@(UpdateAssemblyVersionTarget)"/>
+
+    <Message Text="============= Building $(CurrentTargetName) solution target has been completed. ============= " />
+
+  </Target>
+  
+  
   <Target Name="CopyBuildFilesToBuildDir">
 
     <PropertyGroup>
@@ -869,6 +841,7 @@
                                Environment ="$(Environment)"
                                InputFiles="$(BuildDirForCommonWorkflowScript)\SetEnv.cmd"
                                OutputFiles="$(BuildDirForCommonWorkflowScript)\SetEnv.cmd"
+                               LayoutFiles="$(FileReaderLayoutFile)"
                                VariableColumnName="$(PropertiesColumnInSettingSpreadsheet)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
@@ -892,6 +865,7 @@
                                Environment ="$(Environment)"
                                InputFiles="$(CommandFileName)"
                                OutputFiles="$(CommandFileName)"
+                               LayoutFiles="$(FileReaderLayoutFile)"
                                VariableColumnName="$(PropertiesColumnInSettingSpreadsheet)" >
       <Output TaskParameter="ErrorMessage" PropertyName="ErrorMessage" />
     </CommandFileTransformation>
@@ -1050,6 +1024,8 @@
       <CurrentTargetName Condition="'$(CurrentTargetName)'!='CopyBuildFilesToDestinationDir'">CopyBuildFilesToDestinationDir</CurrentTargetName>
     </PropertyGroup>
 
+    <CallTarget Targets="DeleteOldLogFile"></CallTarget>
+
     <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
 
     <Message Text = "Start copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
@@ -1057,6 +1033,23 @@
     <Exec Command='$(LibDir)\ContentSync.exe $(DeploymentDirForApp) $(DestinationDir) -c -u' />
 
     <Message Text = "Completed copying files from $(DeploymentDirForApp) to $(DestinationDir)"></Message>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+  </Target>
+
+  <Target Name="DeleteOldLogFile">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='DeleteOldLogFile'">DeleteOldLogFile</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <ItemGroup>
+      <FilesToDelete Include="$(DestinationDir)\**\*.log"/>
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" />
 
     <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
 
@@ -1123,7 +1116,7 @@
 
     <RemoveDir Directories="$(TempDir)" />
 
-   
+    <!--<Copy SourceFiles="$(LogFilePath)\$(ReadMeFile)" DestinationFolder="$(DestinationDir)\"/>-->
 
   </Target>
 
@@ -1149,7 +1142,7 @@
   <Target Name="Run">
     <!--CustomLogger will throw error if LogFilePath is not exist-->
     <MakeDir Directories="$(LogFilePath)" Condition="!Exists('$(LogFilePath)')"/>
-    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /logger:$(LibDir)\CXC.CustomLogger.dll;FromEmailAddress=$(EmailNotificationFromAddress);ToEmailAddress=$(EmailNotificationToAddress);ProjectName=$(ProjectName);LogFilePath=$(LogFilePath);EmailUtilityPath=$(EmailUtilityPath);EnvironmentName=$(Environment);SendErrorEmail=$(SendEmailNotification)"/>
+    <Exec Command="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe $(MSBuildThisFile) /t:Build /logger:$(LibDir)\CXC.CustomLogger.dll;FromEmailAddress=$(EmailNotificationFromAddress);ToEmailAddress=$(EmailNotificationToAddress);ProjectName=$(ProjectName);LogFilePath=$(LogFilePath);EmailUtilityPath=$(EmailUtilityPath);EnvironmentName=$(Environment);SendErrorEmail=$(SendEmailNotification);LogFileName=$(LogFileName);ReadMeFileName=$(ReadMeFile)"/>
   </Target>
 
 

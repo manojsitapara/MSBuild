@@ -3,6 +3,7 @@
   
   <PropertyGroup>
     <BackupPreBuildDatabaseFile>$(BackupDirForDatabase)\ClaimXO_PreBuild_$(CurrentDateTime).bak</BackupPreBuildDatabaseFile>
+    <BackupDbDeployDatabaseFilePreBuild>$(BackupDirForDatabase)\EligibilityXO_DbDeploy_PreBuild_$(CurrentDateTime).bak</BackupDbDeployDatabaseFilePreBuild>
     <BackupPreBuildSourceFile>$(BackupDirForSource)\ClaimXO_PreBuild_$(CurrentDateTime).zip</BackupPreBuildSourceFile>
     <BackupPostBuildDeploymentFile>$(BackupDirForDeployment)\ClaimXO_PostBuild_$(CurrentDateTime).zip</BackupPostBuildDeploymentFile>
     <BackupPreBuildDestinationFile>$(BackupDirForDestination)\ClaimXO_PreBuild_$(CurrentDateTime).zip</BackupPreBuildDestinationFile>
@@ -91,6 +92,86 @@
 
   </Target>
 
+
+  <Target Name="BackupDbDeployDatabasePreBuild" Condition="$(BackupDbDeployDatabase) == 'true' ">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupDbDeployDatabasePreBuild'">BackupDbDeployDatabasePreBuild</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <CallTarget Targets="BackupDbDeployDatabaseForSqlServer2008VersionPreBuild" Condition="$(SqlServerVersion) == '2008' "/>
+    <CallTarget Targets="BackupDbDeployDatabaseForSqlServer2012VersionPreBuild" Condition="$(SqlServerVersion) == '2012' "/>
+    <CallTarget Targets="BackupDbDeployDatabaseForSqlServer2014VersionPreBuild" Condition="$(SqlServerVersion) == '2014' "/>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+  </Target>
+
+  <Target Name="BackupDbDeployDatabaseForSqlServer2008VersionPreBuild">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupDbDeployDatabaseForSqlServer2008VersionPreBuild'">BackupDbDeployDatabaseForSqlServer2008VersionPreBuild</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild.ExtensionPack.Sql2008.Database
+      TaskAction="Backup"
+      DatabaseItem="$(DecryptDbDeployDatabaseName)"
+      MachineName="$(DecryptSqlServerName)"
+      UserName="$(DecryptSqlServerUserName)"
+      UserPassword="$(DecryptSqlServerPassword)"
+      DataFilePath="$(BackupDbDeployDatabaseFilePreBuild)" />
+    <Message Text="DbDeploy Database backup has been sucessfully completed at this location: $(BackupDirForDatabase)"></Message>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+  </Target>
+
+  <Target Name="BackupDbDeployDatabaseForSqlServer2012VersionPreBuild">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupDbDeployDatabaseForSqlServer2012VersionPreBuild'">BackupDbDeployDatabaseForSqlServer2012VersionPreBuild</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild.ExtensionPack.Sql2012.Database
+      TaskAction="Backup"
+      DatabaseItem="$(DecryptDbDeployDatabaseName)"
+      MachineName="$(DecryptSqlServerName)"
+      UserName="$(DecryptSqlServerUserName)"
+      UserPassword="$(DecryptSqlServerPassword)"
+      DataFilePath="$(BackupDbDeployDatabaseFilePreBuild)" />
+    <Message Text="DbDeploy Database backup has been sucessfully completed at this location: $(BackupDirForDatabase)"></Message>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+  </Target>
+
+  <Target Name="BackupDbDeployDatabaseForSqlServer2014VersionPreBuild">
+
+    <PropertyGroup>
+      <CurrentTargetName Condition="'$(CurrentTargetName)'!='BackupDbDeployDatabaseForSqlServer2014VersionPreBuild'">BackupDbDeployDatabaseForSqlServer2014VersionPreBuild</CurrentTargetName>
+    </PropertyGroup>
+
+    <Message Text="============= $(CurrentTargetName) target has been started. ============= " />
+
+    <MSBuild.ExtensionPack.Sql2014.Database
+      TaskAction="Backup"
+      DatabaseItem="$(DecryptDbDeployDatabaseName)"
+      MachineName="$(DecryptSqlServerName)"
+      UserName="$(DecryptSqlServerUserName)"
+      UserPassword="$(DecryptSqlServerPassword)"
+      DataFilePath="$(BackupDbDeployDatabaseFilePreBuild)" />
+    <Message Text="DbDeploy Database backup has been sucessfully completed at this location: $(BackupDirForDatabase)"></Message>
+
+    <Message Text="============= $(CurrentTargetName) target has been completed. ============= " />
+
+  </Target>
+  
 
   <Target Name="BackupPreBuildSource" Condition="$(BackupSourceCode) == 'true'">
 
